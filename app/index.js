@@ -71,7 +71,8 @@ const HomeScreen = () => {
         const index = Math.round(e.nativeEvent.contentOffset.y / (WINDOW_HEIGHT - bottomTabHeight))
         setActiveVideoIndex(index)
       }}
-      showsVerticalScrollIndicator={false}
+      horizontal
+      showsHorizontalScrollIndicator={false}
     />
 )};
 
