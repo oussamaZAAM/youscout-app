@@ -5,7 +5,11 @@ import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 
 import { WINDOW_HEIGHT, WINDOW_WIDTH, getMusicNoteAnim } from "../assets/utils";
 
-export default function VideoItem({ data }) {
+  const [isPlaying, setIsPlaying] = useState(true);
+
+  const handlePlayPause = () => {
+    setIsPlaying(prevState => !prevState);
+  };
   const { channelName, uri, caption, musicName, likes, comments, avatarUri } =
     data;
 
@@ -56,8 +60,11 @@ export default function VideoItem({ data }) {
 
   const bottomTabHeight = useBottomTabBarHeight();
   return (
-    <View style={[styles.container, { height: WINDOW_HEIGHT - bottomTabHeight}]}>
-      <Video source={{ uri }} style={styles.video} resizeMode="cover" />
+      <TouchableOpacity style={[styles.controls, {backgroundColor: isPlaying ? 'rgba(0, 0, 0, 0)' : 'rgba(0, 0, 0, 0.5)', width: WINDOW_WIDTH, height: WINDOW_HEIGHT - bottomTabHeight}]} onPress={handlePlayPause}>
+        {isPlaying
+        ? <MaterialIcons name="play-arrow" size={56} color="white" style={{opacity: 0}} />
+        : <MaterialIcons name="pause" size={56} color="white" />}
+      </TouchableOpacity>
 
       <View style={styles.bottomSection}>
         <View style={styles.bottomLeftSection}>
@@ -216,5 +223,15 @@ const styles = StyleSheet.create({
     width: 16,
     height: 16,
     tintColor: "white",
+  },
+  controls: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    height: 48,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
