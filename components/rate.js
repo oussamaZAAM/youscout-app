@@ -5,10 +5,13 @@ import {
   Modal,
   StyleSheet,
   Button,
+  TouchableOpacity,
 } from "react-native";
 import React from "react";
-import { WINDOW_WIDTH } from "../assets/utils";
+import { WINDOW_HEIGHT, WINDOW_WIDTH } from "../assets/utils";
 import Rating from "../assets/Rating";
+
+import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 
 const Rate = ({
   skills,
@@ -46,17 +49,18 @@ const Rate = ({
       </View>
     );
   });
+  const bottomTabHeight = useBottomTabBarHeight();
   return (
     <Modal
-      animationType="slide"
+      animationType="fade"
       transparent={true}
       visible={modalVisible}
       onRequestClose={toggleModal}
     >
       <TouchableWithoutFeedback onPress={() => setModalVisible(false)}>
-        <View style={styles.overlay} />
+          <View style={styles.overlay}/>
       </TouchableWithoutFeedback>
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+      <View style={{ position: 'absolute', right: 0, left: 0, bottom: WINDOW_HEIGHT / 3, justifyContent: "center", alignItems: "center" }}>
         <View
           style={{
             backgroundColor: "white",
