@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import {
   SafeAreaView,
   View,
@@ -13,9 +13,13 @@ import * as Yup from "yup";
 import { COLORS } from "../assets/styles";
 
 const LoginScreen = ({ navigation }) => {
+  const scrollViewRef = useRef();
+  const handleInputFocus = () => {
+    scrollViewRef.current.scrollToEnd({ animated: true });
+  };
   return (
     <SafeAreaView style={{ flex: 1, justifyContent: "center" }}>
-      <ScrollView style={{ paddingHorizontal: 25 }}>
+      <ScrollView style={{ paddingHorizontal: 25 }} ref={scrollViewRef}>
         <View style={{ alignItems: "center" }}>
           <Image
             style={{ width: 200, height: 200, marginTop: 30, marginBottom: 30 }}
@@ -39,7 +43,10 @@ const LoginScreen = ({ navigation }) => {
           initialValues={{ email: "", password: "" }}
           validationSchema={Yup.object({
             name: Yup.string()
-              .matches(/^[a-zA-Z]+ [a-zA-Z]+(?: [a-zA-Z]+)*$/, 'Full name must contain at least two strings')
+              .matches(
+                /^[a-zA-Z]+ [a-zA-Z]+(?: [a-zA-Z]+)*$/,
+                "Full name must contain at least two strings"
+              )
               .required("Required"),
             email: Yup.string()
               .email("Invalid email address")
@@ -47,8 +54,10 @@ const LoginScreen = ({ navigation }) => {
             password: Yup.string()
               .min(6, "Must be at least 6 characters")
               .required("Required"),
-            confirmPassword: Yup.string()
-              .oneOf([Yup.ref('password'), null], 'Passwords must match')
+            confirmPassword: Yup.string().oneOf(
+              [Yup.ref("password"), null],
+              "Passwords must match"
+            ),
           })}
           onSubmit={(values) => {}}
         >
@@ -77,6 +86,7 @@ const LoginScreen = ({ navigation }) => {
                 }}
                 onChangeText={handleChange("name")}
                 value={values.name}
+                onFocus={handleInputFocus}
               />
 
               {touched.email && (
@@ -102,6 +112,7 @@ const LoginScreen = ({ navigation }) => {
                 }}
                 onChangeText={handleChange("email")}
                 value={values.email}
+                onFocus={handleInputFocus}
               />
 
               {touched.password && (
@@ -128,6 +139,7 @@ const LoginScreen = ({ navigation }) => {
                 onChangeText={handleChange("password")}
                 value={values.password}
                 secureTextEntry={true}
+                onFocus={handleInputFocus}
               />
 
               {touched.confirmPassword && (
@@ -154,6 +166,7 @@ const LoginScreen = ({ navigation }) => {
                 onChangeText={handleChange("confirmPassword")}
                 value={values.confirmPassword}
                 secureTextEntry={true}
+                onFocus={handleInputFocus}
               />
 
               <TouchableOpacity

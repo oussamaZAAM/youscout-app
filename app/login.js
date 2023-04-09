@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import {
   SafeAreaView,
   View,
@@ -15,10 +15,17 @@ import * as Yup from "yup";
 import { COLORS } from "../assets/styles";
 
 const LoginScreen = ({ navigation }) => {
-  
+  const scrollViewRef = useRef();
+  const handleInputFocus = () => {
+    scrollViewRef.current.scrollToEnd({ animated: true });
+  };
+
   return (
     <SafeAreaView style={{ flex: 1, justifyContent: "center" }}>
-      <ScrollView style={{ paddingHorizontal: 25 }}>
+      <ScrollView
+        style={{ paddingHorizontal: 25 }}
+        ref={scrollViewRef}
+      >
         <View style={{ alignItems: "center" }}>
           <Image
             style={{ width: 200, height: 200, marginTop: 30, marginBottom: 30 }}
@@ -52,7 +59,17 @@ const LoginScreen = ({ navigation }) => {
         >
           {({ handleChange, handleSubmit, values, errors, touched }) => (
             <View>
-              {touched.email && <Text style={{color: 'red', marginHorizontal: 10, marginVertical: -5}}>{errors.email}</Text>}
+              {touched.email && (
+                <Text
+                  style={{
+                    color: "red",
+                    marginHorizontal: 10,
+                    marginVertical: -5,
+                  }}
+                >
+                  {errors.email}
+                </Text>
+              )}
               <TextInput
                 name="email"
                 placeholder="Email Address"
@@ -65,9 +82,20 @@ const LoginScreen = ({ navigation }) => {
                 }}
                 onChangeText={handleChange("email")}
                 value={values.email}
+                onFocus={handleInputFocus}
               />
 
-              {touched.password && <Text style={{color: 'red', marginHorizontal: 10, marginVertical: -5}}>{errors.password}</Text>}
+              {touched.password && (
+                <Text
+                  style={{
+                    color: "red",
+                    marginHorizontal: 10,
+                    marginVertical: -5,
+                  }}
+                >
+                  {errors.password}
+                </Text>
+              )}
               <TextInput
                 name="password"
                 placeholder="Password"
@@ -81,6 +109,7 @@ const LoginScreen = ({ navigation }) => {
                 onChangeText={handleChange("password")}
                 value={values.password}
                 secureTextEntry={true}
+                onFocus={handleInputFocus}
               />
 
               <TouchableOpacity
