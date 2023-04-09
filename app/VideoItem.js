@@ -1,17 +1,29 @@
-import { Animated, Easing, Image, StatusBar, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  Animated,
+  Button,
+  Easing,
+  Image,
+  Modal,
+  StatusBar,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  View,
+} from "react-native";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Video } from "expo-av";
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
-import { MaterialIcons } from '@expo/vector-icons';
-
+import { MaterialIcons } from "@expo/vector-icons";
 
 import { WINDOW_HEIGHT, WINDOW_WIDTH, getMusicNoteAnim } from "../assets/utils";
+import Rate from "../components/rate";
 
 export default function VideoItem({ data, isActive }) {
   const [isPlaying, setIsPlaying] = useState(true);
 
   const handlePlayPause = () => {
-    setIsPlaying(prevState => !prevState);
+    setIsPlaying((prevState) => !prevState);
   };
   const { channelName, uri, caption, musicName, likes, comments, avatarUri } =
     data;
@@ -48,7 +60,7 @@ export default function VideoItem({ data, isActive }) {
         easing: Easing.linear,
         useNativeDriver: false,
       })
-    )
+    );
     discAnimLoopRef.current.start();
     musicAnimLoopRef.current = Animated.loop(
       Animated.sequence([
@@ -65,12 +77,12 @@ export default function VideoItem({ data, isActive }) {
           useNativeDriver: false,
         }),
       ])
-    )
+    );
     musicAnimLoopRef.current.start();
-  }, [discAnimatedValue, musicNoteAnimatedValue1, musicNoteAnimatedValue2])
+  }, [discAnimatedValue, musicNoteAnimatedValue1, musicNoteAnimatedValue2]);
 
   useEffect(() => {
-    if (isActive){
+    if (isActive) {
       triggerAnimation();
     } else {
       discAnimLoopRef.current?.stop();
@@ -87,14 +99,54 @@ export default function VideoItem({ data, isActive }) {
     //     useNativeDriver: true,
     //   }
     // ).start();
-  }, [isActive, triggerAnimation, discAnimatedValue, musicNoteAnimatedValue1, musicNoteAnimatedValue2]);
+  }, [
+    isActive,
+    triggerAnimation,
+    discAnimatedValue,
+    musicNoteAnimatedValue1,
+    musicNoteAnimatedValue2,
+  ]);
 
   const bottomTabHeight = useBottomTabBarHeight();
+
+  const [modalVisible, setModalVisible] = useState(false);
+
+  const toggleModal = () => {
+    setModalVisible(!modalVisible);
+  };
+
+  // The structure can be changed after
+  const [skills, setSkills] = useState([
+    {
+      skill: "Dribble",
+      rating: 0,
+    },
+    {
+      skill: "Shooting",
+      rating: 0,
+    },
+    {
+      skill: "Jugging",
+      rating: 0,
+    },
+  ]);
+
+  const handleRate = (value, skill) => {
+    setSkills((prevList) => {
+      for (let i = 0; i < skills.length; i++) {
+        if (skills[i].skill === skill) {
+          skills[i].rating = value;
+        }
+      }
+      return [...prevList];
+    });
+  };
+
   return (
     <View
       style={[styles.container, { height: WINDOW_HEIGHT - bottomTabHeight }]}
     >
-      <StatusBar barStyle={'light-content'} />
+      <StatusBar barStyle={"light-content"} />
       <Video
         source={{ uri }}
         style={styles.video}
@@ -102,11 +154,34 @@ export default function VideoItem({ data, isActive }) {
         shouldPlay={isPlaying && isActive}
         isLooping
       />
-      <TouchableOpacity style={[styles.controls, {backgroundColor: isPlaying ? 'rgba(0, 0, 0, 0)' : 'rgba(0, 0, 0, 0.5)', width: WINDOW_WIDTH, height: WINDOW_HEIGHT - bottomTabHeight}]} onPress={handlePlayPause}>
-        {isPlaying
-        ? <MaterialIcons name="play-arrow" size={56} color="white" style={{opacity: 0}} />
-        : <MaterialIcons name="pause" size={56} color="white" />}
+      <TouchableOpacity
+        style={[
+          styles.controls,
+          {
+            backgroundColor: isPlaying
+              ? "rgba(0, 0, 0, 0)"
+              : "rgba(0, 0, 0, 0.5)",
+            width: WINDOW_WIDTH,
+            height: WINDOW_HEIGHT - bottomTabHeight,
+          },
+        ]}
+        onPress={handlePlayPause}
+      >
+        {isPlaying ? (
+          <MaterialIcons
+            name="play-arrow"
+            size={56}
+            color="white"
+            style={{ opacity: 0 }}
+          />
+        ) : (
+          <MaterialIcons name="pause" size={56} color="white" />
+        )}
       </TouchableOpacity>
+
+      <View style={styles.bottomSection}>
+        <Text>w</Text>
+      </View>
 
       <View style={styles.bottomSection}>
         <View style={styles.bottomLeftSection}>
@@ -164,14 +239,23 @@ export default function VideoItem({ data, isActive }) {
           <Text style={styles.verticalBarText}>{comments}</Text>
         </View>
 
-        <View style={styles.verticalBarItem}>
-          <Image
-            style={styles.verticalBarIcon}
-            source={require("../assets/images/reply.png")}
-          />
-          <Text style={styles.verticalBarText}>Share</Text>
-        </View>
+        <TouchableOpacity onPress={toggleModal}>
+          <View style={styles.verticalBarItem}>
+            <Image
+              style={styles.verticalBarIcon}
+              source={require("../assets/images/star.png")}
+            />
+            <Text style={styles.verticalBarText}>Rate</Text>
+          </View>
+        </TouchableOpacity>
       </View>
+      <Rate
+        skills={skills}
+        handleRate={handleRate}
+        modalVisible={modalVisible}
+        setModalVisible={setModalVisible}
+        toggleModal={toggleModal}
+      />
     </View>
   );
 }
@@ -185,9 +269,17 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "100%",
   },
-  bottomSection: {
+  commentSlider: {
     position: "absolute",
     bottom: 0,
+    flexDirection: "row",
+    width: "100%",
+    paddingHorizontal: 8,
+    paddingBottom: 16,
+  },
+  bottomSection: {
+    position: "absolute",
+    bottom: 10,
     flexDirection: "row",
     width: "100%",
     paddingHorizontal: 8,
@@ -267,13 +359,13 @@ const styles = StyleSheet.create({
     tintColor: "white",
   },
   controls: {
-    position: 'absolute',
+    position: "absolute",
     bottom: 0,
     left: 0,
     right: 0,
     height: 48,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
