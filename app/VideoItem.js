@@ -1,21 +1,30 @@
 import {
   Animated,
+  BackHandler,
   Easing,
   Image,
   StatusBar,
   StyleSheet,
   Text,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   View,
 } from "react-native";
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { Video } from "expo-av";
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import { MaterialIcons } from "@expo/vector-icons";
 
 import { WINDOW_HEIGHT, WINDOW_WIDTH, getMusicNoteAnim } from "../assets/utils";
 import Rate from "../components/rate";
-import BottomSheet from '@gorhom/bottom-sheet';
+import BottomSheet from "@gorhom/bottom-sheet";
+import { useFocusEffect } from "expo-router";
 
 export default function VideoItem({ data, isActive }) {
   const [isPlaying, setIsPlaying] = useState(true);
@@ -25,84 +34,6 @@ export default function VideoItem({ data, isActive }) {
   };
   const { channelName, uri, caption, musicName, likes, comments, avatarUri } =
     data;
-
-  const discAnimatedValue = useRef(new Animated.Value(0)).current;
-  const musicNoteAnimatedValue1 = useRef(new Animated.Value(0)).current;
-  const musicNoteAnimatedValue2 = useRef(new Animated.Value(0)).current;
-
-  const discAnimation = {
-    transform: [
-      {
-        rotate: discAnimatedValue.interpolate({
-          inputRange: [0, 1],
-          outputRange: ["0deg", "360deg"],
-        }),
-      },
-    ],
-  };
-
-  const musicNoteAnimation1 = getMusicNoteAnim(musicNoteAnimatedValue1, false);
-  const musicNoteAnimation2 = getMusicNoteAnim(musicNoteAnimatedValue2, true);
-
-  const discAnimLoopRef = useRef();
-  const musicAnimLoopRef = useRef();
-
-  // console.log(fadeAnim)
-
-  const triggerAnimation = useCallback(() => {
-    discAnimLoopRef.current = Animated.loop(
-      Animated.timing(discAnimatedValue, {
-        toValue: 1,
-        duration: 3000,
-        easing: Easing.linear,
-        useNativeDriver: false,
-      })
-    );
-    discAnimLoopRef.current.start();
-    musicAnimLoopRef.current = Animated.loop(
-      Animated.sequence([
-        Animated.timing(musicNoteAnimatedValue1, {
-          toValue: 1,
-          duration: 2000,
-          easing: Easing.linear,
-          useNativeDriver: false,
-        }),
-        Animated.timing(musicNoteAnimatedValue2, {
-          toValue: 1,
-          duration: 2000,
-          easing: Easing.linear,
-          useNativeDriver: false,
-        }),
-      ])
-    );
-    musicAnimLoopRef.current.start();
-  }, [discAnimatedValue, musicNoteAnimatedValue1, musicNoteAnimatedValue2]);
-
-  useEffect(() => {
-    if (isActive) {
-      triggerAnimation();
-    } else {
-      discAnimLoopRef.current?.stop();
-      musicAnimLoopRef.current?.stop();
-      discAnimatedValue.setValue(0);
-      musicNoteAnimatedValue1.setValue(0);
-      musicNoteAnimatedValue2.setValue(0);
-    }
-    // Animated.timing(
-    //   fadeAnim,
-    //   {
-    //     toValue: 0,
-    //     duration: 1000, // 1 second
-    //     useNativeDriver: true,
-    //   }
-    // ).start();
-  }, [
-    isActive,
-    triggerAnimation,
-    discAnimatedValue,
-    musicNoteAnimatedValue1,
-    musicNoteAnimatedValue2,
-  ]);
 
   const bottomTabHeight = useBottomTabBarHeight();
 
@@ -141,18 +72,33 @@ export default function VideoItem({ data, isActive }) {
 
   const bottomSheetRef = useRef(null);
 
+  const [isComments, setIsComments] = useState(0);
+
   // variables
-  const snapPoints = useMemo(() => ['6%', '75%'], []);
+  const snapPoints = useMemo(() => ["6%", "75%"], []);
 
   // callbacks
   const handleSheetChanges = useCallback((index) => {
     // Fetch Comments if enabled
+    setIsComments(index);
+  }, []);
+
+  useEffect(() => {
+    const backAction = () => {
+      bottomSheetRef.current.collapse();
+      return true;
+    };
+
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      backAction
+    );
+
+    return () => backHandler.remove();
   }, []);
 
   return (
-    <View
-      style={[styles.container, { height: WINDOW_HEIGHT - bottomTabHeight }]}
-    >
+    <View style={[styles.container, { height: WINDOW_HEIGHT }]}>
       <StatusBar barStyle={"light-content"} />
       <Video
         source={{ uri }}
@@ -160,6 +106,7 @@ export default function VideoItem({ data, isActive }) {
         resizeMode="cover"
         shouldPlay={isPlaying && isActive}
         isLooping
+        isMuted={false}
       />
       <TouchableOpacity
         style={[
@@ -167,9 +114,9 @@ export default function VideoItem({ data, isActive }) {
           {
             backgroundColor: isPlaying
               ? "rgba(0, 0, 0, 0)"
-              : "rgba(0, 0, 0, 0.5)",
+              : "rgba(0, 0, 0, 0.25)",
             width: WINDOW_WIDTH,
-            height: WINDOW_HEIGHT - bottomTabHeight,
+            height: WINDOW_HEIGHT,
           },
         ]}
         onPress={handlePlayPause}
@@ -212,13 +159,18 @@ export default function VideoItem({ data, isActive }) {
           <Text style={styles.verticalBarText}>{likes}</Text>
         </View>
 
-        <View style={styles.verticalBarItem}>
+        <TouchableOpacity
+          onPress={() => {
+            bottomSheetRef.current.expand();
+          }}
+          style={styles.verticalBarItem}
+        >
           <Image
             style={styles.verticalBarIcon}
             source={require("../assets/images/message-circle.png")}
           />
           <Text style={styles.verticalBarText}>{comments}</Text>
-        </View>
+        </TouchableOpacity>
 
         <TouchableOpacity onPress={toggleModal}>
           <View style={styles.verticalBarItem}>
@@ -237,6 +189,13 @@ export default function VideoItem({ data, isActive }) {
         setModalVisible={setModalVisible}
         toggleModal={toggleModal}
       />
+      {isComments === 1 && (
+        <TouchableWithoutFeedback
+          onPress={() => bottomSheetRef.current.collapse()}
+        >
+          <View style={styles.overlay} />
+        </TouchableWithoutFeedback>
+      )}
       <BottomSheet
         ref={bottomSheetRef}
         index={0}
@@ -268,7 +227,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     flexDirection: "row",
     width: "100%",
-    backgroundColor: 'rgba(0, 0, 0, 0.5)'
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
   },
   bottomSection: {
     position: "absolute",
@@ -280,7 +239,7 @@ const styles = StyleSheet.create({
   },
   bottomLeftSection: {
     flex: 3,
-    marginBottom: 20
+    marginBottom: 20,
   },
   bottomRightSection: {
     flex: 1,
@@ -290,12 +249,12 @@ const styles = StyleSheet.create({
   channelName: {
     color: "white",
     fontWeight: "bold",
-    marginRight: 50
+    marginRight: 50,
   },
   caption: {
     color: "white",
     marginVertical: 8,
-    marginRight: 50
+    marginRight: 50,
   },
   musicNameContainer: {
     flexDirection: "row",
@@ -366,6 +325,14 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     flex: 1,
-    alignItems: 'center',
+    alignItems: "center",
+  },
+  overlay: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    height: WINDOW_HEIGHT / 4,
   },
 });

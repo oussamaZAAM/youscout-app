@@ -51,6 +51,7 @@ import React, { useState } from "react";
 import VideoItem from "./VideoItem";
 import videosData from './videosData'
 import { WINDOW_HEIGHT } from "../assets/utils";
+import LoginScreen from "./login";
 
 const BottomTab = createBottomTabNavigator();
 
@@ -153,7 +154,7 @@ const App = () => {
 
         <BottomTab.Screen
           name="Profile"
-          component={HomeScreen}
+          component={LoginScreen}
           options={{
             tabBarIcon: ({ focused }) => (
               <Image
