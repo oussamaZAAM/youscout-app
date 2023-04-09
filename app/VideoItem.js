@@ -1,10 +1,13 @@
-import { Animated, Easing, Image, StyleSheet, Text, View } from "react-native";
-import React, { useEffect, useRef } from "react";
+import { Animated, Easing, Image, StatusBar, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Video } from "expo-av";
-import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
+import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
+import { MaterialIcons } from '@expo/vector-icons';
+
 
 import { WINDOW_HEIGHT, WINDOW_WIDTH, getMusicNoteAnim } from "../assets/utils";
 
+export default function VideoItem({ data, isActive }) {
   const [isPlaying, setIsPlaying] = useState(true);
 
   const handlePlayPause = () => {
@@ -16,6 +19,7 @@ import { WINDOW_HEIGHT, WINDOW_WIDTH, getMusicNoteAnim } from "../assets/utils";
   const discAnimatedValue = useRef(new Animated.Value(0)).current;
   const musicNoteAnimatedValue1 = useRef(new Animated.Value(0)).current;
   const musicNoteAnimatedValue2 = useRef(new Animated.Value(0)).current;
+  // const fadeAnim = useRef(new Animated.Value(1)).current;
 
   const discAnimation = {
     transform: [
@@ -28,19 +32,25 @@ import { WINDOW_HEIGHT, WINDOW_WIDTH, getMusicNoteAnim } from "../assets/utils";
     ],
   };
 
-  const musicNoteAnimation1 = getMusicNoteAnim(musicNoteAnimatedValue1, false)
-  const musicNoteAnimation2 = getMusicNoteAnim(musicNoteAnimatedValue2, true)
+  const musicNoteAnimation1 = getMusicNoteAnim(musicNoteAnimatedValue1, false);
+  const musicNoteAnimation2 = getMusicNoteAnim(musicNoteAnimatedValue2, true);
 
-  useEffect(() => {
-    Animated.loop(
+  const discAnimLoopRef = useRef();
+  const musicAnimLoopRef = useRef();
+
+  // console.log(fadeAnim)
+
+  const triggerAnimation = useCallback(() => {
+    discAnimLoopRef.current = Animated.loop(
       Animated.timing(discAnimatedValue, {
         toValue: 1,
         duration: 3000,
         easing: Easing.linear,
         useNativeDriver: false,
       })
-    ).start();
-    Animated.loop(
+    )
+    discAnimLoopRef.current.start();
+    musicAnimLoopRef.current = Animated.loop(
       Animated.sequence([
         Animated.timing(musicNoteAnimatedValue1, {
           toValue: 1,
@@ -55,11 +65,43 @@ import { WINDOW_HEIGHT, WINDOW_WIDTH, getMusicNoteAnim } from "../assets/utils";
           useNativeDriver: false,
         }),
       ])
-    ).start();
-  }, [discAnimatedValue, musicNoteAnimatedValue1, musicNoteAnimatedValue2]);
+    )
+    musicAnimLoopRef.current.start();
+  }, [discAnimatedValue, musicNoteAnimatedValue1, musicNoteAnimatedValue2])
+
+  useEffect(() => {
+    if (isActive){
+      triggerAnimation();
+    } else {
+      discAnimLoopRef.current?.stop();
+      musicAnimLoopRef.current?.stop();
+      discAnimatedValue.setValue(0);
+      musicNoteAnimatedValue1.setValue(0);
+      musicNoteAnimatedValue2.setValue(0);
+    }
+    // Animated.timing(
+    //   fadeAnim,
+    //   {
+    //     toValue: 0,
+    //     duration: 1000, // 1 second
+    //     useNativeDriver: true,
+    //   }
+    // ).start();
+  }, [isActive, triggerAnimation, discAnimatedValue, musicNoteAnimatedValue1, musicNoteAnimatedValue2]);
 
   const bottomTabHeight = useBottomTabBarHeight();
   return (
+    <View
+      style={[styles.container, { height: WINDOW_HEIGHT - bottomTabHeight }]}
+    >
+      <StatusBar barStyle={'light-content'} />
+      <Video
+        source={{ uri }}
+        style={styles.video}
+        resizeMode="cover"
+        shouldPlay={isPlaying && isActive}
+        isLooping
+      />
       <TouchableOpacity style={[styles.controls, {backgroundColor: isPlaying ? 'rgba(0, 0, 0, 0)' : 'rgba(0, 0, 0, 0.5)', width: WINDOW_WIDTH, height: WINDOW_HEIGHT - bottomTabHeight}]} onPress={handlePlayPause}>
         {isPlaying
         ? <MaterialIcons name="play-arrow" size={56} color="white" style={{opacity: 0}} />
