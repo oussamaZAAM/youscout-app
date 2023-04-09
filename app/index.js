@@ -45,25 +45,33 @@
 
 import { FlatList, Image, StyleSheet, Text, View } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import React from "react";
+import { createBottomTabNavigator, useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
+import React, { useState } from "react";
 
 import VideoItem from "./VideoItem";
 import videosData from './videosData'
+import { WINDOW_HEIGHT } from "../assets/utils";
 
 const BottomTab = createBottomTabNavigator();
 
 const HomeScreen = () => {
+  const [activeVideoIndex, setActiveVideoIndex] = useState(0);
+  
+  const bottomTabHeight = useBottomTabBarHeight();
   return  (
     <FlatList
       data={videosData}
       pagingEnabled
       renderItem={({item, index}) => {
-        console.log('test')
         return (
-          <VideoItem data={item} />
+          <VideoItem data={item} isActive={activeVideoIndex === index} />
         )
       }}
+      onScroll={e => {
+        const index = Math.round(e.nativeEvent.contentOffset.y / (WINDOW_HEIGHT - bottomTabHeight))
+        setActiveVideoIndex(index)
+      }}
+      showsVerticalScrollIndicator={false}
     />
 )};
 
