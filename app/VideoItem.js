@@ -1,23 +1,21 @@
 import {
   Animated,
-  Button,
   Easing,
   Image,
-  Modal,
   StatusBar,
   StyleSheet,
   Text,
   TouchableOpacity,
-  TouchableWithoutFeedback,
   View,
 } from "react-native";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Video } from "expo-av";
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import { MaterialIcons } from "@expo/vector-icons";
 
 import { WINDOW_HEIGHT, WINDOW_WIDTH, getMusicNoteAnim } from "../assets/utils";
 import Rate from "../components/rate";
+import BottomSheet from '@gorhom/bottom-sheet';
 
 export default function VideoItem({ data, isActive }) {
   const [isPlaying, setIsPlaying] = useState(true);
@@ -31,7 +29,6 @@ export default function VideoItem({ data, isActive }) {
   const discAnimatedValue = useRef(new Animated.Value(0)).current;
   const musicNoteAnimatedValue1 = useRef(new Animated.Value(0)).current;
   const musicNoteAnimatedValue2 = useRef(new Animated.Value(0)).current;
-  // const fadeAnim = useRef(new Animated.Value(1)).current;
 
   const discAnimation = {
     transform: [
@@ -142,6 +139,16 @@ export default function VideoItem({ data, isActive }) {
     });
   };
 
+  const bottomSheetRef = useRef(null);
+
+  // variables
+  const snapPoints = useMemo(() => ['6%', '75%'], []);
+
+  // callbacks
+  const handleSheetChanges = useCallback((index) => {
+    // Fetch Comments if enabled
+  }, []);
+
   return (
     <View
       style={[styles.container, { height: WINDOW_HEIGHT - bottomTabHeight }]}
@@ -180,35 +187,9 @@ export default function VideoItem({ data, isActive }) {
       </TouchableOpacity>
 
       <View style={styles.bottomSection}>
-        <Text>w</Text>
-      </View>
-
-      <View style={styles.bottomSection}>
         <View style={styles.bottomLeftSection}>
           <Text style={styles.channelName}>{channelName}</Text>
           <Text style={styles.caption}>{caption}</Text>
-          <View style={styles.musicNameContainer}>
-            <Image
-              source={require("../assets/images/music-note.png")}
-              style={styles.musicNameIcon}
-            />
-            <Text style={styles.musicName}>{musicName}</Text>
-          </View>
-        </View>
-
-        <View style={styles.bottomRightSection}>
-          <Animated.Image
-            source={require("../assets/images/floating-music-note.png")}
-            style={[styles.floatingMusicNote, musicNoteAnimation1]}
-          />
-          <Animated.Image
-            source={require("../assets/images/floating-music-note.png")}
-            style={[styles.floatingMusicNote, musicNoteAnimation2]}
-          />
-          <Animated.Image
-            source={require("../assets/images/disc.png")}
-            style={[styles.musicDisc, discAnimation]}
-          />
         </View>
       </View>
 
@@ -256,6 +237,16 @@ export default function VideoItem({ data, isActive }) {
         setModalVisible={setModalVisible}
         toggleModal={toggleModal}
       />
+      <BottomSheet
+        ref={bottomSheetRef}
+        index={0}
+        snapPoints={snapPoints}
+        onChange={handleSheetChanges}
+      >
+        <View style={styles.contentContainer}>
+          <Text>{comments} Comments</Text>
+        </View>
+      </BottomSheet>
     </View>
   );
 }
@@ -272,10 +263,12 @@ const styles = StyleSheet.create({
   commentSlider: {
     position: "absolute",
     bottom: 0,
+    left: 0,
+    right: 0,
+    justifyContent: "center",
     flexDirection: "row",
     width: "100%",
-    paddingHorizontal: 8,
-    paddingBottom: 16,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)'
   },
   bottomSection: {
     position: "absolute",
@@ -286,7 +279,8 @@ const styles = StyleSheet.create({
     paddingBottom: 16,
   },
   bottomLeftSection: {
-    flex: 4,
+    flex: 3,
+    marginBottom: 20
   },
   bottomRightSection: {
     flex: 1,
@@ -296,10 +290,12 @@ const styles = StyleSheet.create({
   channelName: {
     color: "white",
     fontWeight: "bold",
+    marginRight: 50
   },
   caption: {
     color: "white",
     marginVertical: 8,
+    marginRight: 50
   },
   musicNameContainer: {
     flexDirection: "row",
@@ -367,5 +363,9 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
+  },
+  contentContainer: {
+    flex: 1,
+    alignItems: 'center',
   },
 });
