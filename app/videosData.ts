@@ -40,26 +40,6 @@ const videosData = [
     comments: 801,
     avatarUri: 'https://wallpaperaccess.com/thumb/384178.jpg',
   },
-  {
-    id: 4,
-    channelName: 'yummy',
-    uri: 'https://v.pinimg.com/videos/mc/720p/c9/22/d8/c922d8391146cc2fdbeb367e8da0d61f.mp4',
-    caption: 'Brown little puppy #cute #puppy',
-    musicName: 'Song #3',
-    likes: 3100,
-    comments: 801,
-    avatarUri: 'https://wallpaperaccess.com/thumb/384178.jpg',
-  },
-  {
-    id: 5,
-    channelName: 'yummy',
-    uri: 'https://v.pinimg.com/videos/mc/720p/c9/22/d8/c922d8391146cc2fdbeb367e8da0d61f.mp4',
-    caption: 'Brown little puppy #cute #puppy',
-    musicName: 'Song #3',
-    likes: 3100,
-    comments: 801,
-    avatarUri: 'https://wallpaperaccess.com/thumb/384178.jpg',
-  },
 ];
 
 export default videosData;

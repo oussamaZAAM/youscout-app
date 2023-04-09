@@ -1,7 +1,6 @@
 import { View, Text, StyleSheet, FlatList } from "react-native";
 import React, { useRef } from "react";
 import { Dimensions } from "react-native";
-import PostSingle from "../components/post";
 
 const FeedScreen = () => {
   const mediaRefs = useRef([]);
@@ -11,7 +10,6 @@ const FeedScreen = () => {
     changed.forEach((element) => {
       const cell = mediaRefs.current[element.key];
       if (cell) {
-        console.log("onViewableItemsChanged", element, element.isViewable);
         if (element.isViewable) {
           cell.play();
         } else {
