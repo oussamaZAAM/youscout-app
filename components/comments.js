@@ -124,10 +124,29 @@ const Comment = ({ comment }) => {
               keyExtractor={(item) => item.id.toString()}
               style={styles.repliesContainer}
             />
-            <TouchableOpacity onPress={() => setShowReplies(false)} style={styles.hideReplies}>
-              <AntDesign name="upcircleo" size={14} color="black" />
-              <Text>Hide</Text>
-            </TouchableOpacity>
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "center",
+                gap: 5,
+              }}
+            >
+              <TouchableOpacity
+                onPress={() => setShowReplies(false)}
+                style={styles.hideReplies}
+              >
+                <Text>More</Text>
+                <AntDesign name="pluscircle" size={16} color="black" />
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => setShowReplies(false)}
+                style={styles.hideReplies}
+              >
+                <AntDesign name="upcircleo" size={16} color="black" />
+                <Text>Hide</Text>
+              </TouchableOpacity>
+            </View>
           </View>
         )}
       </View>
