@@ -195,35 +195,49 @@ const Comments = ({comments}) => {
   }, []);
 
   return (
-    <View style={styles.container}>
-      <BottomSheet
-        ref={sheetRef}
-        index={1}
-        snapPoints={snapPoints}
-        onChange={handleSheetChange}
+    // <View style={styles.container}>
+    <BottomSheet
+      ref={bottomSheetRef}
+      index={0}
+      snapPoints={snapPoints}
+      onChange={handleSheetChanges}
+    >
+      <Text style={{ alignSelf: "center", fontWeight: 600, fontSize: 16 }}>
+        {comments} Comments
+      </Text>
+      <BottomSheetScrollView contentContainerStyle={styles.contentContainer}>
+        {data.map((comment) => (
+          <Comment
+            handleLikeComment={handleLikeComment}
+            handleUnlikeComment={handleUnlikeComment}
+            comment={comment}
+          />
+        ))}
+      </BottomSheetScrollView>
+      <View
+        style={[
+          styles.commentInputContainer,
+          isKeyboard && { marginBottom: -22 },
+        ]}
       >
-        <BottomSheetScrollView contentContainerStyle={styles.contentContainer}>
-          <Text style={{alignSelf: 'center', fontWeight: 600, fontSize: 16}}>{comments} Comments</Text>
-          {data.map(comment => <Comment comment={comment}/>)}
-          <View style={styles.commentInputContainer}>
-            <TextInput
-              style={styles.commentInput}
-              value={newComment}
-              onChangeText={(text) => setNewComment(text)}
-              placeholder="Add a comment..."
-              placeholderTextColor="#999"
-              multiline
-            />
-            <TouchableOpacity
-              style={styles.commentButton}
-              onPress={handleCommentSubmit}
-            >
-              <Ionicons name="send-outline" size={24} color={COLORS.blue} />
-            </TouchableOpacity>
-          </View>
-        </BottomSheetScrollView>
-      </BottomSheet>
-    </View>
+        <BottomSheetTextInput
+          style={styles.commentInput}
+          value={newComment}
+          onChangeText={(text) => setNewComment(text)}
+          placeholder="Add a comment..."
+          placeholderTextColor="#999"
+          onFocus={() => setIsKeyboard(true)}
+          onBlur={() => setIsKeyboard(false)}
+          multiline
+        />
+        <TouchableOpacity
+          style={styles.commentButton}
+          onPress={handleCommentSubmit}
+        >
+          <Ionicons name="send-outline" size={24} color={COLORS.blue} />
+        </TouchableOpacity>
+      </View>
+    </BottomSheet>
   );
 };
 
