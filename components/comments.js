@@ -8,13 +8,13 @@ import {
   TextInput,
   FlatList,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { WINDOW_WIDTH } from "../assets/utils";
 import { COLORS } from "../assets/styles";
 
 import { AntDesign } from "@expo/vector-icons";
-import { FontAwesome } from '@expo/vector-icons'; 
-import { Ionicons } from '@expo/vector-icons';
+import { FontAwesome } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 
 const data = [
   {
@@ -30,6 +30,15 @@ const data = [
     replies: [
       {
         id: 1,
+        user: {
+          name: "Jane Smith",
+          avatar: "https://randomuser.me/api/portraits/women/1.jpg",
+        },
+        text: "I agree, thanks for sharing!",
+        timestamp: "30 minutes ago",
+      },
+      {
+        id: 2,
         user: {
           name: "Jane Smith",
           avatar: "https://randomuser.me/api/portraits/women/1.jpg",
@@ -62,6 +71,11 @@ const Comment = ({ comment }) => {
     setIsExpanded(!isExpanded);
   };
 
+  const [ showMore, setShowMore ] = useState(false);
+  const onTextLayout = useCallback(e => {
+    setShowMore(e.nativeEvent.lines.length > 3);
+  }, []);
+
   return (
     <View style={styles.commentContainer}>
       <Image style={styles.avatar} source={{ uri: comment.user.avatar }} />
@@ -71,42 +85,50 @@ const Comment = ({ comment }) => {
           <Text style={styles.timestamp}>{comment.timestamp}</Text>
         </View>
         <Text
+          onTextLayout={onTextLayout}
           style={styles.commentText}
           numberOfLines={isExpanded ? undefined : 3}
         >
           {comment.text}
         </Text>
-        <Text onPress={handlePress} style={styles.expandButton}>
+        {showMore && <Text onPress={handlePress} style={styles.expandButton}>
           {isExpanded ? "Read less" : "Read more"}
-        </Text>
+        </Text>}
         <View style={styles.reactionsContainer}>
           <TouchableOpacity style={styles.reactionButton}>
             <AntDesign name="like2" size={16} color="black" />
             <Text style={styles.reactionButtonText}>{comment.likes} Likes</Text>
           </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.reactionButton}
-          >
+          <TouchableOpacity style={styles.reactionButton}>
             <FontAwesome name="mail-reply" size={16} color="black" />
             <Text style={styles.reactionButtonText}>
-              {comment.replies.length} Reply
+              {comment?.replies?.length} Reply
             </Text>
           </TouchableOpacity>
         </View>
-        <TouchableOpacity 
-            onPress={() => setShowReplies(!showReplies)}>
-        {comment.replies.length
-          ? <Text style={styles.reactionButtonText}>View {comment.replies.length} {comment.replies.length === 1 ? 'Reply' : 'Replies'}</Text>
-          : <View></View>
-        }
+        <TouchableOpacity onPress={() => setShowReplies(true)}>
+          {!showReplies && comment?.replies?.length ? (
+            <Text style={styles.reactionButtonText}>
+              View {comment?.replies?.length}{" "}
+              {comment?.replies?.length === 1 ? "Reply" : "Replies"}
+            </Text>
+          ) : (
+            <View></View>
+          )}
         </TouchableOpacity>
         {showReplies && (
-          <FlatList
-            data={comment.replies}
-            renderItem={({ item }) => <Comment comment={item} />}
-            keyExtractor={(item) => item.id.toString()}
-            style={styles.repliesContainer}
-          />
+          <View>
+            <FlatList
+              data={comment.replies}
+              renderItem={({ item }) => <Comment comment={item} />}
+              keyExtractor={(item) => item.id.toString()}
+              style={styles.repliesContainer}
+            />
+            <TouchableOpacity onPress={() => setShowReplies(false)} style={styles.hideReplies}>
+              <AntDesign name="upcircleo" size={14} color="black" />
+              <Text>Hide</Text>
+            </TouchableOpacity>
+          </View>
         )}
       </View>
     </View>
@@ -186,9 +208,9 @@ const styles = StyleSheet.create({
   },
   userAndTime: {
     flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 5
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 5,
   },
   commentText: {
     marginBottom: 5,
@@ -203,7 +225,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "flex-start",
     gap: 5,
-    marginBottom: 0
+    marginBottom: 0,
   },
   reactionButton: {
     flexDirection: "row",
@@ -217,21 +239,27 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   repliesContainer: {
-    marginLeft: 50,
-    marginTop: 10,
+    marginTop: 5,
+  },
+  hideReplies: {
+    flex: 1,
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    gap: 5,
   },
   commentInputContainer: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#eee",
+    backgroundColor: "#fff",
     paddingHorizontal: 10,
     paddingVertical: 5,
+    borderTopWidth: 0.5,
+    borderTopColor: "black",
   },
   commentInput: {
     flex: 1,
-    backgroundColor: "#fff",
-    borderWidth: 1,
-    borderColor: "#999",
+    backgroundColor: "#eee",
     borderRadius: 20,
     paddingVertical: 5,
     paddingHorizontal: 10,
@@ -239,7 +267,7 @@ const styles = StyleSheet.create({
   },
   commentButton: {
     paddingHorizontal: 5,
-    paddingVertical: 5
+    paddingVertical: 5,
   },
   commentButtonText: {
     color: "#fff",
