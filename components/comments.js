@@ -37,6 +37,32 @@ const Comment = ({ comment, handleLikeComment }) => {
     setShowMore(e.nativeEvent.lines.length > 3);
   }, []);
 
+  const [replyArea, setReplyArea] = useState(false);
+  const [reply, setReply] = useState("");
+
+  const toggleReply = () => {
+    setReplyArea((prevValue) => !prevValue);
+  };
+
+  const handleReply = () => {
+    const modifiedCommentReplies = comment.replies;
+    const newReply = {
+      id: comment.replies.length + 1,
+      user: {
+        name: "Yunyun",
+        avatar: "https://lthumb.lisimg.com/549/20838549.jpg",
+      },
+      text: reply,
+      timestamp: "1 minute ago"
+    }
+    // modifiedComment.replies.push(newReply);
+    modifiedCommentReplies.push(newReply);
+    const modifiedComment = {...comment}
+    modifiedComment.replies = modifiedCommentReplies;
+    handleReplyOnComment(modifiedComment);
+    setReply('');
+  }
+
   return (
     <View style={styles.commentContainer}>
       <Image style={styles.avatar} source={{ uri: comment.user.avatar }} />
