@@ -15,52 +15,7 @@ import { COLORS } from "../assets/styles";
 import { AntDesign } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
-
-const data = [
-  {
-    id: 1,
-    user: {
-      name: "Megumin",
-      avatar:
-        "https://ih1.redbubble.net/image.3613970471.1584/st,small,845x845-pad,1000x1000,f8f8f8.jpg",
-    },
-    text: "Kono Subarashii Sekai ni Bakuen en woKono Subarashii Sekai ni Bakuen woKono Subarashii Sekai ni Bakuen woKono Subarashii Sekai ni Bakuen woKono Subarashii Sekai ni Bakuen wo!",
-    timestamp: "1 hour ago",
-    likes: 5,
-    replies: [
-      {
-        id: 1,
-        user: {
-          name: "Jane Smith",
-          avatar: "https://randomuser.me/api/portraits/women/1.jpg",
-        },
-        text: "I agree, thanks for sharing!",
-        timestamp: "30 minutes ago",
-      },
-      {
-        id: 2,
-        user: {
-          name: "Jane Smith",
-          avatar: "https://randomuser.me/api/portraits/women/1.jpg",
-        },
-        text: "I agree, thanks for sharing!",
-        timestamp: "30 minutes ago",
-      },
-    ],
-  },
-  {
-    id: 2,
-    user: {
-      name: "Bob Johnson",
-      avatar: "https://randomuser.me/api/portraits/men/2.jpg",
-    },
-    text: "Wow, this is really insightful!",
-    timestamp: "2 hours ago",
-    likes: 2,
-    replies: [],
-  },
-  // more comments here...
-];
+import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
 
 const Comment = ({ comment }) => {
   const [showReplies, setShowReplies] = useState(false);
@@ -154,7 +109,75 @@ const Comment = ({ comment }) => {
   );
 };
 
-const Comments = () => {
+const Comments = ({comments}) => {
+  
+  const data = [
+    {
+      id: 1,
+      user: {
+        name: "Megumin",
+        avatar:
+          "https://ih1.redbubble.net/image.3613970471.1584/st,small,845x845-pad,1000x1000,f8f8f8.jpg",
+      },
+      text: "Kono Subarashii Sekai ni Bakuen en woKono Subarashii Sekai ni Bakuen woKono Subarashii Sekai ni Bakuen woKono Subarashii Sekai ni Bakuen woKono Subarashii Sekai ni Bakuen wo!",
+      timestamp: "1 hour ago",
+      likes: 5,
+      replies: [
+        {
+          id: 1,
+          user: {
+            name: "Jane Smith",
+            avatar: "https://randomuser.me/api/portraits/women/1.jpg",
+          },
+          text: "I agree, thanks for sharing!",
+          timestamp: "30 minutes ago",
+        },
+        {
+          id: 2,
+          user: {
+            name: "Jane Smith",
+            avatar: "https://randomuser.me/api/portraits/women/1.jpg",
+          },
+          text: "I agree, thanks for sharing!",
+          timestamp: "30 minutes ago",
+        },
+      ],
+    },
+    {
+      id: 2,
+      user: {
+        name: "Bob Johnson",
+        avatar: "https://randomuser.me/api/portraits/men/2.jpg",
+      },
+      text: "Wow, this is really insightful!",
+      timestamp: "2 hours ago",
+      likes: 2,
+      replies: [],
+    },
+    {
+      id: 2,
+      user: {
+        name: "Bob Johnson",
+        avatar: "https://randomuser.me/api/portraits/men/2.jpg",
+      },
+      text: "Wow, this is really insightful!",
+      timestamp: "2 hours ago",
+      likes: 2,
+      replies: [],
+    },
+    {
+      id: 2,
+      user: {
+        name: "Bob Johnson",
+        avatar: "https://randomuser.me/api/portraits/men/2.jpg",
+      },
+      text: "Wow, this is really insightful!",
+      timestamp: "2 hours ago",
+      likes: 2,
+      replies: [],
+    },
+    // more comments here...
+  ];
   const [newComment, setNewComment] = useState("");
 
   const handleCommentSubmit = () => {
