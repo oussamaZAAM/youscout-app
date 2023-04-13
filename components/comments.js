@@ -7,6 +7,7 @@ import {
   TextInput,
   FlatList,
   Button,
+  Keyboard,
 } from "react-native";
 import React, { useCallback, useMemo, useRef, useState } from "react";
 import { WINDOW_WIDTH } from "../assets/utils";
@@ -15,9 +16,12 @@ import { COLORS } from "../assets/styles";
 import { AntDesign } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
-import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
+import BottomSheet, {
+  BottomSheetScrollView,
+  BottomSheetTextInput,
+} from "@gorhom/bottom-sheet";
 
-const Comment = ({ comment }) => {
+const Comment = ({ comment, handleLikeComment }) => {
   const [showReplies, setShowReplies] = useState(false);
 
   const [isExpanded, setIsExpanded] = useState(false);
@@ -52,7 +56,10 @@ const Comment = ({ comment }) => {
           </Text>
         )}
         <View style={styles.reactionsContainer}>
-          <TouchableOpacity style={styles.reactionButton}>
+          <TouchableOpacity
+            onPress={() => handleLikeComment(comment.id)}
+            style={styles.reactionButton}
+          >
             <AntDesign name="like2" size={16} color="black" />
             <Text style={styles.reactionButtonText}>{comment.likes} Likes</Text>
           </TouchableOpacity>
@@ -113,7 +120,7 @@ const Comment = ({ comment }) => {
 
 const Comments = ({ comments, bottomSheetRef, handleSheetChanges }) => {
   const [isKeyboard, setIsKeyboard] = useState(false);
-  const data = [
+  const [data, setData] = useState([
     {
       id: 1,
       user: {
@@ -157,7 +164,7 @@ const Comments = ({ comments, bottomSheetRef, handleSheetChanges }) => {
       replies: [],
     },
     {
-      id: 2,
+      id: 3,
       user: {
         name: "Bob Johnson",
         avatar: "https://randomuser.me/api/portraits/men/2.jpg",
@@ -168,7 +175,7 @@ const Comments = ({ comments, bottomSheetRef, handleSheetChanges }) => {
       replies: [],
     },
     {
-      id: 2,
+      id: 4,
       user: {
         name: "Bob Johnson",
         avatar: "https://randomuser.me/api/portraits/men/2.jpg",
@@ -179,7 +186,7 @@ const Comments = ({ comments, bottomSheetRef, handleSheetChanges }) => {
       replies: [],
     },
     // more comments here...
-  ];
+  ]);
   const [newComment, setNewComment] = useState("");
 
   const handleLikeComment = (id) => {
@@ -224,13 +231,8 @@ const Comments = ({ comments, bottomSheetRef, handleSheetChanges }) => {
     setNewComment("");
   };
 
-  const sheetRef = useRef(null);
+  // const sheetRef = useRef(null);
   const snapPoints = useMemo(() => ["6%", "75%"], []);
-
-  // callbacks
-  const handleSheetChange = useCallback((index) => {
-    
-  }, []);
 
   return (
     // <View style={styles.container}>
@@ -284,7 +286,6 @@ export default Comments;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // backgroundColor: "#fff",
     width: WINDOW_WIDTH,
   },
   contentContainer: {
