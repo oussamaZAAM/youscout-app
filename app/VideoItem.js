@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   View,
+  ScrollView
 } from "react-native";
 import React, {
   useCallback,
@@ -23,9 +24,10 @@ import { MaterialIcons } from "@expo/vector-icons";
 
 import { WINDOW_HEIGHT, WINDOW_WIDTH, getMusicNoteAnim } from "../assets/utils";
 import Rate from "../components/rate";
-import BottomSheet from "@gorhom/bottom-sheet";
+import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
 import { useFocusEffect } from "expo-router";
 import Comments from "../components/comments";
+import Comment from "../components/comments";
 
 export default function VideoItem({ data, isActive }) {
   const [isPlaying, setIsPlaying] = useState(true);
@@ -106,7 +108,7 @@ export default function VideoItem({ data, isActive }) {
         style={[styles.video, {height: WINDOW_HEIGHT - bottomTabHeight}]}
         resizeMode="cover"
         // shouldPlay={isPlaying && isActive}
-        shouldPlay={isPlaying && isActive}
+        shouldPlay={false}
         isLooping
         isMuted={false}
       />
@@ -198,17 +200,8 @@ export default function VideoItem({ data, isActive }) {
           <View style={styles.overlay} />
         </TouchableWithoutFeedback>
       )}
-      <BottomSheet
-        ref={bottomSheetRef}
-        index={0}
-        snapPoints={snapPoints}
-        onChange={handleSheetChanges}
-      >
-        <View style={styles.contentContainer}>
-          <Text>{comments} Comments</Text>
-          <Comments />
-        </View>
-      </BottomSheet>
+        <Comments comments={comments} />
+        
     </View>
   );
 }

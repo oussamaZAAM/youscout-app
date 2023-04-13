@@ -195,32 +195,6 @@ const Comments = ({comments}) => {
   }, []);
 
   return (
-    // <View style={styles.container}>
-    //   <FlatList
-    //     data={data}
-    //     renderItem={({ item }) => <Comment comment={item} />}
-    //     keyExtractor={(item) => item.id.toString()}
-    //     style={styles.commentsList}
-    //     scrollEnabled={false}
-    //     showsVerticalScrollIndicator
-    //   />
-    //   <View style={styles.commentInputContainer}>
-    //     <TextInput
-    //       style={styles.commentInput}
-    //       value={newComment}
-    //       onChangeText={(text) => setNewComment(text)}
-    //       placeholder="Add a comment..."
-    //       placeholderTextColor="#999"
-    //       multiline
-    //     />
-    //     <TouchableOpacity
-    //       style={styles.commentButton}
-    //       onPress={handleCommentSubmit}
-    //     >
-    //       <Ionicons name="send-outline" size={24} color={COLORS.blue} />
-    //     </TouchableOpacity>
-    //   </View>
-    // </View>
     <View style={styles.container}>
       <BottomSheet
         ref={sheetRef}
