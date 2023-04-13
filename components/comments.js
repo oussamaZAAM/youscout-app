@@ -185,30 +185,33 @@ const Comments = ({comments}) => {
   };
   return (
     <View style={styles.container}>
-      <FlatList
-        data={data}
-        renderItem={({ item }) => <Comment comment={item} />}
-        keyExtractor={(item) => item.id.toString()}
-        style={styles.commentsList}
-        scrollEnabled={false}
-        showsVerticalScrollIndicator
-      />
-      <View style={styles.commentInputContainer}>
-        <TextInput
-          style={styles.commentInput}
-          value={newComment}
-          onChangeText={(text) => setNewComment(text)}
-          placeholder="Add a comment..."
-          placeholderTextColor="#999"
-          multiline
-        />
-        <TouchableOpacity
-          style={styles.commentButton}
-          onPress={handleCommentSubmit}
-        >
-          <Ionicons name="send-outline" size={24} color={COLORS.blue} />
-        </TouchableOpacity>
-      </View>
+      <BottomSheet
+        ref={sheetRef}
+        index={1}
+        snapPoints={snapPoints}
+        onChange={handleSheetChange}
+      >
+        <BottomSheetScrollView contentContainerStyle={styles.contentContainer}>
+          <Text style={{alignSelf: 'center', fontWeight: 600, fontSize: 16}}>{comments} Comments</Text>
+          {data.map(comment => <Comment comment={comment}/>)}
+          <View style={styles.commentInputContainer}>
+            <TextInput
+              style={styles.commentInput}
+              value={newComment}
+              onChangeText={(text) => setNewComment(text)}
+              placeholder="Add a comment..."
+              placeholderTextColor="#999"
+              multiline
+            />
+            <TouchableOpacity
+              style={styles.commentButton}
+              onPress={handleCommentSubmit}
+            >
+              <Ionicons name="send-outline" size={24} color={COLORS.blue} />
+            </TouchableOpacity>
+          </View>
+        </BottomSheetScrollView>
+      </BottomSheet>
     </View>
   );
 };
