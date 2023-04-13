@@ -2,13 +2,13 @@ import {
   StyleSheet,
   Text,
   View,
-  ScrollView,
   Image,
   TouchableOpacity,
   TextInput,
   FlatList,
+  Button,
 } from "react-native";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useMemo, useRef, useState } from "react";
 import { WINDOW_WIDTH } from "../assets/utils";
 import { COLORS } from "../assets/styles";
 
@@ -26,8 +26,8 @@ const Comment = ({ comment }) => {
     setIsExpanded(!isExpanded);
   };
 
-  const [ showMore, setShowMore ] = useState(false);
-  const onTextLayout = useCallback(e => {
+  const [showMore, setShowMore] = useState(false);
+  const onTextLayout = useCallback((e) => {
     setShowMore(e.nativeEvent.lines.length > 3);
   }, []);
 
@@ -46,9 +46,11 @@ const Comment = ({ comment }) => {
         >
           {comment.text}
         </Text>
-        {showMore && <Text onPress={handlePress} style={styles.expandButton}>
-          {isExpanded ? "Read less" : "Read more"}
-        </Text>}
+        {showMore && (
+          <Text onPress={handlePress} style={styles.expandButton}>
+            {isExpanded ? "Read less" : "Read more"}
+          </Text>
+        )}
         <View style={styles.reactionsContainer}>
           <TouchableOpacity style={styles.reactionButton}>
             <AntDesign name="like2" size={16} color="black" />
@@ -183,7 +185,42 @@ const Comments = ({comments}) => {
   const handleCommentSubmit = () => {
     // add new comment to data array
   };
+
+  const sheetRef = useRef(null);
+  const snapPoints = useMemo(() => ["6%", "75%"], []);
+
+  // callbacks
+  const handleSheetChange = useCallback((index) => {
+    
+  }, []);
+
   return (
+    // <View style={styles.container}>
+    //   <FlatList
+    //     data={data}
+    //     renderItem={({ item }) => <Comment comment={item} />}
+    //     keyExtractor={(item) => item.id.toString()}
+    //     style={styles.commentsList}
+    //     scrollEnabled={false}
+    //     showsVerticalScrollIndicator
+    //   />
+    //   <View style={styles.commentInputContainer}>
+    //     <TextInput
+    //       style={styles.commentInput}
+    //       value={newComment}
+    //       onChangeText={(text) => setNewComment(text)}
+    //       placeholder="Add a comment..."
+    //       placeholderTextColor="#999"
+    //       multiline
+    //     />
+    //     <TouchableOpacity
+    //       style={styles.commentButton}
+    //       onPress={handleCommentSubmit}
+    //     >
+    //       <Ionicons name="send-outline" size={24} color={COLORS.blue} />
+    //     </TouchableOpacity>
+    //   </View>
+    // </View>
     <View style={styles.container}>
       <BottomSheet
         ref={sheetRef}
@@ -221,8 +258,16 @@ export default Comments;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    // backgroundColor: "#fff",
     width: WINDOW_WIDTH,
+  },
+  contentContainer: {
+    backgroundColor: "white",
+  },
+  itemContainer: {
+    padding: 6,
+    margin: 6,
+    backgroundColor: "#eee",
   },
   commentsList: {
     flex: 1,
@@ -292,6 +337,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     gap: 5,
+    padding: 5,
   },
   commentInputContainer: {
     flexDirection: "row",
