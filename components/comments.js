@@ -293,6 +293,16 @@ const Comments = ({ comments, bottomSheetRef, handleSheetChanges }) => {
     setNewComment("");
   };
 
+  const handleReplyOnComment = (comment) => {
+    const id = comment.id;
+    setData((prevArray) => {
+      const index = prevArray.findIndex(comment => comment.id === id);
+      const newArray = prevArray.filter((comment) => comment.id !== id);
+      newArray.splice(index, 0, comment);
+      return [...newArray]
+    })
+  }
+
   // const sheetRef = useRef(null);
   const snapPoints = useMemo(() => ["6%", "75%"], []);
 
