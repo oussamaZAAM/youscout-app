@@ -111,8 +111,8 @@ const Comment = ({ comment }) => {
   );
 };
 
-const Comments = ({comments}) => {
-  
+const Comments = ({ comments, bottomSheetRef, handleSheetChanges }) => {
+  const [isKeyboard, setIsKeyboard] = useState(false);
   const data = [
     {
       id: 1,
@@ -182,8 +182,46 @@ const Comments = ({comments}) => {
   ];
   const [newComment, setNewComment] = useState("");
 
+  const handleLikeComment = (id) => {
+    setData((prevArray) => {
+      for (let i = 0; i < prevArray.length; i++) {
+        if (prevArray[i].id === id) {
+          prevArray[i].likes += 1;
+        }
+      }
+      return [...prevArray];
+    });
+  };
+
+  const handleUnlikeComment = (id) => {
+    setData((prevArray) => {
+      for (let i = 0; i < prevArray.length; i++) {
+        if (prevArray[i].id === id) {
+          prevArray[i].likes += 1;
+        }
+      }
+      return [...prevArray];
+    });
+  };
+
   const handleCommentSubmit = () => {
     // add new comment to data array
+    setData((prevArray) => {
+      const addComment = {
+        id: prevArray.length + 1,
+        user: {
+          name: "Yunyun",
+          avatar: "https://lthumb.lisimg.com/549/20838549.jpg",
+        },
+        text: newComment,
+        timestamp: "1 minute ago",
+        likes: 0,
+        replies: [],
+      };
+      prevArray.push(addComment);
+      return [...prevArray];
+    });
+    setNewComment("");
   };
 
   const sheetRef = useRef(null);
