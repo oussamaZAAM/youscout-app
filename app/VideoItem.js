@@ -77,9 +77,6 @@ export default function VideoItem({ data, isActive }) {
 
   const [isComments, setIsComments] = useState(0);
 
-  // variables
-  const snapPoints = useMemo(() => ["6%", "75%"], []);
-
   // callbacks
   const handleSheetChanges = useCallback((index) => {
     // Fetch Comments if enabled
@@ -200,7 +197,7 @@ export default function VideoItem({ data, isActive }) {
           <View style={styles.overlay} />
         </TouchableWithoutFeedback>
       )}
-        <Comments comments={comments} />
+        <Comments comments={comments} bottomSheetRef={bottomSheetRef} handleSheetChanges={handleSheetChanges} />
         
     </View>
   );
@@ -329,6 +326,6 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    height: WINDOW_HEIGHT / 4,
+    height: WINDOW_HEIGHT / 3,
   },
 });
