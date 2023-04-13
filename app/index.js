@@ -85,6 +85,7 @@ const App = () => {
           tabBarStyle: { backgroundColor: "black" },
           headerShown: false,
           tabBarActiveTintColor: "white",
+          tabBarHideOnKeyboard: true
         }}
       >
         <BottomTab.Screen
