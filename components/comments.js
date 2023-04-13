@@ -21,6 +21,8 @@ import BottomSheet, {
   BottomSheetTextInput,
 } from "@gorhom/bottom-sheet";
 
+const mockUser = 17;
+
 const Comment = ({ comment, handleLikeComment }) => {
   const [showReplies, setShowReplies] = useState(false);
 
@@ -61,7 +63,7 @@ const Comment = ({ comment, handleLikeComment }) => {
             style={styles.reactionButton}
           >
             <AntDesign name="like2" size={16} color="black" />
-            <Text style={styles.reactionButtonText}>{comment.likes} Likes</Text>
+            <Text style={styles.reactionButtonText}>{comment.likes.length} Likes</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.reactionButton}>
             <FontAwesome name="mail-reply" size={16} color="black" />
@@ -130,7 +132,7 @@ const Comments = ({ comments, bottomSheetRef, handleSheetChanges }) => {
       },
       text: "Kono Subarashii Sekai ni Bakuen en woKono Subarashii Sekai ni Bakuen woKono Subarashii Sekai ni Bakuen woKono Subarashii Sekai ni Bakuen woKono Subarashii Sekai ni Bakuen wo!",
       timestamp: "1 hour ago",
-      likes: 5,
+      likes: [],
       replies: [
         {
           id: 1,
@@ -160,7 +162,7 @@ const Comments = ({ comments, bottomSheetRef, handleSheetChanges }) => {
       },
       text: "Wow, this is really insightful!",
       timestamp: "2 hours ago",
-      likes: 2,
+      likes: [],
       replies: [],
     },
     {
@@ -171,7 +173,7 @@ const Comments = ({ comments, bottomSheetRef, handleSheetChanges }) => {
       },
       text: "Wow, this is really insightful!",
       timestamp: "2 hours ago",
-      likes: 2,
+      likes: [],
       replies: [],
     },
     {
@@ -182,29 +184,24 @@ const Comments = ({ comments, bottomSheetRef, handleSheetChanges }) => {
       },
       text: "Wow, this is really insightful!",
       timestamp: "2 hours ago",
-      likes: 2,
+      likes: [],
       replies: [],
     },
     // more comments here...
   ]);
   const [newComment, setNewComment] = useState("");
-
   const handleLikeComment = (id) => {
     setData((prevArray) => {
       for (let i = 0; i < prevArray.length; i++) {
         if (prevArray[i].id === id) {
-          prevArray[i].likes += 1;
-        }
-      }
-      return [...prevArray];
-    });
-  };
-
-  const handleUnlikeComment = (id) => {
-    setData((prevArray) => {
-      for (let i = 0; i < prevArray.length; i++) {
-        if (prevArray[i].id === id) {
-          prevArray[i].likes += 1;
+          if (!prevArray[i].likes.includes(mockUser)) {
+            const newLikes = prevArray[i].likes.filter((user) => user !== mockUser)
+            newLikes.push(mockUser);
+            prevArray[i].likes = newLikes;
+          } else {
+            const newLikes = prevArray[i].likes.filter((user) => user !== mockUser)
+            prevArray[i].likes = newLikes;
+          }
         }
       }
       return [...prevArray];
@@ -248,8 +245,8 @@ const Comments = ({ comments, bottomSheetRef, handleSheetChanges }) => {
       <BottomSheetScrollView contentContainerStyle={styles.contentContainer}>
         {data.map((comment) => (
           <Comment
+            key={comment.id}
             handleLikeComment={handleLikeComment}
-            handleUnlikeComment={handleUnlikeComment}
             comment={comment}
           />
         ))}
