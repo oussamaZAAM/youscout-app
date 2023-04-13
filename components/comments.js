@@ -62,8 +62,11 @@ const Comment = ({ comment, handleLikeComment }) => {
             onPress={() => handleLikeComment(comment.id)}
             style={styles.reactionButton}
           >
-            <AntDesign name="like2" size={16} color="black" />
-            <Text style={styles.reactionButtonText}>{comment.likes.length} Likes</Text>
+            {comment.likes.includes(mockUser)
+            ? <AntDesign name="like1" size={16} color="black" />
+            : <AntDesign name="like2" size={16} color="black" />
+            }
+            <Text style={styles.reactionButtonText}>{comment.likes.length} {comment.likes.length > 1 ? 'Likes' : 'Like'}</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.reactionButton}>
             <FontAwesome name="mail-reply" size={16} color="black" />
