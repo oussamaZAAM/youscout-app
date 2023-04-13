@@ -83,24 +83,61 @@ const Comment = ({ comment, handleLikeComment }) => {
             {isExpanded ? "Read less" : "Read more"}
           </Text>
         )}
-        <View style={styles.reactionsContainer}>
-          <TouchableOpacity
-            onPress={() => handleLikeComment(comment.id)}
-            style={styles.reactionButton}
-          >
-            {comment.likes.includes(mockUser)
-            ? <AntDesign name="like1" size={16} color="black" />
-            : <AntDesign name="like2" size={16} color="black" />
-            }
-            <Text style={styles.reactionButtonText}>{comment.likes.length} {comment.likes.length > 1 ? 'Likes' : 'Like'}</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.reactionButton}>
-            <FontAwesome name="mail-reply" size={16} color="black" />
-            <Text style={styles.reactionButtonText}>
-              {comment?.replies?.length} Reply
-            </Text>
-          </TouchableOpacity>
-        </View>
+        {comment.likes && (
+          <View style={styles.reactionsContainer}>
+            <TouchableOpacity
+              onPress={() => handleLikeComment(comment.id)}
+              style={styles.reactionButton}
+            >
+              {comment.likes.includes(mockUser) ? (
+                <AntDesign name="like1" size={16} color="black" />
+              ) : (
+                <AntDesign name="like2" size={16} color="black" />
+              )}
+              <Text style={styles.reactionButtonText}>
+                {comment.likes.length}{" "}
+                {comment.likes.length > 1 ? "Likes" : "Like"}
+              </Text>
+            </TouchableOpacity>
+            {comment.likes && replyArea ? (
+              <TouchableOpacity
+                onPress={toggleReply}
+                style={styles.reactionButton}
+              >
+                <AntDesign name="shrink" size={16} color="black" />
+                <Text style={styles.reactionButtonText}>Collapse</Text>
+              </TouchableOpacity>
+            ) : (
+              <TouchableOpacity
+                onPress={toggleReply}
+                style={styles.reactionButton}
+              >
+                <FontAwesome name="mail-reply" size={16} color="black" />
+                <Text style={styles.reactionButtonText}>Reply</Text>
+              </TouchableOpacity>
+            )}
+          </View>
+        )}
+        {replyArea && (
+          <View style={styles.replyInputContainer}>
+            <BottomSheetTextInput
+              style={styles.commentInput}
+              value={reply}
+              onChangeText={(text) => setReply(text)}
+              placeholder={"Reply to " + comment.user.name}
+              placeholderTextColor="#999"
+              onFocus={() => setIsKeyboard(2)}
+              onBlur={() => setIsKeyboard(0)}
+              multiline
+            />
+            <TouchableOpacity
+              style={styles.commentButton}
+              onPress={handleReply}
+            >
+              <Ionicons name="send-outline" size={24} color={COLORS.blue} />
+            </TouchableOpacity>
+          </View>
+        )}
         <TouchableOpacity onPress={() => setShowReplies(true)}>
           {!showReplies && comment?.replies?.length ? (
             <Text style={styles.reactionButtonText}>
