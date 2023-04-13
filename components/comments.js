@@ -156,6 +156,12 @@ const Comment = ({ comment, handleLikeComment }) => {
               keyExtractor={(item) => item.id.toString()}
               style={styles.repliesContainer}
             />
+            <TouchableOpacity
+              onPress={() => setShowReplies(false)}
+              style={styles.moreReplies}
+            >
+              <Text style={styles.reactionButtonText}>Show more</Text>
+            </TouchableOpacity>
             <View
               style={{
                 flexDirection: "row",
@@ -164,13 +170,6 @@ const Comment = ({ comment, handleLikeComment }) => {
                 gap: 5,
               }}
             >
-              <TouchableOpacity
-                onPress={() => setShowReplies(false)}
-                style={styles.hideReplies}
-              >
-                <Text>More</Text>
-                <AntDesign name="pluscircle" size={16} color="black" />
-              </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => setShowReplies(false)}
                 style={styles.hideReplies}
