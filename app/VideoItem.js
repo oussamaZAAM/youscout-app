@@ -25,6 +25,7 @@ import { WINDOW_HEIGHT, WINDOW_WIDTH, getMusicNoteAnim } from "../assets/utils";
 import Rate from "../components/rate";
 import BottomSheet from "@gorhom/bottom-sheet";
 import { useFocusEffect } from "expo-router";
+import Comments from "../components/comments";
 
 export default function VideoItem({ data, isActive }) {
   const [isPlaying, setIsPlaying] = useState(true);
@@ -98,12 +99,13 @@ export default function VideoItem({ data, isActive }) {
   }, []);
 
   return (
-    <View style={[styles.container, { height: WINDOW_HEIGHT }]}>
+    <View style={[styles.container, {height: WINDOW_HEIGHT - bottomTabHeight}]}>
       <StatusBar barStyle={"light-content"} />
       <Video
         source={{ uri }}
-        style={styles.video}
+        style={[styles.video, {height: WINDOW_HEIGHT - bottomTabHeight}]}
         resizeMode="cover"
+        // shouldPlay={isPlaying && isActive}
         shouldPlay={isPlaying && isActive}
         isLooping
         isMuted={false}
@@ -204,6 +206,7 @@ export default function VideoItem({ data, isActive }) {
       >
         <View style={styles.contentContainer}>
           <Text>{comments} Comments</Text>
+          <Comments />
         </View>
       </BottomSheet>
     </View>
