@@ -4,12 +4,13 @@ import {
   View,
   Image,
   TouchableOpacity,
-  TextInput,
   FlatList,
-  Button,
-  Keyboard,
 } from "react-native";
-import React, { useCallback, useMemo, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useMemo,
+  useState,
+} from "react";
 import { WINDOW_WIDTH } from "../assets/utils";
 import { COLORS } from "../assets/styles";
 
@@ -23,7 +24,7 @@ import BottomSheet, {
 
 const mockUser = 17;
 
-const Comment = ({ comment, handleLikeComment }) => {
+const Comment = ({ comment, handleLikeComment, setIsKeyboard, handleReplyOnComment }) => {
   const [showReplies, setShowReplies] = useState(false);
 
   const [isExpanded, setIsExpanded] = useState(false);
@@ -186,7 +187,7 @@ const Comment = ({ comment, handleLikeComment }) => {
 };
 
 const Comments = ({ comments, bottomSheetRef, handleSheetChanges }) => {
-  const [isKeyboard, setIsKeyboard] = useState(false);
+  const [isKeyboard, setIsKeyboard] = useState(0);
   const [data, setData] = useState([
     {
       id: 1,
@@ -260,11 +261,15 @@ const Comments = ({ comments, bottomSheetRef, handleSheetChanges }) => {
       for (let i = 0; i < prevArray.length; i++) {
         if (prevArray[i].id === id) {
           if (!prevArray[i].likes.includes(mockUser)) {
-            const newLikes = prevArray[i].likes.filter((user) => user !== mockUser)
+            const newLikes = prevArray[i].likes.filter(
+              (user) => user !== mockUser
+            );
             newLikes.push(mockUser);
             prevArray[i].likes = newLikes;
           } else {
-            const newLikes = prevArray[i].likes.filter((user) => user !== mockUser)
+            const newLikes = prevArray[i].likes.filter(
+              (user) => user !== mockUser
+            );
             prevArray[i].likes = newLikes;
           }
         }
@@ -284,7 +289,7 @@ const Comments = ({ comments, bottomSheetRef, handleSheetChanges }) => {
         },
         text: newComment,
         timestamp: "1 minute ago",
-        likes: 0,
+        likes: [],
         replies: [],
       };
       prevArray.push(addComment);
@@ -304,7 +309,7 @@ const Comments = ({ comments, bottomSheetRef, handleSheetChanges }) => {
   }
 
   // const sheetRef = useRef(null);
-  const snapPoints = useMemo(() => ["6%", "75%"], []);
+  const snapPoints = useMemo(() => ["6%", "100%"], []);
 
   return (
     // <View style={styles.container}>
@@ -323,13 +328,16 @@ const Comments = ({ comments, bottomSheetRef, handleSheetChanges }) => {
             key={comment.id}
             handleLikeComment={handleLikeComment}
             comment={comment}
+            setIsKeyboard={setIsKeyboard}
+            handleReplyOnComment={handleReplyOnComment}
           />
         ))}
       </BottomSheetScrollView>
       <View
         style={[
           styles.commentInputContainer,
-          isKeyboard && { marginBottom: -22 },
+          isKeyboard === 1 && { marginBottom: -22 },
+          isKeyboard === 2 && { display: 'none' },
         ]}
       >
         <BottomSheetTextInput
@@ -338,8 +346,8 @@ const Comments = ({ comments, bottomSheetRef, handleSheetChanges }) => {
           onChangeText={(text) => setNewComment(text)}
           placeholder="Add a comment..."
           placeholderTextColor="#999"
-          onFocus={() => setIsKeyboard(true)}
-          onBlur={() => setIsKeyboard(false)}
+          onFocus={() => setIsKeyboard(1)}
+          onBlur={() => setIsKeyboard(0)}
           multiline
         />
         <TouchableOpacity
@@ -430,13 +438,19 @@ const styles = StyleSheet.create({
   repliesContainer: {
     marginTop: 5,
   },
+  moreReplies: {
+    flex: 1,
+    marginLeft: 10,
+    marginTop: -10,
+  },
   hideReplies: {
     flex: 1,
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
     gap: 5,
-    padding: 5,
+    padding: 2,
+    marginBottom: -15,
   },
   commentInputContainer: {
     flexDirection: "row",
@@ -446,6 +460,13 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
     borderTopWidth: 0.5,
     borderTopColor: "black",
+  },
+  replyInputContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#fff",
+    paddingHorizontal: 10,
+    paddingVertical: 5,
   },
   commentInput: {
     flex: 1,
