@@ -59,6 +59,7 @@ const NewVideoScreen = () => {
         if (videoRecordPromise) {
           const data = await videoRecordPromise;
           const source = data.uri;
+          navigation.navigate('SaveVideo', {source})
         }
       } catch (err) {
         console.log(err);
