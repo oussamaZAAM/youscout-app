@@ -12,7 +12,7 @@ import React, {
   useState,
 } from "react";
 import { WINDOW_WIDTH } from "../assets/utils";
-import { COLORS } from "../assets/styles";
+import { COLORS, ICONS } from "../assets/styles";
 
 import { AntDesign } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
@@ -135,7 +135,7 @@ const Comment = ({ comment, handleLikeComment, setIsKeyboard, handleReplyOnComme
               style={styles.commentButton}
               onPress={handleReply}
             >
-              <Ionicons name="send-outline" size={24} color={COLORS.blue} />
+              <Ionicons name={ICONS.send} size={24} color={COLORS.blue} />
             </TouchableOpacity>
           </View>
         )}
@@ -309,7 +309,7 @@ const Comments = ({ comments, bottomSheetRef, handleSheetChanges }) => {
   }
 
   // const sheetRef = useRef(null);
-  const snapPoints = useMemo(() => ["6%", "100%"], []);
+  const snapPoints = useMemo(() => ["6%", "75%"], []);
 
   return (
     // <View style={styles.container}>
@@ -337,7 +337,7 @@ const Comments = ({ comments, bottomSheetRef, handleSheetChanges }) => {
         style={[
           styles.commentInputContainer,
           isKeyboard === 1 && { marginBottom: -22 },
-          isKeyboard === 2 && { display: 'none' },
+          isKeyboard === 2 && { marginBottom: -73 },
         ]}
       >
         <BottomSheetTextInput
@@ -354,7 +354,7 @@ const Comments = ({ comments, bottomSheetRef, handleSheetChanges }) => {
           style={styles.commentButton}
           onPress={handleCommentSubmit}
         >
-          <Ionicons name="send-outline" size={24} color={COLORS.blue} />
+          <Ionicons name={ICONS.send} size={24} color={COLORS.blue} />
         </TouchableOpacity>
       </View>
     </BottomSheet>
@@ -370,6 +370,7 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     backgroundColor: "white",
+    paddingBottom: 10
   },
   itemContainer: {
     padding: 6,
