@@ -4,8 +4,6 @@ import {
   TouchableWithoutFeedback,
   Modal,
   StyleSheet,
-  Button,
-  TouchableOpacity,
 } from "react-native";
 import React from "react";
 import { WINDOW_HEIGHT, WINDOW_WIDTH } from "../assets/utils";

@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef } from "react";
 import {
   SafeAreaView,
   View,
@@ -12,7 +12,7 @@ import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { Formik } from "formik";
 import * as Yup from "yup";
-import { COLORS } from "../assets/styles";
+import { COLORS } from "../../assets/styles";
 
 const LoginScreen = ({ navigation }) => {
   const scrollViewRef = useRef();
@@ -29,7 +29,7 @@ const LoginScreen = ({ navigation }) => {
         <View style={{ alignItems: "center" }}>
           <Image
             style={{ width: 200, height: 200, marginTop: 30, marginBottom: 30 }}
-            source={require("../assets/logoRaw.png")}
+            source={require("../../assets/logoRaw.png")}
           />
         </View>
 

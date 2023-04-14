@@ -23,7 +23,7 @@ const LoginScreen = ({ navigation }) => {
         <View style={{ alignItems: "center" }}>
           <Image
             style={{ width: 200, height: 200, marginTop: 30, marginBottom: 30 }}
-            source={require("../assets/logoRaw.png")}
+            source={require("../../assets/logoRaw.png")}
           />
         </View>
 
