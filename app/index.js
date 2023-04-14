@@ -52,6 +52,7 @@ import VideoItem from "./VideoItem";
 import videosData from './videosData'
 import { WINDOW_HEIGHT } from "../assets/utils";
 import LoginScreen from "./login";
+import Newpost from "./newpost";
 
 const BottomTab = createBottomTabNavigator();
 
@@ -122,7 +123,7 @@ const App = () => {
 
         <BottomTab.Screen
           name="NewVideo"
-          component={HomeScreen}
+          component={Newpost}
           options={{
             tabBarLabel: () => null,
             tabBarIcon: ({ focused }) => (
