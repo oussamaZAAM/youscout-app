@@ -1,7 +1,7 @@
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import LoginScreen from './login';
-import RegisterScreen from './register';
+import LoginScreen from './auth/login';
+import RegisterScreen from './auth/registerister';
 import { FlatList, Image, StyleSheet, Text, View } from "react-native";
 import { createBottomTabNavigator, useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import React, { useState } from "react";
@@ -9,7 +9,8 @@ import React, { useState } from "react";
 import VideoItem from "./VideoItem";
 import videosData from './videosData'
 import { WINDOW_HEIGHT } from "../assets/utils";
-import Newpost from "./newpost";
+import Newpost from "./newpost/newpost";
+import SavePostScreen from './newpost/savepost';
 
 const Stack = createNativeStackNavigator();
 
@@ -30,6 +31,11 @@ const App = () => {
         <Stack.Screen
           name="Register"
           component={RegisterScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="savePost"
+          component={SavePostScreen}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>

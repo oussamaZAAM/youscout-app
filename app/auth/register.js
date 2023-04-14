@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import { Formik } from "formik";
 import * as Yup from "yup";
-import { COLORS } from "../assets/styles";
+import { COLORS } from "../../assets/styles";
 
 const LoginScreen = ({ navigation }) => {
   const scrollViewRef = useRef();

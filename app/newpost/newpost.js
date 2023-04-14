@@ -6,6 +6,7 @@ import * as ImagePicker from "expo-image-picker";
 import * as MediaLibrary from 'expo-media-library';
 import { useIsFocused } from "@react-navigation/core";
 import { Feather } from "react-native-vector-icons";
+import { useNavigation } from "@react-navigation/native";
 
 const Newpost = () => {
   const [hasCameraPermissions, setHasCameraPermissions] = useState(false);
@@ -22,6 +23,8 @@ const Newpost = () => {
 
   const [isCameraReady, setIsCameraReady] = useState(false);
   const isFocused = useIsFocused();
+
+  const navigation = useNavigation();
 
   useEffect(() => {
     (async () => {
@@ -40,7 +43,6 @@ const Newpost = () => {
           sortBy: ["creationTime"],
           mediaType: ["video"],
         });
-        console.log(userGalleryMedia)
         setGalleryItems(userGalleryMedia.assets);
       }
     })().catch((err) => console.log(err));
@@ -78,6 +80,7 @@ const Newpost = () => {
       quality: 1,
     });
     if (!result.canceled) {
+      navigation.navigate('savePost', { source: result.uri })
     }
   };
 
@@ -88,7 +91,7 @@ const Newpost = () => {
       </View>
     );
   }
-  console.log(galleryItems)
+  
   return (
     <View style={styles.container}>
       {isFocused ? (
