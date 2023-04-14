@@ -8,7 +8,7 @@ import { useIsFocused } from "@react-navigation/core";
 import { Feather } from "react-native-vector-icons";
 import { useNavigation } from "@react-navigation/native";
 
-const Newpost = () => {
+const NewVideoScreen = () => {
   const [hasCameraPermissions, setHasCameraPermissions] = useState(false);
   const [hasAudioPermissions, setHasAudioPermissions] = useState(false);
   const [hasGalleryPermissions, setHasGalleryPermissions] = useState(false);
@@ -80,7 +80,8 @@ const Newpost = () => {
       quality: 1,
     });
     if (!result.canceled) {
-      navigation.navigate('savePost', { source: result.uri })
+      console.log(result.assets[0].uri)
+      navigation.navigate('SaveVideo', {source: result.assets[0].uri})
     }
   };
 
@@ -164,7 +165,7 @@ const Newpost = () => {
   );
 };
 
-export default Newpost;
+export default NewVideoScreen;
 
 const styles = StyleSheet.create({
   container: {
