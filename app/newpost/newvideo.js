@@ -59,6 +59,7 @@ const NewVideoScreen = () => {
         if (videoRecordPromise) {
           const data = await videoRecordPromise;
           const source = data.uri;
+          console.log(source)
           navigation.navigate('SaveVideo', {source})
         }
       } catch (err) {
@@ -98,7 +99,7 @@ const NewVideoScreen = () => {
     <View style={styles.container}>
       {isFocused ? (
         <Camera
-          ref={(ref) => setCameraRef()}
+          ref={(ref) => setCameraRef(ref)}
           style={styles.camera}
           ration={"16:12"}
           type={cameraType}
