@@ -1,7 +1,7 @@
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import LoginScreen from './auth/login';
-import RegisterScreen from './auth/registerister';
+import RegisterScreen from './auth/register';
 import { FlatList, Image, StyleSheet, Text, View } from "react-native";
 import { createBottomTabNavigator, useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import React, { useState } from "react";
@@ -9,18 +9,18 @@ import React, { useState } from "react";
 import VideoItem from "./VideoItem";
 import videosData from './videosData'
 import { WINDOW_HEIGHT } from "../assets/utils";
-import Newpost from "./newpost/newpost";
-import SavePostScreen from './newpost/savepost';
+import NewpostScreen from './newpost/newvideo';
+import SaveVideoScreen from './newpost/savevideo';
 
 const Stack = createNativeStackNavigator();
 
-const App = () => {
+const MainScreen = () => {
   return (
     <NavigationContainer independent={true}>
       <Stack.Navigator>
         <Stack.Screen
           name="Home"
-          component={MainScreen}
+          component={HomeScreen}
           options={{ headerShown: false }}
         />
         <Stack.Screen
@@ -33,9 +33,23 @@ const App = () => {
           component={RegisterScreen}
           options={{ headerShown: false }}
         />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+};
+
+const NewVideo = () => {
+  return (
+    <NavigationContainer independent={true}>
+      <Stack.Navigator>
         <Stack.Screen
-          name="savePost"
-          component={SavePostScreen}
+          name="NewVideo"
+          component={NewpostScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="SaveVideo"
+          component={SaveVideoScreen}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>
@@ -67,7 +81,7 @@ const HomeScreen = () => {
     />
 )};
 
-const MainScreen = () => {
+const App = () => {
   return (
     <NavigationContainer independent={true}>
       <BottomTab.Navigator
@@ -79,8 +93,8 @@ const MainScreen = () => {
         }}
       >
         <BottomTab.Screen
-          name="Home"
-          component={HomeScreen}
+          name="MainScreen"
+          component={MainScreen}
           options={{
             tabBarIcon: ({ focused }) => (
               <Image
@@ -112,7 +126,7 @@ const MainScreen = () => {
 
         <BottomTab.Screen
           name="NewVideo"
-          component={Newpost}
+          component={NewVideo}
           options={{
             tabBarLabel: () => null,
             tabBarIcon: ({ focused }) => (
