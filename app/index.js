@@ -1,58 +1,41 @@
-// import * as React from 'react';
-// import {NavigationContainer} from '@react-navigation/native';
-// import {createNativeStackNavigator} from '@react-navigation/native-stack';
-// import LoginScreen from './login';
-// import RegisterScreen from './register';
-// import FeedScreen from './feed';
-// import { Constants } from 'expo-constants';
-// import firebase from 'firebase/app'
-// import VideoScreen from './video';
-
-// // if (firebase.apps.length === 0) {
-// //   firebase.initializeApp(Constants.manifest.web.config.firebase)
-// // }
-
-// const Stack = createNativeStackNavigator();
-
-// const App = () => {
-//   return (
-//     <NavigationContainer independent={true}>
-//       <Stack.Navigator>
-//         {/* <Stack.Screen
-//           name="Feed"
-//           component={FeedScreen}
-//         /> */}
-//         <Stack.Screen
-//           name="Video"
-//           component={VideoScreen}
-//         />
-//         <Stack.Screen
-//           name="Login"
-//           component={LoginScreen}
-//           options={{ headerShown: false }}
-//         />
-//         <Stack.Screen
-//           name="Register"
-//           component={RegisterScreen}
-//           options={{ headerShown: false }}
-//         />
-//       </Stack.Navigator>
-//     </NavigationContainer>
-//   );
-// };
-
-// export default App;
-
+import {NavigationContainer} from '@react-navigation/native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import LoginScreen from './login';
+import RegisterScreen from './register';
 import { FlatList, Image, StyleSheet, Text, View } from "react-native";
-import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator, useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import React, { useState } from "react";
 
 import VideoItem from "./VideoItem";
 import videosData from './videosData'
 import { WINDOW_HEIGHT } from "../assets/utils";
-import LoginScreen from "./login";
 import Newpost from "./newpost";
+
+const Stack = createNativeStackNavigator();
+
+const App = () => {
+  return (
+    <NavigationContainer independent={true}>
+      <Stack.Navigator>
+        <Stack.Screen
+          name="Home"
+          component={MainScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Login"
+          component={LoginScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Register"
+          component={RegisterScreen}
+          options={{ headerShown: false }}
+        />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+};
 
 const BottomTab = createBottomTabNavigator();
 
@@ -78,7 +61,7 @@ const HomeScreen = () => {
     />
 )};
 
-const App = () => {
+const MainScreen = () => {
   return (
     <NavigationContainer independent={true}>
       <BottomTab.Navigator
@@ -156,7 +139,7 @@ const App = () => {
 
         <BottomTab.Screen
           name="Profile"
-          component={LoginScreen}
+          component={HomeScreen}
           options={{
             tabBarIcon: ({ focused }) => (
               <Image
