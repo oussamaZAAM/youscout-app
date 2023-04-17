@@ -11,6 +11,7 @@ import videosData from './videosData'
 import { WINDOW_HEIGHT } from "../assets/utils";
 import NewpostScreen from './newpost/newvideo';
 import SaveVideoScreen from './newpost/savevideo';
+import SkillsScreen from './newpost/skills';
 
 const Stack = createNativeStackNavigator();
 
@@ -50,6 +51,11 @@ const NewVideo = () => {
         <Stack.Screen
           name="SaveVideo"
           component={SaveVideoScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Skills"
+          component={SkillsScreen}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>

@@ -59,7 +59,6 @@ const NewVideoScreen = () => {
         if (videoRecordPromise) {
           const data = await videoRecordPromise;
           const source = data.uri;
-          console.log(source)
           navigation.navigate('SaveVideo', {source})
         }
       } catch (err) {
@@ -82,7 +81,6 @@ const NewVideoScreen = () => {
       quality: 1,
     });
     if (!result.canceled) {
-      console.log(result.assets[0].uri)
       navigation.navigate('SaveVideo', {source: result.assets[0].uri})
     }
   };
