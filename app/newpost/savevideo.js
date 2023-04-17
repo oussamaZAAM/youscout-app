@@ -1,15 +1,37 @@
-import { Button, Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
-import React, { useState } from 'react'
-import { useNavigation } from '@react-navigation/native';
-import { Feather, AntDesign } from "@expo/vector-icons"
-import { COLORS } from '../../assets/styles';
+import {
+  Button,
+  Image,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+  Appearance,
+  FlatList,
+} from "react-native";
+import React, { useState } from "react";
+import { useNavigation } from "@react-navigation/native";
+import { Feather, AntDesign } from "@expo/vector-icons";
+import { COLORS } from "../../assets/styles";
+import { MaterialIcons } from "react-native-vector-icons";
+import { WINDOW_WIDTH } from "@gorhom/bottom-sheet";
+
+const renderItem = ({ item }) => {
+  if (item.clicked === true) {
+    return (<View style={styles.skillBorder}>
+      <Text style={styles.skillText}>{item.name}</Text>
+    </View>);
+  }
+};
+
 const SaveVideoScreen = (props) => {
   const colorScheme = Appearance.getColorScheme();
+  const [description, setDescription] = useState("");
   const navigation = useNavigation();
 
   const handlePost = () => {
     // Handle Posting the video
-  }
+  };
 
   return (
     <View style={styles.container}>
@@ -19,9 +41,10 @@ const SaveVideoScreen = (props) => {
           { borderBottomColor: colorScheme === "dark" ? "#eee" : "#555" },
         ]}
       >
+        <TextInput
           style={styles.inputText}
           value={description}
-          placeholder='Add a description'
+          placeholder="Add a description"
           maxLength={150}
           onChangeText={(text) => setDescription(text)}
           multiline
@@ -81,10 +104,10 @@ const SaveVideoScreen = (props) => {
         </TouchableOpacity>
       </View>
     </View>
-  )
-}
+  );
+};
 
-export default SaveVideoScreen
+export default SaveVideoScreen;
 
 const styles = StyleSheet.create({
   container: {
