@@ -27,20 +27,56 @@ const SaveVideoScreen = (props) => {
           multiline
         />
 
-        <Image 
+        <Image
           style={styles.mediaPreview}
-          source={{uri: props.route.params.source}}
+          source={{ uri: props.route.params.source }}
         />
+      </View>
+      <View style={styles.skillsContainer}>
+        <TouchableOpacity
+          onPress={() =>
+            navigation.navigate("Skills", { source: props.route.params.source })
+          }
+          style={styles.skillsButton}
+        >
+          <View style={styles.iconText}>
+            <MaterialIcons name="sports-handball" size={24} />
+            <Text>Add a skill(s)</Text>
+          </View>
+          <MaterialIcons name="keyboard-arrow-right" size={24} />
+        </TouchableOpacity>
+        {props.route.params.skills && (
+          <TouchableOpacity
+            onPress={() =>
+              navigation.navigate("Skills", {
+                source: props.route.params.source,
+                skills: props.route.params.skills
+              })
+            }
+            style={styles.skillsChosen}
+          >
+            <FlatList
+              contentContainerStyle={styles.skillsChosen}
+              data={props.route.params.skills}
+              renderItem={renderItem}
+              keyExtractor={(item) => item.id.toString()}
+              numColumns={5}
+            />
+          </TouchableOpacity>
+        )}
       </View>
       <View style={styles.spacer}></View>
       <View style={styles.buttonsContainer}>
-        <TouchableOpacity style={styles.cancelButton} onPress={() => navigation.goBack()}>
-          <Feather name='x' size={24} color='black' />
+        <TouchableOpacity
+          style={styles.cancelButton}
+          onPress={() => navigation.goBack()}
+        >
+          <Feather name="x" size={24} color="black" />
           <Text style={styles.cancelButtonText}>Cancel</Text>
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.postButton} onPress={handlePost}>
-          <AntDesign name='up-square-o' size={24} color='white' />
+          <AntDesign name="up-square-o" size={24} color="white" />
           <Text style={styles.postButtonText}>Post</Text>
         </TouchableOpacity>
       </View>
