@@ -15,21 +15,16 @@ const data = [
   { id: 1, name: "Shooting" },
   { id: 2, name: "Jugging" },
   { id: 3, name: "Dribbling" },
-  { id: 4, name: "Shooting" },
-  { id: 5, name: "Jugging" },
-  { id: 6, name: "Dribbling" },
-  { id: 11, name: "Shooting" },
-  { id: 12, name: "Jugging" },
-  { id: 13, name: "Dribbling" },
-  { id: 14, name: "Shooting" },
-  { id: 15, name: "Jugging" },
-  { id: 16, name: "Dribbling" },
-  { id: 21, name: "Shooting" },
-  { id: 22, name: "Jugging" },
-  { id: 23, name: "Dribbling" },
-  { id: 24, name: "Shooting" },
-  { id: 25, name: "Jugging" },
-  { id: 26, name: "Dribbling" },
+  { id: 4, name: "Passing" },
+  { id: 5, name: "Ball Control" },
+  { id: 6, name: "Tackling" },
+  { id: 7, name: "Heading" },
+  { id: 8, name: "Positioning" },
+  { id: 9, name: "Awareness" },
+  { id: 10, name: "Speed" },
+  { id: 11, name: "Agility" },
+  { id: 12, name: "Balance" },
+  { id: 13, name: "Vision" },
 ];
 
 const RenderItem = ({ item, handleClickSkill }) => {
@@ -90,7 +85,7 @@ const SkillsScreen = (props) => {
       />
       <FlatList
         data={filteredData}
-        keyboardShouldPersistTaps
+        keyboardShouldPersistTaps='always'
         renderItem={({ item }) => (
           <RenderItem item={item} handleClickSkill={handleClickSkill} />
         )}
