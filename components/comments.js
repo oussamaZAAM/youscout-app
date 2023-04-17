@@ -209,41 +209,10 @@ const Comments = ({ comments, bottomSheetRef, handleSheetChanges }) => {
           text: "I agree, thanks for sharing!",
           timestamp: "30 minutes ago",
         },
-        {
-          id: 2,
-          user: {
-            name: "Jane Smith",
-            avatar: "https://randomuser.me/api/portraits/women/1.jpg",
-          },
-          text: "I agree, thanks for sharing!",
-          timestamp: "30 minutes ago",
-        },
       ],
     },
     {
       id: 2,
-      user: {
-        name: "Bob Johnson",
-        avatar: "https://randomuser.me/api/portraits/men/2.jpg",
-      },
-      text: "Wow, this is really insightful!",
-      timestamp: "2 hours ago",
-      likes: [],
-      replies: [],
-    },
-    {
-      id: 3,
-      user: {
-        name: "Bob Johnson",
-        avatar: "https://randomuser.me/api/portraits/men/2.jpg",
-      },
-      text: "Wow, this is really insightful!",
-      timestamp: "2 hours ago",
-      likes: [],
-      replies: [],
-    },
-    {
-      id: 4,
       user: {
         name: "Bob Johnson",
         avatar: "https://randomuser.me/api/portraits/men/2.jpg",
@@ -318,11 +287,12 @@ const Comments = ({ comments, bottomSheetRef, handleSheetChanges }) => {
       index={0}
       snapPoints={snapPoints}
       onChange={handleSheetChanges}
+      keyboardBlurBehavior='restore'
     >
       <Text style={{ alignSelf: "center", fontWeight: 600, fontSize: 16 }}>
         {comments} Comments
       </Text>
-      <BottomSheetScrollView contentContainerStyle={styles.contentContainer}>
+      <BottomSheetScrollView keyboardShouldPersistTaps="always" contentContainerStyle={styles.contentContainer}>
         {data.map((comment) => (
           <Comment
             key={comment.id}
