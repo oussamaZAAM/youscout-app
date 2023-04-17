@@ -15,6 +15,21 @@ const data = [
   { id: 1, name: "Shooting" },
   { id: 2, name: "Jugging" },
   { id: 3, name: "Dribbling" },
+  { id: 4, name: "Shooting" },
+  { id: 5, name: "Jugging" },
+  { id: 6, name: "Dribbling" },
+  { id: 11, name: "Shooting" },
+  { id: 12, name: "Jugging" },
+  { id: 13, name: "Dribbling" },
+  { id: 14, name: "Shooting" },
+  { id: 15, name: "Jugging" },
+  { id: 16, name: "Dribbling" },
+  { id: 21, name: "Shooting" },
+  { id: 22, name: "Jugging" },
+  { id: 23, name: "Dribbling" },
+  { id: 24, name: "Shooting" },
+  { id: 25, name: "Jugging" },
+  { id: 26, name: "Dribbling" },
 ];
 
 const RenderItem = ({ item, handleClickSkill }) => {
@@ -38,8 +53,6 @@ const SkillsScreen = (props) => {
   const [filteredData, setFilteredData] = useState(data);
 
   const [skillsData, setSkillsData] = useState(props.route.params.skills ? props.route.params.skills : thisData);
-
-  console.log(props.route.params.skills)
 
   const navigation = useNavigation();
 
@@ -77,6 +90,7 @@ const SkillsScreen = (props) => {
       />
       <FlatList
         data={filteredData}
+        keyboardShouldPersistTaps
         renderItem={({ item }) => (
           <RenderItem item={item} handleClickSkill={handleClickSkill} />
         )}
