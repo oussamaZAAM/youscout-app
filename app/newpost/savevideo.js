@@ -58,7 +58,7 @@ const SaveVideoScreen = (props) => {
       <View style={styles.skillsContainer}>
         <TouchableOpacity
           onPress={() =>
-            navigation.navigate("Skills", { source: props.route.params.source })
+            navigation.navigate("Skills", { source: props.route.params.source, skills: props.route.params.skills })
           }
           style={styles.skillsButton}
         >
