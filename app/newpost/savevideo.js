@@ -4,7 +4,7 @@ import { useNavigation } from '@react-navigation/native';
 import { Feather, AntDesign } from "@expo/vector-icons"
 import { COLORS } from '../../assets/styles';
 const SaveVideoScreen = (props) => {
-  const [description, setDescription] = useState('');
+  const colorScheme = Appearance.getColorScheme();
   const navigation = useNavigation();
 
   const handlePost = () => {
@@ -13,8 +13,12 @@ const SaveVideoScreen = (props) => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.formContainer}>
-        <TextInput 
+      <View
+        style={[
+          styles.formContainer,
+          { borderBottomColor: colorScheme === "dark" ? "#eee" : "#555" },
+        ]}
+      >
           style={styles.inputText}
           value={description}
           placeholder='Add a description'
