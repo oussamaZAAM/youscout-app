@@ -53,11 +53,12 @@ const styles = StyleSheet.create({
     backgroundColor: 'white'
   },
   spacer: {
-    flex: 1
+    flex: 1,
   },
   formContainer: {
-    margin: 20,
-    flexDirection: 'row',
+    padding: 20,
+    flexDirection: "row",
+    borderBottomWidth: 1,
   },
   inputText: {
     paddingVertical: 10,
@@ -66,45 +67,62 @@ const styles = StyleSheet.create({
   },
   mediaPreview: {
     aspectRatio: 9 / 16,
-    backgroundColor: 'black',
+    backgroundColor: "black",
     width: 60,
   },
   buttonsContainer: {
-    flexDirection: 'row',
+    flexDirection: "row",
     margin: 20,
-    gap: 10
+    gap: 10,
   },
   postButton: {
-    alignItems: 'center',
+    alignItems: "center",
     flex: 1,
     backgroundColor: COLORS.blue,
-    flexDirection: 'row',
+    flexDirection: "row",
     paddingVertical: 10,
     paddingHorizontal: 20,
-    justifyContent: 'center',
-    borderRadius: 4
+    justifyContent: "center",
+    borderRadius: 4,
   },
   cancelButton: {
-    alignItems: 'center',
+    alignItems: "center",
     flex: 1,
-    borderColor: 'lightgrey',
+    borderColor: "lightgrey",
     borderWidth: 1,
-    flexDirection: 'row',
+    flexDirection: "row",
     paddingVertical: 10,
     paddingHorizontal: 20,
-    justifyContent: 'center',
-    borderRadius: 4
+    justifyContent: "center",
+    borderRadius: 4,
   },
   postButtonText: {
     marginLeft: 5,
-    fontWeight: 'bold',
-    color: 'white',
-    fontSize: 16
+    fontWeight: "bold",
+    color: "white",
+    fontSize: 16,
   },
   cancelButtonText: {
     marginLeft: 5,
-    fontWeight: 'bold',
-    color: 'black',
-    fontSize: 16
+    fontWeight: "bold",
+    color: "black",
+    fontSize: 16,
   },
-})
+  skillBorder: {
+    borderColor: COLORS.light,
+    borderWidth: 1,
+    borderRadius: 50,
+    paddingHorizontal: 5,
+    paddingVertical: 2,
+    margin: 2
+  },
+  skillsChosen: {
+    marginLeft: 20,
+    alignItems: "stretch",
+    width: WINDOW_WIDTH
+  },
+  skillText: {
+    fontWeight: '300',
+    fontSize: 10,
+  }
+});
