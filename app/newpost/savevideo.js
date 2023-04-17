@@ -50,7 +50,24 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: 50,
-    backgroundColor: 'white'
+    backgroundColor: "white",
+  },
+  skillsContainer: {
+    flex: 1,
+    flexDirection: "column",
+    padding: 10,
+  },
+  skillsButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    padding: 10,
+  },
+  iconText: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 10,
   },
   spacer: {
     flex: 1,
