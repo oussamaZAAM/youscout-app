@@ -28,7 +28,7 @@ const SaveVideoScreen = (props) => {
   const colorScheme = Appearance.getColorScheme();
   const [description, setDescription] = useState("");
   const navigation = useNavigation();
-
+  
   const handlePost = () => {
     // Handle Posting the video
   };

@@ -15,15 +15,6 @@ const data = [
   { id: 1, name: "Shooting" },
   { id: 2, name: "Jugging" },
   { id: 3, name: "Dribbling" },
-  { id: 11, name: "Shooting" },
-  { id: 12, name: "Jugging" },
-  { id: 13, name: "Dribbling" },
-  { id: 21, name: "Shooting" },
-  { id: 22, name: "Jugging" },
-  { id: 23, name: "Dribbling" },
-  { id: 31, name: "Shooting" },
-  { id: 32, name: "Jugging" },
-  { id: 33, name: "Dribbling" },
 ];
 
 const RenderItem = ({ item, handleClickSkill }) => {
@@ -40,26 +31,15 @@ const RenderItem = ({ item, handleClickSkill }) => {
   );
 };
 
-const addClickedToArray = (array) => {
-    const newArray = array.map((skill) => {
-        skill['clicked'] = false;
-        return skill
-    })
-    return newArray
-}
-
 const SkillsScreen = (props) => {
   const [searchQuery, setSearchQuery] = useState("");
+  const thisData = data;
+
   const [filteredData, setFilteredData] = useState(data);
 
-//   const [skillsData, setSkillsData] = useState(addClickedToArray(data));
-  const data = [
-    { id: 1, name: "Shooting", clicked: false },
-    { id: 2, name: "Jugging", clicked: false },
-    { id: 3, name: "Dribbling", clicked: false },
-  ]
-  const [skillsData, setSkillsData] = useState(props.route.params.skills ? props.route.params.skills : data);
-  console.log(props.route.params)
+  const [skillsData, setSkillsData] = useState(props.route.params.skills ? props.route.params.skills : thisData);
+
+  console.log(props.route.params.skills)
 
   const navigation = useNavigation();
 
@@ -81,6 +61,7 @@ const SkillsScreen = (props) => {
       element.name.toLowerCase().includes(searchQuery.toLowerCase())
     );
     setFilteredData(results);
+    !props.route.params.skills && thisData.forEach(skill => skill.clicked = false);
   }, [searchQuery]);
 
   return (
@@ -102,10 +83,10 @@ const SkillsScreen = (props) => {
         keyExtractor={(item) => item.id.toString()}
       />
       <View style={styles.buttonsContainer}>
-        <TouchableOpacity style={styles.cancelButton} onPress={() => navigation.goBack()}>
+        {/* <TouchableOpacity style={styles.cancelButton} onPress={() => navigation.goBack()}>
           <Feather name='x' size={24} color='black' />
           <Text style={styles.cancelButtonText}>Cancel</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
 
         <TouchableOpacity style={styles.validateButton} onPress={() => navigation.navigate("SaveVideo", {skills: skillsData, source: props.route.params.source})}>
           <AntDesign name='checkcircleo' size={24} color='white' />
