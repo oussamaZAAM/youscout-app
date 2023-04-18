@@ -281,13 +281,13 @@ const Comments = ({ comments, bottomSheetRef, handleSheetChanges }) => {
   const snapPoints = useMemo(() => ["6%", "75%"], []);
 
   return (
-    // <View style={styles.container}>
     <BottomSheet
       ref={bottomSheetRef}
       index={0}
       snapPoints={snapPoints}
       onChange={handleSheetChanges}
       keyboardBlurBehavior='restore'
+      keyboardShouldPersistTaps='always'
     >
       <Text style={{ alignSelf: "center", fontWeight: 600, fontSize: 16 }}>
         {comments} Comments

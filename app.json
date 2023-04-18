@@ -17,5 +17,6 @@
       }
     },
     "name": "YouScout",
-    "slug": "YouScout"
+    "slug": "YouScout",
+    "orientation": "portrait"
 }
