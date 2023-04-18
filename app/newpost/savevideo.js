@@ -58,7 +58,7 @@ const SaveVideoScreen = (props) => {
       <View style={styles.skillsContainer}>
         <TouchableOpacity
           onPress={() =>
-            navigation.navigate("Skills", { source: props.route.params.source, skills: props.route.params.skills })
+            navigation.navigate("Skills", { source: props.route.params.source, skills: props.route.params.skills, sourceThumb: props.route.params.sourceThumb })
           }
           style={styles.skillsButton}
         >
@@ -73,7 +73,8 @@ const SaveVideoScreen = (props) => {
             onPress={() =>
               navigation.navigate("Skills", {
                 source: props.route.params.source,
-                skills: props.route.params.skills
+                skills: props.route.params.skills,
+                sourceThumb: props.route.params.sourceThumb
               })
             }
             style={styles.skillsChosen}

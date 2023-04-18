@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import { COLORS } from "../../assets/styles";
 import { Feather, AntDesign } from "@expo/vector-icons";
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation } from "@react-navigation/native";
 
 const data = [
   { id: 1, name: "Shooting" },
@@ -47,7 +47,9 @@ const SkillsScreen = (props) => {
 
   const [filteredData, setFilteredData] = useState(data);
 
-  const [skillsData, setSkillsData] = useState(props.route.params.skills ? props.route.params.skills : thisData);
+  const [skillsData, setSkillsData] = useState(
+    props.route.params.skills ? props.route.params.skills : thisData
+  );
 
   const navigation = useNavigation();
 
@@ -69,7 +71,8 @@ const SkillsScreen = (props) => {
       element.name.toLowerCase().includes(searchQuery.toLowerCase())
     );
     setFilteredData(results);
-    !props.route.params.skills && thisData.forEach(skill => skill.clicked = false);
+    !props.route.params.skills &&
+      thisData.forEach((skill) => (skill.clicked = false));
   }, [searchQuery]);
 
   return (
@@ -85,7 +88,7 @@ const SkillsScreen = (props) => {
       />
       <FlatList
         data={filteredData}
-        keyboardShouldPersistTaps='always'
+        keyboardShouldPersistTaps="always"
         renderItem={({ item }) => (
           <RenderItem item={item} handleClickSkill={handleClickSkill} />
         )}
@@ -97,8 +100,17 @@ const SkillsScreen = (props) => {
           <Text style={styles.cancelButtonText}>Cancel</Text>
         </TouchableOpacity> */}
 
-        <TouchableOpacity style={styles.validateButton} onPress={() => navigation.navigate("SaveVideo", {skills: skillsData, source: props.route.params.source})}>
-          <AntDesign name='checkcircleo' size={24} color='white' />
+        <TouchableOpacity
+          style={styles.validateButton}
+          onPress={() =>
+            navigation.navigate("SaveVideo", {
+              skills: skillsData,
+              source: props.route.params.source,
+              sourceThumb: props.route.params.sourceThumb,
+            })
+          }
+        >
+          <AntDesign name="checkcircleo" size={24} color="white" />
           <Text style={styles.validateButtonText}>Validate</Text>
         </TouchableOpacity>
       </View>
@@ -131,49 +143,49 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     height: 150,
-    padding: 10
+    padding: 10,
   },
   skillTitle: {
     fontSize: 20,
     fontWeight: "bold",
   },
   buttonsContainer: {
-    flexDirection: 'row',
+    flexDirection: "row",
     margin: 20,
-    gap: 10
+    gap: 10,
   },
   validateButton: {
-    alignItems: 'center',
+    alignItems: "center",
     flex: 1,
     backgroundColor: COLORS.blue,
-    flexDirection: 'row',
+    flexDirection: "row",
     paddingVertical: 10,
     paddingHorizontal: 20,
-    justifyContent: 'center',
-    borderRadius: 4
+    justifyContent: "center",
+    borderRadius: 4,
   },
   cancelButton: {
-    alignItems: 'center',
+    alignItems: "center",
     flex: 1,
-    borderColor: 'lightgrey',
+    borderColor: "lightgrey",
     borderWidth: 1,
-    flexDirection: 'row',
+    flexDirection: "row",
     paddingVertical: 10,
     paddingHorizontal: 20,
-    justifyContent: 'center',
-    borderRadius: 4
+    justifyContent: "center",
+    borderRadius: 4,
   },
   validateButtonText: {
     marginLeft: 5,
-    fontWeight: 'bold',
-    color: 'white',
-    fontSize: 16
+    fontWeight: "bold",
+    color: "white",
+    fontSize: 16,
   },
   cancelButtonText: {
     marginLeft: 5,
-    fontWeight: 'bold',
-    color: 'black',
-    fontSize: 16
+    fontWeight: "bold",
+    color: "black",
+    fontSize: 16,
   },
 });
 
