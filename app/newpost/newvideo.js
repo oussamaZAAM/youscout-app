@@ -4,6 +4,7 @@ import { Camera } from "expo-camera";
 import { Audio } from "expo-av";
 import * as ImagePicker from "expo-image-picker";
 import * as MediaLibrary from 'expo-media-library';
+import * as VideoThumbnails from 'expo-video-thumbnails';
 import { useIsFocused } from "@react-navigation/core";
 import { Feather } from "react-native-vector-icons";
 import { useNavigation } from "@react-navigation/native";
@@ -59,7 +60,8 @@ const NewVideoScreen = () => {
         if (videoRecordPromise) {
           const data = await videoRecordPromise;
           const source = data.uri;
-          navigation.navigate('SaveVideo', {source})
+          let sourceThumb = await generateThumbnail(source)
+          navigation.navigate('SaveVideo', {source, sourceThumb})
         }
       } catch (err) {
         console.log(err);
@@ -81,7 +83,22 @@ const NewVideoScreen = () => {
       quality: 1,
     });
     if (!result.canceled) {
-      navigation.navigate('SaveVideo', {source: result.assets[0].uri})
+      let sourceThumb = await generateThumbnail(result.assets[0].uri);
+      navigation.navigate('SaveVideo', {source: result.assets[0].uri, sourceThumb});
+    }
+  };
+
+  const generateThumbnail = async (source) => {
+    try {
+      const { uri } = await VideoThumbnails.getThumbnailAsync(
+        source,
+        {
+          time: 1000,
+        }
+      );
+      return uri;
+    } catch (e) {
+      console.warn(e);
     }
   };
 
