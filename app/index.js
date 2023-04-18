@@ -12,6 +12,7 @@ import { WINDOW_HEIGHT } from "../assets/utils";
 import NewpostScreen from './newpost/newvideo';
 import SaveVideoScreen from './newpost/savevideo';
 import SkillsScreen from './newpost/skills';
+import ProfileScreen from './profile';
 
 const Stack = createNativeStackNavigator();
 
@@ -99,7 +100,7 @@ const App = () => {
         }}
       >
         <BottomTab.Screen
-          name="MainScreen"
+          name="Home"
           component={MainScreen}
           options={{
             tabBarIcon: ({ focused }) => (
@@ -165,7 +166,7 @@ const App = () => {
 
         <BottomTab.Screen
           name="Profile"
-          component={HomeScreen}
+          component={ProfileScreen}
           options={{
             tabBarIcon: ({ focused }) => (
               <Image
