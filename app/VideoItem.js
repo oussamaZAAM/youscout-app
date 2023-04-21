@@ -1,7 +1,5 @@
 import {
-  Animated,
   BackHandler,
-  Easing,
   Image,
   StatusBar,
   StyleSheet,
@@ -9,12 +7,10 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   View,
-  ScrollView
 } from "react-native";
 import React, {
   useCallback,
   useEffect,
-  useMemo,
   useRef,
   useState,
 } from "react";
@@ -22,12 +18,9 @@ import { Video } from "expo-av";
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import { MaterialIcons } from "@expo/vector-icons";
 
-import { WINDOW_HEIGHT, WINDOW_WIDTH, getMusicNoteAnim } from "../assets/utils";
+import { WINDOW_HEIGHT, WINDOW_WIDTH } from "../assets/utils";
 import Rate from "../components/rate";
-import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
-import { useFocusEffect } from "expo-router";
 import Comments from "../components/comments";
-import Comment from "../components/comments";
 
 export default function VideoItem({ data, isActive }) {
   const [isPlaying, setIsPlaying] = useState(true);
@@ -98,7 +91,7 @@ export default function VideoItem({ data, isActive }) {
   }, []);
 
   return (
-    <View style={[styles.container, {height: WINDOW_HEIGHT - bottomTabHeight}]}>
+    <View style={[styles.container, {height: WINDOW_HEIGHT - bottomTabHeight + 29}]}>
       <StatusBar barStyle={"light-content"} />
       <Video
         source={{ uri }}

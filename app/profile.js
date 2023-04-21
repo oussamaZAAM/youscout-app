@@ -6,7 +6,6 @@ import ProfileHeader from "../components/profile/header";
 import ProfilePostList from "../components/profile/postList";
 import VideoItem from "./VideoItem";
 import { Feather } from "react-native-vector-icons";
-import { WINDOW_HEIGHT, WINDOW_WIDTH } from "../assets/utils";
 
 const ProfileScreen = () => {
     const [postEnabled, setPostEnabled] = useState(-1);
@@ -95,7 +94,7 @@ const styles = StyleSheet.create({
     position: "relative",
   },
   Flatlist: {
-    marginTop: -50,
+    marginTop: -80,
   },
   navbarContainer: {
     flexDirection: "row",

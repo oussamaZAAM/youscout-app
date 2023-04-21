@@ -10,6 +10,7 @@ import React, {
   useCallback,
   useMemo,
   useState,
+  useRef
 } from "react";
 import { WINDOW_WIDTH } from "../assets/utils";
 import { COLORS, ICONS } from "../assets/styles";
@@ -249,22 +250,24 @@ const Comments = ({ comments, bottomSheetRef, handleSheetChanges }) => {
 
   const handleCommentSubmit = () => {
     // add new comment to data array
-    setData((prevArray) => {
-      const addComment = {
-        id: prevArray.length + 1,
-        user: {
-          name: "Yunyun",
-          avatar: "https://lthumb.lisimg.com/549/20838549.jpg",
-        },
-        text: newComment,
-        timestamp: "1 minute ago",
-        likes: [],
-        replies: [],
-      };
-      prevArray.push(addComment);
-      return [...prevArray];
-    });
-    setNewComment("");
+    if (newComment !== '') {
+      setData((prevArray) => {
+        const addComment = {
+          id: prevArray.length + 1,
+          user: {
+            name: "Yunyun",
+            avatar: "https://lthumb.lisimg.com/549/20838549.jpg",
+          },
+          text: newComment,
+          timestamp: "1 minute ago",
+          likes: [],
+          replies: [],
+        };
+        prevArray.push(addComment);
+        return [...prevArray];
+      });
+      setNewComment("");
+    }
   };
 
   const handleReplyOnComment = (comment) => {
@@ -277,8 +280,7 @@ const Comments = ({ comments, bottomSheetRef, handleSheetChanges }) => {
     })
   }
 
-  // const sheetRef = useRef(null);
-  const snapPoints = useMemo(() => ["6%", "75%"], []);
+  const snapPoints = useMemo(() => ["6%", "85%"], []);
 
   return (
     <BottomSheet
@@ -306,8 +308,9 @@ const Comments = ({ comments, bottomSheetRef, handleSheetChanges }) => {
       <View
         style={[
           styles.commentInputContainer,
-          isKeyboard === 1 && { marginBottom: -22 },
-          isKeyboard === 2 && { marginBottom: -73 },
+          isKeyboard === 0 && { marginBottom: 0 },
+          isKeyboard === 1 && {  },
+          isKeyboard === 2 && { display: 'none' },
         ]}
       >
         <BottomSheetTextInput

@@ -13,6 +13,7 @@ import NewpostScreen from './newpost/newvideo';
 import SaveVideoScreen from './newpost/savevideo';
 import SkillsScreen from './newpost/skills';
 import ProfileScreen from './profile';
+import EditProfileScreen from './editprofile';
 
 const Stack = createNativeStackNavigator();
 
@@ -63,6 +64,25 @@ const NewVideo = () => {
     </NavigationContainer>
   );
 };
+
+const ProfileStack = () => {
+  return (
+    <NavigationContainer independent={true}>
+      <Stack.Navigator>
+        <Stack.Screen
+          name="Profile"
+          component={ProfileScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="EditProfile"
+          component={EditProfileScreen}
+          options={{ headerShown: false }}
+        />
+      </Stack.Navigator>
+    </NavigationContainer>
+  )
+}
 
 const BottomTab = createBottomTabNavigator();
 
@@ -166,7 +186,7 @@ const App = () => {
 
         <BottomTab.Screen
           name="Profile"
-          component={ProfileScreen}
+          component={ProfileStack}
           options={{
             tabBarIcon: ({ focused }) => (
               <Image
