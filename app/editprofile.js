@@ -13,8 +13,9 @@ const EditProfileScreen = () => {
   const [image, setImage] = useState(
     "https://cdn.myanimelist.net/images/characters/9/295367.jpg"
   );
+  const [username, setUsername] = useState("Araragi Karen");
   const chooseImage = async () => {
-    let result = await ImagePicker.launchCameraAsync({
+    let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       aspect: [1, 1],
@@ -40,12 +41,19 @@ const EditProfileScreen = () => {
       </View>
       <View style={styles.fieldsContainer}>
         <TouchableOpacity
-          onPress={()=>navigation.navigate("EditProfileField")}
+          onPress={() =>
+            navigation.navigate("EditProfileField", {
+              title: "Username",
+              field: "username",
+              value: username,
+              action: setUsername
+            })
+          }
           style={styles.fieldItemContainer}
         >
-          <Text>Display Name</Text>
+          <Text>Username</Text>
           <View style={styles.fieldValueContainer}>
-            <Text>Araragi Karen</Text>
+            <Text>{username}</Text>
             <Feather name="chevron-right" size={20} color="gray" />
           </View>
         </TouchableOpacity>

@@ -1,5 +1,4 @@
 import {NavigationContainer} from '@react-navigation/native';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import { FlatList, Image, StyleSheet } from "react-native";
 import { createBottomTabNavigator, useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import React, { useState } from "react";
@@ -10,8 +9,6 @@ import { WINDOW_HEIGHT } from "../assets/utils";
 import { MainScreenStack } from './navigation/MainScreenStack';
 import { NewVideoStack } from './navigation/NewVideoStack';
 import { ProfileStack } from './navigation/ProfileStack';
-
-const Stack = createNativeStackNavigator();
 
 const BottomTab = createBottomTabNavigator();
 
