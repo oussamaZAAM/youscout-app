@@ -10,6 +10,8 @@ import {
 import { COLORS } from "../../assets/styles";
 import { Feather, AntDesign } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { WINDOW_HEIGHT } from "../../assets/utils";
 
 const data = [
   { id: 1, name: "Shooting" },
@@ -76,7 +78,7 @@ const SkillsScreen = (props) => {
   }, [searchQuery]);
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <View style={styles.skillTitleContainer}>
         <Text style={styles.skillTitle}>Skills</Text>
       </View>
@@ -87,6 +89,7 @@ const SkillsScreen = (props) => {
         style={styles.searchBar}
       />
       <FlatList
+        style={{height: WINDOW_HEIGHT - 400}}
         data={filteredData}
         keyboardShouldPersistTaps="always"
         renderItem={({ item }) => (
@@ -114,7 +117,7 @@ const SkillsScreen = (props) => {
           <Text style={styles.validateButtonText}>Validate</Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 

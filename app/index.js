@@ -1,88 +1,17 @@
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import LoginScreen from './auth/login';
-import RegisterScreen from './auth/register';
-import { FlatList, Image, StyleSheet, Text, View } from "react-native";
+import { FlatList, Image, StyleSheet } from "react-native";
 import { createBottomTabNavigator, useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import React, { useState } from "react";
 
 import VideoItem from "./VideoItem";
 import videosData from './videosData'
 import { WINDOW_HEIGHT } from "../assets/utils";
-import NewpostScreen from './newpost/newvideo';
-import SaveVideoScreen from './newpost/savevideo';
-import SkillsScreen from './newpost/skills';
-import ProfileScreen from './profile';
-import EditProfileScreen from './editprofile';
+import { MainScreenStack } from './navigation/MainScreenStack';
+import { NewVideoStack } from './navigation/NewVideoStack';
+import { ProfileStack } from './navigation/ProfileStack';
 
 const Stack = createNativeStackNavigator();
-
-const MainScreen = () => {
-  return (
-    <NavigationContainer independent={true}>
-      <Stack.Navigator>
-        <Stack.Screen
-          name="Home"
-          component={HomeScreen}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="Login"
-          component={LoginScreen}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="Register"
-          component={RegisterScreen}
-          options={{ headerShown: false }}
-        />
-      </Stack.Navigator>
-    </NavigationContainer>
-  );
-};
-
-const NewVideo = () => {
-  return (
-    <NavigationContainer independent={true}>
-      <Stack.Navigator>
-        <Stack.Screen
-          name="NewVideo"
-          component={NewpostScreen}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="SaveVideo"
-          component={SaveVideoScreen}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="Skills"
-          component={SkillsScreen}
-          options={{ headerShown: false }}
-        />
-      </Stack.Navigator>
-    </NavigationContainer>
-  );
-};
-
-const ProfileStack = () => {
-  return (
-    <NavigationContainer independent={true}>
-      <Stack.Navigator>
-        <Stack.Screen
-          name="Profile"
-          component={ProfileScreen}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="EditProfile"
-          component={EditProfileScreen}
-          options={{ headerShown: false }}
-        />
-      </Stack.Navigator>
-    </NavigationContainer>
-  )
-}
 
 const BottomTab = createBottomTabNavigator();
 
@@ -121,7 +50,7 @@ const App = () => {
       >
         <BottomTab.Screen
           name="Home"
-          component={MainScreen}
+          component={MainScreenStack}
           options={{
             tabBarIcon: ({ focused }) => (
               <Image
@@ -153,7 +82,7 @@ const App = () => {
 
         <BottomTab.Screen
           name="NewVideo"
-          component={NewVideo}
+          component={NewVideoStack}
           options={{
             tabBarLabel: () => null,
             tabBarIcon: ({ focused }) => (
