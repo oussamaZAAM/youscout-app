@@ -5,13 +5,9 @@ import {
   Image,
   TouchableOpacity,
   FlatList,
+  TextInput
 } from "react-native";
-import React, {
-  useCallback,
-  useMemo,
-  useState,
-  useRef
-} from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import { WINDOW_WIDTH } from "../assets/utils";
 import { COLORS, ICONS } from "../assets/styles";
 
@@ -25,7 +21,12 @@ import BottomSheet, {
 
 const mockUser = 17;
 
-const Comment = ({ comment, handleLikeComment, setIsKeyboard, handleReplyOnComment }) => {
+const Comment = ({
+  comment,
+  handleLikeComment,
+  setIsKeyboard,
+  handleReplyOnComment,
+}) => {
   const [showReplies, setShowReplies] = useState(false);
 
   const [isExpanded, setIsExpanded] = useState(false);
@@ -275,12 +276,12 @@ const Comments = ({ comments, bottomSheetRef, handleSheetChanges }) => {
   const handleReplyOnComment = (comment) => {
     const id = comment.id;
     setData((prevArray) => {
-      const index = prevArray.findIndex(comment => comment.id === id);
+      const index = prevArray.findIndex((comment) => comment.id === id);
       const newArray = prevArray.filter((comment) => comment.id !== id);
       newArray.splice(index, 0, comment);
-      return [...newArray]
-    })
-  }
+      return [...newArray];
+    });
+  };
 
   const snapPoints = useMemo(() => ["6%", "85%"], []);
 
@@ -290,13 +291,16 @@ const Comments = ({ comments, bottomSheetRef, handleSheetChanges }) => {
       index={0}
       snapPoints={snapPoints}
       onChange={handleSheetChanges}
-      keyboardBlurBehavior='restore'
-      keyboardShouldPersistTaps='always'
+      keyboardBlurBehavior="restore"
+      keyboardBehavior="interactive"
     >
       <Text style={{ alignSelf: "center", fontWeight: 600, fontSize: 16 }}>
         {comments} Comments
       </Text>
-      <BottomSheetScrollView keyboardShouldPersistTaps="always" contentContainerStyle={styles.contentContainer}>
+      <BottomSheetScrollView
+        keyboardShouldPersistTaps="always"
+        contentContainerStyle={styles.contentContainer}
+      >
         {data.map((comment) => (
           <Comment
             key={comment.id}
@@ -311,11 +315,11 @@ const Comments = ({ comments, bottomSheetRef, handleSheetChanges }) => {
         style={[
           styles.commentInputContainer,
           isKeyboard === 0 && { marginBottom: 0 },
-          isKeyboard === 1 && {  },
-          isKeyboard === 2 && { display: 'none' },
+          isKeyboard === 1 && {},
+          isKeyboard === 2 && { display: "none" },
         ]}
       >
-        <BottomSheetTextInput
+        <TextInput
           style={styles.commentInput}
           value={newComment}
           onChangeText={(text) => setNewComment(text)}
@@ -345,7 +349,7 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     backgroundColor: "white",
-    paddingBottom: 10
+    paddingBottom: 10,
   },
   itemContainer: {
     padding: 6,
@@ -436,6 +440,7 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
     borderTopWidth: 0.5,
     borderTopColor: "black",
+    height: 50
   },
   replyInputContainer: {
     flexDirection: "row",
