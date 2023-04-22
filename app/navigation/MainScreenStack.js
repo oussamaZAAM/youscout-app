@@ -8,6 +8,7 @@ import { FlatList } from "react-native";
 import { createBottomTabNavigator, useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import { useState } from 'react';
 import videosData from '../videosData';
+import { WINDOW_HEIGHT } from '../../assets/utils';
 
 const Stack = createNativeStackNavigator();
 

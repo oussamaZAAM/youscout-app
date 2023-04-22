@@ -1,7 +1,7 @@
-import {Dimensions} from 'react-native';
+import { Dimensions } from "react-native";
 
-export const {width: WINDOW_WIDTH, height: WINDOW_HEIGHT} =
-  Dimensions.get('window');
+export const { width: WINDOW_WIDTH, height: WINDOW_HEIGHT } =
+  Dimensions.get("window");
 
 export const getMusicNoteAnim = (animatedValue, isRotatedLeft: boolean) => {
   return {
@@ -21,7 +21,7 @@ export const getMusicNoteAnim = (animatedValue, isRotatedLeft: boolean) => {
       {
         rotate: animatedValue.interpolate({
           inputRange: [0, 1],
-          outputRange: ['0deg', isRotatedLeft ? '-45deg' : '45deg'],
+          outputRange: ["0deg", isRotatedLeft ? "-45deg" : "45deg"],
         }),
       },
     ],

@@ -18,9 +18,10 @@ import { Video } from "expo-av";
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import { MaterialIcons } from "@expo/vector-icons";
 
-import { WINDOW_HEIGHT, WINDOW_WIDTH } from "../assets/utils";
+import { WINDOW_HEIGHT, WINDOW_WIDTH, window } from "../assets/utils";
 import Rate from "../components/rate";
 import Comments from "../components/comments";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function VideoItem({ data, isActive }) {
   const [isPlaying, setIsPlaying] = useState(true);
@@ -90,108 +91,107 @@ export default function VideoItem({ data, isActive }) {
     return () => backHandler.remove();
   }, []);
 
+  const insets = useSafeAreaInsets();
+
   return (
-    <View style={[styles.container, {height: WINDOW_HEIGHT - bottomTabHeight + 29}]}>
-      <StatusBar barStyle={"light-content"} />
-      <Video
-        source={{ uri }}
-        style={[styles.video, {height: WINDOW_HEIGHT - bottomTabHeight}]}
-        resizeMode="cover"
-        // shouldPlay={isPlaying && isActive}
-        shouldPlay={false}
-        isLooping
-        isMuted={false}
-      />
-      <TouchableOpacity
-        style={[
-          styles.controls,
-          {
-            backgroundColor: isPlaying
-              ? "rgba(0, 0, 0, 0)"
-              : "rgba(0, 0, 0, 0.25)",
-            width: WINDOW_WIDTH,
-            height: WINDOW_HEIGHT,
-          },
-        ]}
-        onPress={handlePlayPause}
-      >
-        {isPlaying ? (
-          <MaterialIcons
-            name="play-arrow"
-            size={56}
-            color="white"
-            style={{ opacity: 0 }}
-          />
-        ) : (
-          <MaterialIcons name="pause" size={56} color="white" />
-        )}
-      </TouchableOpacity>
-
-      <View style={styles.bottomSection}>
-        <View style={styles.bottomLeftSection}>
-          <Text style={styles.channelName}>{channelName}</Text>
-          <Text style={styles.caption}>{caption}</Text>
-        </View>
-      </View>
-
-      <View style={styles.verticalBar}>
-        <View style={[styles.verticalBarItem, styles.avatarContainer]}>
-          <Image style={styles.avatar} source={{ uri: avatarUri }} />
-          <View style={styles.followButton}>
-            <Image
-              source={require("../assets/images/plus-button.png")}
-              style={styles.followIcon}
+    <View>
+      <View style={[styles.container, {width: WINDOW_WIDTH, height: WINDOW_HEIGHT - bottomTabHeight + insets.top + insets.bottom}]}>
+        <StatusBar barStyle={"light-content"} />
+        <Video
+          source={{ uri }}
+          style={[styles.video, {width: WINDOW_WIDTH, height: WINDOW_HEIGHT - bottomTabHeight}]}
+          resizeMode="cover"
+          // shouldPlay={isPlaying && isActive}
+          shouldPlay={false}
+          isLooping
+          isMuted={false}
+        />
+        <TouchableOpacity
+          style={[
+            styles.controls,
+            {
+              backgroundColor: isPlaying
+                ? "rgba(0, 0, 0, 0)"
+                : "rgba(0, 0, 0, 0.25)",
+              width: WINDOW_WIDTH,
+              height: WINDOW_HEIGHT,
+            },
+          ]}
+          onPress={handlePlayPause}
+        >
+          {isPlaying ? (
+            <MaterialIcons
+              name="play-arrow"
+              size={56}
+              color="white"
+              style={{ opacity: 0 }}
             />
+          ) : (
+            <MaterialIcons name="pause" size={56} color="white" />
+          )}
+        </TouchableOpacity>
+        <View style={styles.bottomSection}>
+          <View style={styles.bottomLeftSection}>
+            <Text style={styles.channelName}>{channelName}</Text>
+            <Text style={styles.caption}>{caption}</Text>
           </View>
         </View>
-
-        <View style={styles.verticalBarItem}>
-          <Image
-            style={styles.verticalBarIcon}
-            source={require("../assets/images/heart.png")}
-          />
-          <Text style={styles.verticalBarText}>{likes}</Text>
-        </View>
-
-        <TouchableOpacity
-          onPress={() => {
-            bottomSheetRef.current.expand();
-          }}
-          style={styles.verticalBarItem}
-        >
-          <Image
-            style={styles.verticalBarIcon}
-            source={require("../assets/images/message-circle.png")}
-          />
-          <Text style={styles.verticalBarText}>{comments}</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity onPress={toggleModal}>
+        <View style={styles.verticalBar}>
+          <View style={[styles.verticalBarItem, styles.avatarContainer]}>
+            <Image style={styles.avatar} source={{ uri: avatarUri }} />
+            <View style={styles.followButton}>
+              <Image
+                source={require("../assets/images/plus-button.png")}
+                style={styles.followIcon}
+              />
+            </View>
+          </View>
           <View style={styles.verticalBarItem}>
             <Image
               style={styles.verticalBarIcon}
-              source={require("../assets/images/star.png")}
+              source={require("../assets/images/heart.png")}
             />
-            <Text style={styles.verticalBarText}>Rate</Text>
+            <Text style={styles.verticalBarText}>{likes}</Text>
           </View>
-        </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              bottomSheetRef.current.expand();
+            }}
+            style={styles.verticalBarItem}
+          >
+            <Image
+              style={styles.verticalBarIcon}
+              source={require("../assets/images/message-circle.png")}
+            />
+            <Text style={styles.verticalBarText}>{comments}</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={toggleModal}>
+            <View style={styles.verticalBarItem}>
+              <Image
+                style={styles.verticalBarIcon}
+                source={require("../assets/images/star.png")}
+              />
+              <Text style={styles.verticalBarText}>Rate</Text>
+            </View>
+          </TouchableOpacity>
+        </View>
+        <Rate
+          skills={skills}
+          handleRate={handleRate}
+          modalVisible={modalVisible}
+          setModalVisible={setModalVisible}
+          toggleModal={toggleModal}
+        />
+        {isComments === 1 && (
+          <TouchableWithoutFeedback
+            onPress={() => bottomSheetRef.current.collapse()}
+          >
+            <View style={styles.overlay} />
+          </TouchableWithoutFeedback>
+        )}
+      
       </View>
-      <Rate
-        skills={skills}
-        handleRate={handleRate}
-        modalVisible={modalVisible}
-        setModalVisible={setModalVisible}
-        toggleModal={toggleModal}
-      />
-      {isComments === 1 && (
-        <TouchableWithoutFeedback
-          onPress={() => bottomSheetRef.current.collapse()}
-        >
-          <View style={styles.overlay} />
-        </TouchableWithoutFeedback>
-      )}
-        <Comments comments={comments} bottomSheetRef={bottomSheetRef} handleSheetChanges={handleSheetChanges} />
-        
+      <Comments comments={comments} bottomSheetRef={bottomSheetRef} handleSheetChanges={handleSheetChanges} />
     </View>
   );
 }
