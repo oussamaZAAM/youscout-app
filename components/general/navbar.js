@@ -1,6 +1,5 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import React from "react";
-import { TouchableOpacity } from "@gorhom/bottom-sheet";
 import { Feather } from "react-native-vector-icons";
 import { useNavigation } from "@react-navigation/native";
 

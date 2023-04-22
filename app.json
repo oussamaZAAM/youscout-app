@@ -3,17 +3,7 @@
     "scheme": "acme",
     "web": {
       "bundler": "metro",
-      "config": {
-        "firebase": {
-            "apiKey": "AIzaSyDxtyM34Ne8G8K6_KGGa9S7kVzlJmut1zA",
-            "authDomain": "youscout-7.firebaseapp.com",
-            "projectId": "youscout-7",
-            "storageBucket": "youscout-7.appspot.com",
-            "messagingSenderId": "102466796956",
-            "appId": "1:102466796956:web:0b92119f6484c46a4f9c59",
-            "measurementId": "G-KPG68L5CW5"
-          }
-        }
+      "config": {}
       }
     },
     "name": "YouScout",
