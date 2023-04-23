@@ -68,10 +68,6 @@ const ProfileScreen = () => {
     },
   ];
 
-  const getItemLayout=(data, index)=> {
-    return { length: wp(100), offset:  wp(100)* index, index };
-}
-
   return postEnabled === -1 ? (
     <SafeAreaView style={styles.container}>
       <ProfileNavbar user={user} />
@@ -80,7 +76,7 @@ const ProfileScreen = () => {
     </SafeAreaView>
   ) : (
     <View style={styles.FlatlistContainer}>
-      <View style={[styles.navContainer, {paddingTop: insets.top}]}>
+      <View style={[styles.navContainer, {paddingTop: insets.top + 15}]}>
         <TouchableOpacity onPress={() => setPostEnabled(-1)}>
           <Feather name="arrow-left" size={20} />
         </TouchableOpacity>

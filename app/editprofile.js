@@ -59,10 +59,10 @@ const EditProfileScreen = () => {
     }
   };
 
-  const height = useRef(new Animated.Value(0)).current;
+  const toggle = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
-    Animated.timing(height, {
+    Animated.timing(toggle, {
       toValue: displayImage ? 1 : 0,
       duration: 500,
       useNativeDriver: false,
@@ -108,25 +108,25 @@ const EditProfileScreen = () => {
             source={{ uri: image }}
             style={{
               position: "absolute",
-              width: height.interpolate({
+              width: toggle.interpolate({
                 inputRange: [0, 1],
                 outputRange: [100, WINDOW_WIDTH],
               }),
-              height: height.interpolate({
+              height: toggle.interpolate({
                 inputRange: [0, 1],
                 outputRange: [100, WINDOW_WIDTH],
               }),
-              borderRadius: height.interpolate({
+              borderRadius: toggle.interpolate({
                 inputRange: [0, 1],
                 outputRange: [50, 0],
               }),
-              zIndex: height.interpolate({
+              zIndex: toggle.interpolate({
                 inputRange: [0, 1],
                 outputRange: [0, 10],
               }),
               transform: [
                 {
-                  translateY: height.interpolate({
+                  translateY: toggle.interpolate({
                     inputRange: [0, 1],
                     outputRange: [0, WINDOW_HEIGHT / 3],
                   }),
