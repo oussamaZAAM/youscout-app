@@ -21,6 +21,15 @@ const checkVariable = (field, value, action) => {
       alert("username should be at least 3 characters!");
     }
   }
+
+  if (field === "email") {
+    const usernameRegex = /\S+@\S+\.\S+/;
+    if (usernameRegex.test(value)) {
+      action(value.toLowerCase());
+    } else {
+      alert("Please insert a valid email address!");
+    }
+  }
 };
 
 const EditProfileFieldScreen = ({ route }) => {

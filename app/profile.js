@@ -11,8 +11,9 @@ const ProfileScreen = () => {
     const [postEnabled, setPostEnabled] = useState(-1);
   // Fetch the authenticated user
   const user = {
-    username: "yunyun123",
-    email: "yunyun@crimson.com",
+    username: "karenbee",
+    email: "karenbee@gmail.com",
+    uri: "https://cdn.myanimelist.net/images/characters/9/295367.jpg"
   };
 
   // Fetch the current user's posts

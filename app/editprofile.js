@@ -10,19 +10,19 @@ import { BottomSheet } from 'react-native-btr';
 import { Feather } from "react-native-vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { Divider } from "react-native-paper";
-import { COLORS } from "../assets/styles";
 
 const EditProfileScreen = () => {
   const navigation = useNavigation();
   const [image, setImage] = useState(
     "https://cdn.myanimelist.net/images/characters/9/295367.jpg"
   );
-  const [username, setUsername] = useState("Araragi Karen");
+  const [username, setUsername] = useState("karenbee7");
+  const [email, setEmail] = useState("karenbee7@gmail.com");
 
-  const [visible, setVisible] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
 
   const toggleBottomNavigationView = () => {
-    setVisible(!visible);
+    setModalVisible(!modalVisible);
   };
 
   const takeImage = async () => {
@@ -81,9 +81,26 @@ const EditProfileScreen = () => {
             <Feather name="chevron-right" size={20} color="gray" />
           </View>
         </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() =>
+            navigation.navigate("EditProfileField", {
+              title: "Email",
+              field: "email",
+              value: email,
+              action: setEmail
+            })
+          }
+          style={styles.fieldItemContainer}
+        >
+          <Text>Email</Text>
+          <View style={styles.fieldValueContainer}>
+            <Text>{email}</Text>
+            <Feather name="chevron-right" size={20} color="gray" />
+          </View>
+        </TouchableOpacity>
       </View>
       <BottomSheet
-          visible={visible}
+          visible={modalVisible}
           onBackButtonPress={toggleBottomNavigationView}
           onBackdropPress={toggleBottomNavigationView}
         >
@@ -172,10 +189,9 @@ const styles = StyleSheet.create({
   fieldValueContainer: {
     flexDirection: "row",
     alignItems: "center",
+    marginVertical: 20,
   },
   bottomNavigationView: {
-    // position: 'absolute',
-    bottom: 0,
     backgroundColor: 'white',
     width: '100%',
     height: 190,
@@ -204,11 +220,11 @@ const styles = StyleSheet.create({
   },
   bottomSheetCencel: {
     fontSize: 16,
-    color: COLORS.light
+    color: 'gray'
   },
   spacer: {
     width: WINDOW_WIDTH,
     height: 10,
-    backgroundColor: '#ddd'
+    backgroundColor: '#eee'
   }
 });

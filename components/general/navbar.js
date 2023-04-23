@@ -4,7 +4,7 @@ import { Feather } from "react-native-vector-icons";
 import { useNavigation } from "@react-navigation/native";
 
 const NavbarGeneral = ({
-  title = "Navbar General",
+  title = "Navbar",
   rightButton = { display: false },
 }) => {
   const navigation = useNavigation();
@@ -29,7 +29,7 @@ const NavbarGeneral = ({
         style={styles.button}
       >
         <Feather
-          name={rightButton.name}
+          name={rightButton.name || 'menu'}
           size={26}
           color={!rightButton.display ? "transparent" : "black"}
         />
