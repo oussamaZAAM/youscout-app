@@ -1,13 +1,14 @@
+import React from "react";
 import {
-  View,
-  Text,
-  TouchableWithoutFeedback,
   Modal,
   StyleSheet,
+  Text,
+  TouchableWithoutFeedback,
+  View,
 } from "react-native";
-import React from "react";
-import { WINDOW_HEIGHT, WINDOW_WIDTH } from "../assets/utils";
+
 import Rating from "../assets/Rating";
+import { WINDOW_HEIGHT, WINDOW_WIDTH } from "../assets/utils";
 
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 
@@ -56,9 +57,18 @@ const Rate = ({
       onRequestClose={toggleModal}
     >
       <TouchableWithoutFeedback onPress={() => setModalVisible(false)}>
-          <View style={styles.overlay}/>
+        <View style={styles.overlay} />
       </TouchableWithoutFeedback>
-      <View style={{ position: 'absolute', right: 0, left: 0, bottom: WINDOW_HEIGHT / 3, justifyContent: "center", alignItems: "center" }}>
+      <View
+        style={{
+          position: "absolute",
+          right: 0,
+          left: 0,
+          bottom: WINDOW_HEIGHT / 3,
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
         <View
           style={{
             backgroundColor: "white",

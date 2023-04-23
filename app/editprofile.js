@@ -1,15 +1,15 @@
-import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
-import React, { useState } from "react";
-import { SafeAreaView } from "react-native-safe-area-context";
-import NavbarGeneral from "../components/general/navbar";
-import { WINDOW_WIDTH } from "../assets/utils";
-import * as ImagePicker from "expo-image-picker";
-
-import { BottomSheet } from 'react-native-btr';
-
-import { Feather } from "react-native-vector-icons";
 import { useNavigation } from "@react-navigation/native";
+import * as ImagePicker from "expo-image-picker";
+import React, { useState } from "react";
+import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+
+import { BottomSheet } from "react-native-btr";
 import { Divider } from "react-native-paper";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { Feather } from "react-native-vector-icons";
+
+import { WINDOW_WIDTH } from "../assets/utils";
+import NavbarGeneral from "../components/general/navbar";
 
 const EditProfileScreen = () => {
   const navigation = useNavigation();
@@ -70,7 +70,7 @@ const EditProfileScreen = () => {
               title: "Username",
               field: "username",
               value: username,
-              action: setUsername
+              action: setUsername,
             })
           }
           style={styles.fieldItemContainer}
@@ -87,7 +87,7 @@ const EditProfileScreen = () => {
               title: "Email",
               field: "email",
               value: email,
-              action: setEmail
+              action: setEmail,
             })
           }
           style={styles.fieldItemContainer}
@@ -100,49 +100,47 @@ const EditProfileScreen = () => {
         </TouchableOpacity>
       </View>
       <BottomSheet
-          visible={modalVisible}
-          onBackButtonPress={toggleBottomNavigationView}
-          onBackdropPress={toggleBottomNavigationView}
-        >
-          <View style={styles.bottomNavigationView}>
-            <View
-              style={{
-                flex: 1,
-                flexDirection: 'column',
-                justifyContent: 'space-between',
-              }}>
-              <TouchableOpacity 
-                onPress={()=>{
-                  takeImage();
-                  toggleBottomNavigationView();
-                }}
-                style={styles.bottomSheetButton}
-              >
-                <Text style={styles.bottomSheetText}>
-                  Take Image
-                </Text>
-              </TouchableOpacity>
-              <Divider />
-              <TouchableOpacity 
-                onPress={()=>{
-                  chooseImage();
-                  toggleBottomNavigationView();
-                }}
-                style={styles.bottomSheetButton}
-              >
-                <Text style={styles.bottomSheetText}>
-                  Select from Gallery
-                </Text>
-              </TouchableOpacity>
-              <View style={styles.spacer}></View>
-              <TouchableOpacity onPress={toggleBottomNavigationView} style={styles.bottomSheetCancelButton}>
-                <Text style={styles.bottomSheetCencel}>
-                  Cancel
-                </Text>
-              </TouchableOpacity>
-            </View>
+        visible={modalVisible}
+        onBackButtonPress={toggleBottomNavigationView}
+        onBackdropPress={toggleBottomNavigationView}
+      >
+        <View style={styles.bottomNavigationView}>
+          <View
+            style={{
+              flex: 1,
+              flexDirection: "column",
+              justifyContent: "space-between",
+            }}
+          >
+            <TouchableOpacity
+              onPress={() => {
+                takeImage();
+                toggleBottomNavigationView();
+              }}
+              style={styles.bottomSheetButton}
+            >
+              <Text style={styles.bottomSheetText}>Take Image</Text>
+            </TouchableOpacity>
+            <Divider />
+            <TouchableOpacity
+              onPress={() => {
+                chooseImage();
+                toggleBottomNavigationView();
+              }}
+              style={styles.bottomSheetButton}
+            >
+              <Text style={styles.bottomSheetText}>Select from Gallery</Text>
+            </TouchableOpacity>
+            <View style={styles.spacer}></View>
+            <TouchableOpacity
+              onPress={toggleBottomNavigationView}
+              style={styles.bottomSheetCancelButton}
+            >
+              <Text style={styles.bottomSheetCencel}>Cancel</Text>
+            </TouchableOpacity>
           </View>
-        </BottomSheet>
+        </View>
+      </BottomSheet>
     </SafeAreaView>
   );
 };
@@ -192,11 +190,11 @@ const styles = StyleSheet.create({
     marginVertical: 20,
   },
   bottomNavigationView: {
-    backgroundColor: 'white',
-    width: '100%',
+    backgroundColor: "white",
+    width: "100%",
     height: 190,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     borderTopEndRadius: 25,
     borderTopStartRadius: 25,
   },
@@ -205,26 +203,26 @@ const styles = StyleSheet.create({
     width: WINDOW_WIDTH,
     borderTopEndRadius: 25,
     borderTopStartRadius: 25,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   bottomSheetCancelButton: {
     paddingVertical: 20,
     width: WINDOW_WIDTH,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   bottomSheetText: {
-    fontWeight: 'bold',
-    fontSize: 16
+    fontWeight: "bold",
+    fontSize: 16,
   },
   bottomSheetCencel: {
     fontSize: 16,
-    color: 'gray'
+    color: "gray",
   },
   spacer: {
     width: WINDOW_WIDTH,
     height: 10,
-    backgroundColor: '#eee'
-  }
+    backgroundColor: "#eee",
+  },
 });

@@ -1,3 +1,7 @@
+import { MaterialIcons } from "@expo/vector-icons";
+import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
+import { Video } from "expo-av";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
   BackHandler,
   Image,
@@ -8,20 +12,12 @@ import {
   TouchableWithoutFeedback,
   View,
 } from "react-native";
-import React, {
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
-import { Video } from "expo-av";
-import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
-import { MaterialIcons } from "@expo/vector-icons";
 
-import { WINDOW_HEIGHT, WINDOW_WIDTH, window } from "../assets/utils";
-import Rate from "../components/rate";
-import Comments from "../components/comments";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+
+import { WINDOW_HEIGHT, WINDOW_WIDTH } from "../assets/utils";
+import Comments from "../components/comments";
+import Rate from "../components/rate";
 
 export default function VideoItem({ data, isActive }) {
   const [isPlaying, setIsPlaying] = useState(true);
@@ -95,11 +91,23 @@ export default function VideoItem({ data, isActive }) {
 
   return (
     <View>
-      <View style={[styles.container, {width: WINDOW_WIDTH, height: WINDOW_HEIGHT - bottomTabHeight + insets.top + insets.bottom}]}>
+      <View
+        style={[
+          styles.container,
+          {
+            width: WINDOW_WIDTH,
+            height:
+              WINDOW_HEIGHT - bottomTabHeight + insets.top + insets.bottom,
+          },
+        ]}
+      >
         <StatusBar barStyle={"light-content"} />
         <Video
           source={{ uri }}
-          style={[styles.video, {width: WINDOW_WIDTH, height: WINDOW_HEIGHT - bottomTabHeight}]}
+          style={[
+            styles.video,
+            { width: WINDOW_WIDTH, height: WINDOW_HEIGHT - bottomTabHeight },
+          ]}
           resizeMode="cover"
           // shouldPlay={isPlaying && isActive}
           shouldPlay={false}
@@ -189,9 +197,12 @@ export default function VideoItem({ data, isActive }) {
             <View style={styles.overlay} />
           </TouchableWithoutFeedback>
         )}
-      
       </View>
-      <Comments comments={comments} bottomSheetRef={bottomSheetRef} handleSheetChanges={handleSheetChanges} />
+      <Comments
+        comments={comments}
+        bottomSheetRef={bottomSheetRef}
+        handleSheetChanges={handleSheetChanges}
+      />
     </View>
   );
 }

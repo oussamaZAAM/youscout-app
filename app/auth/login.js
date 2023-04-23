@@ -1,16 +1,17 @@
+import { Formik } from "formik";
 import React, { useRef } from "react";
 import {
+  Image,
   SafeAreaView,
-  View,
+  ScrollView,
   Text,
   TextInput,
-  Image,
   TouchableOpacity,
-  ScrollView,
+  View,
 } from "react-native";
-import MaterialIcons from "react-native-vector-icons/MaterialIcons";
-import FontAwesome from "react-native-vector-icons/FontAwesome";
-import { Formik } from "formik";
+
+import { FontAwesome, MaterialIcons } from "react-native-vector-icons";
+
 import * as Yup from "yup";
 import { COLORS } from "../../assets/styles";
 
@@ -22,10 +23,7 @@ const LoginScreen = ({ navigation }) => {
 
   return (
     <SafeAreaView style={{ flex: 1, justifyContent: "center" }}>
-      <ScrollView
-        style={{ paddingHorizontal: 25 }}
-        ref={scrollViewRef}
-      >
+      <ScrollView style={{ paddingHorizontal: 25 }} ref={scrollViewRef}>
         <View style={{ alignItems: "center" }}>
           <Image
             style={{ width: 200, height: 200, marginTop: 30, marginBottom: 30 }}

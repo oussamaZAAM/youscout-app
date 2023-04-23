@@ -1,11 +1,11 @@
-import { StyleSheet, Text, View } from "react-native";
 import React from "react";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+
 import { Feather } from "react-native-vector-icons";
-import { TouchableOpacity } from "react-native-gesture-handler";
 
 const ProfileNavbar = ({ user }) => {
   return (
-    <View style={styles.container}>
+    <View style={styles.navContainer}>
       <TouchableOpacity>
         <Feather name="search" size={20} />
       </TouchableOpacity>
@@ -20,7 +20,7 @@ const ProfileNavbar = ({ user }) => {
 export default ProfileNavbar;
 
 const styles = StyleSheet.create({
-  container: {
+  navContainer: {
     flexDirection: "row",
     paddingHorizontal: 20,
     paddingVertical: 15,

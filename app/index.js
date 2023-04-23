@@ -1,14 +1,14 @@
-import {NavigationContainer} from '@react-navigation/native';
-import { FlatList, Image, StyleSheet } from "react-native";
 import { createBottomTabNavigator, useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import React, { useState } from "react";
+import { FlatList, Image, StyleSheet } from "react-native";
+import { NavigationContainer } from '@react-navigation/native';
 
-import VideoItem from "./VideoItem";
-import videosData from './videosData'
 import { WINDOW_HEIGHT } from "../assets/utils";
+import VideoItem from "./VideoItem";
 import { MainScreenStack } from './navigation/MainScreenStack';
 import { NewVideoStack } from './navigation/NewVideoStack';
 import { ProfileStack } from './navigation/ProfileStack';
+import videosData from './videosData';
 
 const BottomTab = createBottomTabNavigator();
 

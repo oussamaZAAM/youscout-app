@@ -1,16 +1,17 @@
-import React, { useState, useEffect } from "react";
+import { AntDesign } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
+import React, { useEffect, useState } from "react";
 import {
   FlatList,
-  TextInput,
-  View,
-  Text,
   StyleSheet,
+  Text,
+  TextInput,
   TouchableOpacity,
+  View,
 } from "react-native";
-import { COLORS } from "../../assets/styles";
-import { Feather, AntDesign } from "@expo/vector-icons";
-import { useNavigation } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
+
+import { COLORS } from "../../assets/styles";
 import { WINDOW_HEIGHT } from "../../assets/utils";
 
 const data = [
@@ -89,7 +90,7 @@ const SkillsScreen = (props) => {
         style={styles.searchBar}
       />
       <FlatList
-        style={{height: WINDOW_HEIGHT - 400}}
+        style={{ height: WINDOW_HEIGHT - 400 }}
         data={filteredData}
         keyboardShouldPersistTaps="always"
         renderItem={({ item }) => (

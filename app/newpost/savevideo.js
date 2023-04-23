@@ -1,26 +1,29 @@
+import { AntDesign, Feather } from "@expo/vector-icons";
+import { WINDOW_WIDTH } from "@gorhom/bottom-sheet";
+import { useNavigation } from "@react-navigation/native";
+import React, { useState } from "react";
 import {
-  Button,
+  Appearance,
+  FlatList,
   Image,
   StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
   View,
-  Appearance,
-  FlatList,
 } from "react-native";
-import React, { useState } from "react";
-import { useNavigation } from "@react-navigation/native";
-import { Feather, AntDesign } from "@expo/vector-icons";
-import { COLORS } from "../../assets/styles";
+
 import { MaterialIcons } from "react-native-vector-icons";
-import { WINDOW_WIDTH } from "@gorhom/bottom-sheet";
+
+import { COLORS } from "../../assets/styles";
 
 const renderItem = ({ item }) => {
   if (item.clicked === true) {
-    return (<View style={styles.skillBorder}>
-      <Text style={styles.skillText}>{item.name}</Text>
-    </View>);
+    return (
+      <View style={styles.skillBorder}>
+        <Text style={styles.skillText}>{item.name}</Text>
+      </View>
+    );
   }
 };
 
@@ -28,7 +31,7 @@ const SaveVideoScreen = (props) => {
   const colorScheme = Appearance.getColorScheme();
   const [description, setDescription] = useState("");
   const navigation = useNavigation();
-  
+
   const handlePost = () => {
     // Handle Posting the video
   };
@@ -58,7 +61,11 @@ const SaveVideoScreen = (props) => {
       <View style={styles.skillsContainer}>
         <TouchableOpacity
           onPress={() =>
-            navigation.navigate("Skills", { source: props.route.params.source, skills: props.route.params.skills, sourceThumb: props.route.params.sourceThumb })
+            navigation.navigate("Skills", {
+              source: props.route.params.source,
+              skills: props.route.params.skills,
+              sourceThumb: props.route.params.sourceThumb,
+            })
           }
           style={styles.skillsButton}
         >
@@ -74,7 +81,7 @@ const SaveVideoScreen = (props) => {
               navigation.navigate("Skills", {
                 source: props.route.params.source,
                 skills: props.route.params.skills,
-                sourceThumb: props.route.params.sourceThumb
+                sourceThumb: props.route.params.sourceThumb,
               })
             }
             style={styles.skillsChosen}
@@ -195,15 +202,15 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     paddingHorizontal: 5,
     paddingVertical: 2,
-    margin: 2
+    margin: 2,
   },
   skillsChosen: {
     marginLeft: 20,
     alignItems: "stretch",
-    width: WINDOW_WIDTH
+    width: WINDOW_WIDTH,
   },
   skillText: {
-    fontWeight: '300',
+    fontWeight: "300",
     fontSize: 10,
-  }
+  },
 });

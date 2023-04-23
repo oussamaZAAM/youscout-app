@@ -1,8 +1,9 @@
-import { StyleSheet, Text, TextInput, View } from "react-native";
 import React, { useState } from "react";
-import { SafeAreaView } from "react-native-safe-area-context";
-import NavbarGeneral from "../general/navbar";
+import { StyleSheet, Text, TextInput, View } from "react-native";
 import { Divider } from "react-native-paper";
+import { SafeAreaView } from "react-native-safe-area-context";
+
+import NavbarGeneral from "../general/navbar";
 
 const checkVariable = (field, value, action) => {
   if (field === "username") {

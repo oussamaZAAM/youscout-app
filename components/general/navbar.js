@@ -1,7 +1,7 @@
-import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
-import React from "react";
-import { Feather } from "react-native-vector-icons";
 import { useNavigation } from "@react-navigation/native";
+import React from "react";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Feather } from "react-native-vector-icons";
 
 const NavbarGeneral = ({
   title = "Navbar",
@@ -12,7 +12,7 @@ const NavbarGeneral = ({
   const check = () => {
     rightButton.action();
     navigation.goBack();
-  }
+  };
   return (
     <View style={styles.container}>
       <TouchableOpacity
@@ -29,7 +29,7 @@ const NavbarGeneral = ({
         style={styles.button}
       >
         <Feather
-          name={rightButton.name || 'menu'}
+          name={rightButton.name || "menu"}
           size={26}
           color={!rightButton.display ? "transparent" : "black"}
         />

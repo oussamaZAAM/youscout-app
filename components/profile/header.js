@@ -1,7 +1,7 @@
-import { StyleSheet, Text, TouchableOpacity, View, Image } from "react-native";
-import React, { useState } from "react";
-import { Avatar } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
+import React, { useState } from "react";
+import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Avatar } from "react-native-paper";
 
 const ProfileHeader = ({ user }) => {
   const navigation = useNavigation();
@@ -23,7 +23,7 @@ const ProfileHeader = ({ user }) => {
         source={{ uri }}
       />
     ) : (
-        <Avatar.Icon size={100} icon={"account"} />
+      <Avatar.Icon size={100} icon={"account"} />
     );
   };
 

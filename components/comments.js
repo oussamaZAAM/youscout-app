@@ -1,23 +1,21 @@
-import {
-  StyleSheet,
-  Text,
-  View,
-  Image,
-  TouchableOpacity,
-  FlatList,
-  TextInput
-} from "react-native";
-import React, { useCallback, useMemo, useState } from "react";
-import { WINDOW_WIDTH } from "../assets/utils";
-import { COLORS, ICONS } from "../assets/styles";
-
-import { AntDesign } from "@expo/vector-icons";
-import { FontAwesome } from "@expo/vector-icons";
-import { Ionicons } from "@expo/vector-icons";
+import { AntDesign, FontAwesome, Ionicons } from "@expo/vector-icons";
 import BottomSheet, {
   BottomSheetScrollView,
   BottomSheetTextInput,
 } from "@gorhom/bottom-sheet";
+import React, { useCallback, useMemo, useState } from "react";
+import {
+  FlatList,
+  Image,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
+
+import { COLORS, ICONS } from "../assets/styles";
+import { WINDOW_WIDTH } from "../assets/utils";
 
 const mockUser = 17;
 
@@ -48,7 +46,7 @@ const Comment = ({
   };
 
   const handleReply = () => {
-    if (reply.trim() !== ""){
+    if (reply.trim() !== "") {
       const modifiedCommentReplies = comment.replies;
       const newReply = {
         id: comment.replies.length + 1,
@@ -440,7 +438,7 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
     borderTopWidth: 0.5,
     borderTopColor: "black",
-    height: 50
+    height: 50,
   },
   replyInputContainer: {
     flexDirection: "row",

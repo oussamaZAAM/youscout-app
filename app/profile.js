@@ -1,19 +1,32 @@
-import { FlatList, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React, { useState } from "react";
+import {
+  FlatList,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+
+import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import { SafeAreaView } from "react-native-safe-area-context";
-import ProfileNavbar from "../components/profile/navbar";
-import ProfileHeader from "../components/profile/header";
-import ProfilePostList from "../components/profile/postList";
-import VideoItem from "./VideoItem";
+
 import { Feather } from "react-native-vector-icons";
 
+import { WINDOW_HEIGHT } from "../assets/utils";
+import ProfileHeader from "../components/profile/header";
+import ProfileNavbar from "../components/profile/navbar";
+import ProfilePostList from "../components/profile/postList";
+import VideoItem from "./VideoItem";
+
 const ProfileScreen = () => {
-    const [postEnabled, setPostEnabled] = useState(-1);
+  const [postEnabled, setPostEnabled] = useState(-1);
+  const [activeVideoIndex, setActiveVideoIndex] = useState(0);
+  const bottomTabHeight = useBottomTabBarHeight();
   // Fetch the authenticated user
   const user = {
     username: "karenbee",
     email: "karenbee@gmail.com",
-    uri: "https://cdn.myanimelist.net/images/characters/9/295367.jpg"
+    uri: "https://cdn.myanimelist.net/images/characters/9/295367.jpg",
   };
 
   // Fetch the current user's posts
@@ -53,7 +66,7 @@ const ProfileScreen = () => {
       avatarUri: "https://wallpaperaccess.com/thumb/384178.jpg",
     },
   ];
-  return (postEnabled === -1) ? (
+  return postEnabled === -1 ? (
     <SafeAreaView style={styles.container}>
       <ProfileNavbar user={user} />
       <ProfileHeader user={user} />
@@ -61,25 +74,34 @@ const ProfileScreen = () => {
     </SafeAreaView>
   ) : (
     <SafeAreaView style={styles.FlatlistContainer}>
-        <View style={styles.navbarContainer}>
-            <TouchableOpacity onPress={()=>setPostEnabled(-1)}>
-                <Feather name="arrow-left-circle" size={20} />
-            </TouchableOpacity>
-            <Text style={styles.text}>{user.username}</Text>
-            <TouchableOpacity>
-            </TouchableOpacity>
-        </View>
-        <FlatList
-          contentContainerStyle={styles.Flatlist}
-          data={posts}
-          initialScrollIndex={postEnabled}
-          pagingEnabled
-          renderItem={({ item }) => {
-            return <VideoItem data={item} />;
-          }}
-          horizontal
-          showsHorizontalScrollIndicator={false}
-        />
+      <View style={styles.navContainer}>
+        <TouchableOpacity onPress={() => setPostEnabled(-1)}>
+          <Feather name="arrow-left" size={20} />
+        </TouchableOpacity>
+        <Text style={styles.text}>{user.username}</Text>
+        <TouchableOpacity>
+          <Feather name="menu" color="transparent" size={24} />
+        </TouchableOpacity>
+      </View>
+      <FlatList
+        contentContainerStyle={styles.Flatlist}
+        data={posts}
+        onScrollToIndexFailed={true}
+        onScroll={(e) => {
+          const index = Math.round(
+            e.nativeEvent.contentOffset.y / (WINDOW_HEIGHT - bottomTabHeight)
+          );
+          setActiveVideoIndex(index);
+        }}
+        pagingEnabled
+        renderItem={({ item, index }) => {
+          return (
+            <VideoItem data={item} isActive={activeVideoIndex === index} />
+          );
+        }}
+        horizontal
+        showsHorizontalScrollIndicator={false}
+      />
     </SafeAreaView>
   );
 };
@@ -97,7 +119,7 @@ const styles = StyleSheet.create({
   Flatlist: {
     marginTop: -80,
   },
-  navbarContainer: {
+  navContainer: {
     flexDirection: "row",
     paddingHorizontal: 20,
     paddingVertical: 15,

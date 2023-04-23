@@ -1,9 +1,18 @@
-import { FlatList, Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React from "react";
+import {
+  FlatList,
+  Image,
+  StyleSheet,
+  TouchableOpacity,
+  View
+} from "react-native";
 
 const ProfilePostListItem = ({ item, index, setPostEnabled }) => {
   return (
-    <TouchableOpacity onPress={()=>setPostEnabled(index)} style={styles.itemContainer}>
+    <TouchableOpacity
+      onPress={() => setPostEnabled(index)}
+      style={styles.itemContainer}
+    >
       <Image style={styles.image} source={{ uri: item.thumbUri }} />
     </TouchableOpacity>
   );

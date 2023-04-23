@@ -1,15 +1,17 @@
-import React, { useRef, useState } from "react";
+import { Formik } from "formik";
+import React, { useRef } from "react";
 import {
+  Image,
   SafeAreaView,
-  View,
+  ScrollView,
   Text,
   TextInput,
-  Image,
   TouchableOpacity,
-  ScrollView,
+  View,
 } from "react-native";
-import { Formik } from "formik";
+
 import * as Yup from "yup";
+
 import { COLORS } from "../../assets/styles";
 
 const LoginScreen = ({ navigation }) => {
