@@ -19,6 +19,7 @@
     "expo-linking": "~4.0.1",
     "expo-media-library": "~15.2.3",
     "expo-router": "^1.2.0",
+    "expo-screen-orientation": "^5.1.1",
     "expo-splash-screen": "~0.18.1",
     "expo-status-bar": "~1.4.2",
     "expo-video-thumbnails": "~7.2.1",

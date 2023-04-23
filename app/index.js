@@ -9,6 +9,9 @@ import { MainScreenStack } from './navigation/MainScreenStack';
 import { NewVideoStack } from './navigation/NewVideoStack';
 import { ProfileStack } from './navigation/ProfileStack';
 import videosData from './videosData';
+import * as ScreenOrientation from 'expo-screen-orientation';
+
+ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT);
 
 const BottomTab = createBottomTabNavigator();
 
