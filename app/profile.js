@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import {
   FlatList,
   StyleSheet,
@@ -8,11 +8,11 @@ import {
 } from "react-native";
 
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { Feather } from "react-native-vector-icons";
 
-import { WINDOW_HEIGHT } from "../assets/utils";
+import { WINDOW_HEIGHT, WINDOW_WIDTH } from "../assets/utils";
 import ProfileHeader from "../components/profile/header";
 import ProfileNavbar from "../components/profile/navbar";
 import ProfilePostList from "../components/profile/postList";
@@ -22,6 +22,7 @@ const ProfileScreen = () => {
   const [postEnabled, setPostEnabled] = useState(-1);
   const [activeVideoIndex, setActiveVideoIndex] = useState(0);
   const bottomTabHeight = useBottomTabBarHeight();
+  const insets = useSafeAreaInsets();
   // Fetch the authenticated user
   const user = {
     username: "karenbee",
@@ -66,6 +67,11 @@ const ProfileScreen = () => {
       avatarUri: "https://wallpaperaccess.com/thumb/384178.jpg",
     },
   ];
+
+  const getItemLayout=(data, index)=> {
+    return { length: wp(100), offset:  wp(100)* index, index };
+}
+
   return postEnabled === -1 ? (
     <SafeAreaView style={styles.container}>
       <ProfileNavbar user={user} />
@@ -73,8 +79,8 @@ const ProfileScreen = () => {
       <ProfilePostList posts={posts} setPostEnabled={setPostEnabled} />
     </SafeAreaView>
   ) : (
-    <SafeAreaView style={styles.FlatlistContainer}>
-      <View style={styles.navContainer}>
+    <View style={styles.FlatlistContainer}>
+      <View style={[styles.navContainer, {paddingTop: insets.top}]}>
         <TouchableOpacity onPress={() => setPostEnabled(-1)}>
           <Feather name="arrow-left" size={20} />
         </TouchableOpacity>
@@ -84,12 +90,11 @@ const ProfileScreen = () => {
         </TouchableOpacity>
       </View>
       <FlatList
-        contentContainerStyle={styles.Flatlist}
+        contentContainerStyle={[styles.Flatlist, {height: WINDOW_HEIGHT - bottomTabHeight + insets.top}]}
         data={posts}
-        onScrollToIndexFailed={true}
         onScroll={(e) => {
           const index = Math.round(
-            e.nativeEvent.contentOffset.y / (WINDOW_HEIGHT - bottomTabHeight)
+            e.nativeEvent.contentOffset.y / (WINDOW_HEIGHT - bottomTabHeight - 30)
           );
           setActiveVideoIndex(index);
         }}
@@ -101,8 +106,12 @@ const ProfileScreen = () => {
         }}
         horizontal
         showsHorizontalScrollIndicator={false}
+        initialScrollIndex={postEnabled}
+        getItemLayout={(data, index) => (
+          {length: WINDOW_WIDTH, offset: WINDOW_WIDTH * index, index}
+        )}
       />
-    </SafeAreaView>
+    </View>
   );
 };
 
@@ -114,17 +123,23 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
   },
   FlatlistContainer: {
-    position: "relative",
+    position: 'relative',
+    width: WINDOW_WIDTH,
+    height: WINDOW_HEIGHT
   },
   Flatlist: {
-    marginTop: -80,
   },
   navContainer: {
+    position: 'absolute',
+    zIndex: 100,
+    width: WINDOW_WIDTH,
     flexDirection: "row",
     paddingHorizontal: 20,
     paddingVertical: 15,
     borderBottomColor: "lightgrey",
     borderBottomWidth: 1,
+    backgroundColor: 'white',
+    opacity: 0.5
   },
   text: {
     fontSize: 16,
