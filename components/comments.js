@@ -3,7 +3,7 @@ import BottomSheet, {
   BottomSheetScrollView,
   BottomSheetTextInput,
 } from "@gorhom/bottom-sheet";
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useMemo, useRef, useState } from "react";
 import {
   FlatList,
   Image,
@@ -189,6 +189,7 @@ const Comment = ({
 };
 
 const Comments = ({ comments, bottomSheetRef, handleSheetChanges }) => {
+  const textinputRef = useRef();
   const [isKeyboard, setIsKeyboard] = useState(0);
   const [data, setData] = useState([
     {
@@ -288,7 +289,10 @@ const Comments = ({ comments, bottomSheetRef, handleSheetChanges }) => {
       ref={bottomSheetRef}
       index={0}
       snapPoints={snapPoints}
-      onChange={handleSheetChanges}
+      onChange={(index) => {
+        handleSheetChanges(index);
+        textinputRef.current.blur();
+      }}
       keyboardBlurBehavior="restore"
       keyboardBehavior="interactive"
     >
@@ -296,7 +300,7 @@ const Comments = ({ comments, bottomSheetRef, handleSheetChanges }) => {
         {comments} Comments
       </Text>
       <BottomSheetScrollView
-        keyboardShouldPersistTaps="always"
+        keyboardShouldPersistTaps="handled"
         contentContainerStyle={styles.contentContainer}
       >
         {data.map((comment) => (
@@ -318,6 +322,7 @@ const Comments = ({ comments, bottomSheetRef, handleSheetChanges }) => {
         ]}
       >
         <TextInput
+          ref={textinputRef}
           style={styles.commentInput}
           value={newComment}
           onChangeText={(text) => setNewComment(text)}
