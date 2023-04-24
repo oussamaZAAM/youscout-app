@@ -3,8 +3,15 @@ import BottomSheet, {
   BottomSheetScrollView,
   BottomSheetTextInput,
 } from "@gorhom/bottom-sheet";
-import React, { useCallback, useMemo, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import {
+  ActivityIndicator,
   FlatList,
   Image,
   StyleSheet,
@@ -16,6 +23,7 @@ import {
 
 import { COLORS, ICONS } from "../assets/styles";
 import { WINDOW_WIDTH } from "../assets/utils";
+import { commentsService } from "../constants/env";
 
 const mockUser = 17;
 
@@ -25,8 +33,8 @@ const Comment = ({
   setIsKeyboard,
   handleReplyOnComment,
 }) => {
+  const [replies, setReplies] = useState(null);
   const [showReplies, setShowReplies] = useState(false);
-
   const [isExpanded, setIsExpanded] = useState(false);
 
   const handlePress = () => {
@@ -45,20 +53,28 @@ const Comment = ({
     setReplyArea((prevValue) => !prevValue);
   };
 
-  const handleReply = () => {
+  const handleReply = async() => {
     if (reply.trim() !== "") {
       const modifiedCommentReplies = comment.replies;
       const newReply = {
-        id: comment.replies.length + 1,
-        user: {
-          name: "Yunyun",
-          avatar: "https://lthumb.lisimg.com/549/20838549.jpg",
+        id: "644690e468db717eb80b03b8",
+        body: reply
+      }
+
+      const response = await fetch(commentsService+"/api/comments/"+comment.id+"/replies", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
         },
-        text: reply,
-        timestamp: "1 minute ago",
-      };
-      // modifiedComment.replies.push(newReply);
-      modifiedCommentReplies.push(newReply);
+        body: JSON.stringify(newReply),
+      });
+      if (!response.ok) {
+        alert(`HTTP error! status: ${response.status}`);
+        return 0;
+      }
+      const data = await response.json();
+
+      modifiedCommentReplies.push(data);
       const modifiedComment = { ...comment };
       modifiedComment.replies = modifiedCommentReplies;
       handleReplyOnComment(modifiedComment);
@@ -66,12 +82,40 @@ const Comment = ({
     }
   };
 
+  useEffect(() => {
+    if (showReplies){
+      const fetchData = async () => {
+        try {
+          const response = await fetch(
+            commentsService+"/api/comments/"+comment.id+"/replies"
+          );
+          const replies = await response.json();
+          setReplies(replies);
+          return replies;
+        } catch (error) {
+          console.error("Error fetching data:", error);
+          throw error;
+        }
+      };
+      fetchData()
+        .then((fetchedData) => {
+          // console.log(fetchedData)
+        })
+        .catch((error) => {
+          console.error(error)
+        });
+    }
+  }, [showReplies])
+
   return (
     <View style={styles.commentContainer}>
-      <Image style={styles.avatar} source={{ uri: comment.user.avatar }} />
+      <Image
+        style={styles.profileImg}
+        source={{ uri: comment.author.profileImg }}
+      />
       <View style={styles.commentContent}>
         <View style={styles.userAndTime}>
-          <Text style={styles.username}>{comment.user.name}</Text>
+          <Text style={styles.username}>{comment.author.username}</Text>
           <Text style={styles.timestamp}>{comment.timestamp}</Text>
         </View>
         <Text
@@ -79,7 +123,7 @@ const Comment = ({
           style={styles.commentText}
           numberOfLines={isExpanded ? undefined : 3}
         >
-          {comment.text}
+          {comment.body}
         </Text>
         {showMore && (
           <Text onPress={handlePress} style={styles.expandButton}>
@@ -123,11 +167,11 @@ const Comment = ({
         )}
         {replyArea && (
           <View style={styles.replyInputContainer}>
-            <BottomSheetTextInput
+            <TextInput
               style={styles.commentInput}
               value={reply}
               onChangeText={(text) => setReply(text)}
-              placeholder={"Reply to " + comment.user.name}
+              placeholder={"Reply to " + comment.author.username}
               placeholderTextColor="#999"
               onFocus={() => setIsKeyboard(2)}
               onBlur={() => setIsKeyboard(0)}
@@ -154,9 +198,9 @@ const Comment = ({
         {showReplies && (
           <View>
             <FlatList
-              data={comment.replies}
+              data={replies}
               renderItem={({ item }) => <Comment comment={item} />}
-              keyExtractor={(item) => item.id.toString()}
+              keyExtractor={(item) => item.id}
               style={styles.repliesContainer}
             />
             <TouchableOpacity
@@ -347,6 +391,10 @@ const Comments = ({ comments, bottomSheetRef, handleSheetChanges }) => {
 
   const snapPoints = useMemo(() => ["6%", "85%"], []);
 
+  if (loading) {
+    return <ActivityIndicator size="large" color="#0000ff" />;
+  }
+
   return (
     <BottomSheet
       ref={bottomSheetRef}
@@ -432,7 +480,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 10,
   },
-  avatar: {
+  profileImg: {
     width: 40,
     height: 40,
     borderRadius: 20,
