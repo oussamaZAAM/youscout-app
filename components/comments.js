@@ -57,16 +57,16 @@ const Comment = ({
   };
 
   const handleReply = async () => {
-    if (reply.trim() !== "") {
-      // Check if reply is not empty
-      const modifiedCommentReplies = comment.replies; // Initialize with list of comment's replies
-      const newReply = {
-        id: "644690e468db717eb80b03b8", // The user's ID
-        body: reply,
-      };
+    try {
+      if (reply.trim() !== "") {
+        // Check if reply is not empty
+        const modifiedCommentReplies = comment.replies; // Initialize with list of comment's replies
+        const newReply = {
+          id: "644690e468db717eb80b03b8", // The user's ID
+          body: reply,
+        };
 
-      // Sent post request to save new reply
-      try {
+        // Sent post request to save new reply
         const response = await fetch(
           commentsService + "/api/comments/" + comment.id + "/replies",
           {
@@ -77,26 +77,26 @@ const Comment = ({
             body: JSON.stringify(newReply),
           }
         );
-      } catch (e) {
-        // Break the function and display an alert message in case of no response from server
-        alert(`HTTP error! status: ${e}`);
-        return 0;
+
+        // Break function in case of error and send Alert message
+        if (!response.ok) {
+          alert(`HTTP error! status: ${response.status}`);
+          return 0;
+        }
+        const data = await response.json();
+
+        modifiedCommentReplies.push(data); // Add to new comment's replies in case reply is saved in backend
+        const modifiedComment = { ...comment };
+        modifiedComment.replies = modifiedCommentReplies;
+        handleReplyOnComment(modifiedComment); // Send new comment to Comment Component
+        setReply("");
+
+        toggleReply(); // Close replying area after creating a new reply
       }
-
-      // Break function in case of error and send Alert message
-      if (!response.ok) {
-        alert(`HTTP error! status: ${response.status}`);
-        return 0;
-      }
-      const data = await response.json();
-
-      modifiedCommentReplies.push(data); // Add to new comment's replies in case reply is saved in backend
-      const modifiedComment = { ...comment };
-      modifiedComment.replies = modifiedCommentReplies;
-      handleReplyOnComment(modifiedComment); // Send new comment to Comment Component
-      setReply("");
-
-      toggleReply(); // Close replying area after creating a new reply
+    } catch (e) {
+      // Break the function and display an alert message in case of no response from server
+      alert(e);
+      return 0;
     }
   };
 
@@ -329,40 +329,63 @@ const Comments = ({ comments, bottomSheetRef, handleSheetChanges }) => {
 
   const [newComment, setNewComment] = useState(""); //Stores the new comment body
   // Like / Unlike a comment
-  const handleLikeComment = (id) => {
-    setData((prevArray) => {
-      for (let i = 0; i < prevArray.length; i++) {
-        if (prevArray[i].id === id) {
-          if (!prevArray[i].likes.includes(mockUser)) {
-            const newLikes = prevArray[i].likes.filter(
-              (user) => user !== mockUser
-            );
-            newLikes.push(mockUser);
-            prevArray[i].likes = newLikes;
-          } else {
-            const newLikes = prevArray[i].likes.filter(
-              (user) => user !== mockUser
-            );
-            prevArray[i].likes = newLikes;
+  const handleLikeComment = async (id) => {
+    try {
+      const userId = {
+        id: "64409abd6ac950184bd90525",
+      };
+      const response = await fetch(
+        commentsService + "/api/comments/" + id + "/like",
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(userId),
+        }
+      );
+      if (!response.ok) {
+        alert(`HTTP error! status: ${response.status}`);
+        return 0;
+      }
+      setData((prevArray) => {
+        for (let i = 0; i < prevArray.length; i++) {
+          if (prevArray[i].id === id) {
+            if (!prevArray[i].likes.includes(mockUser)) {
+              const newLikes = prevArray[i].likes.filter(
+                (user) => user !== mockUser
+              );
+              newLikes.push(mockUser);
+              prevArray[i].likes = newLikes;
+            } else {
+              const newLikes = prevArray[i].likes.filter(
+                (user) => user !== mockUser
+              );
+              prevArray[i].likes = newLikes;
+            }
           }
         }
-      }
-      return [...prevArray];
-    });
+        return [...prevArray];
+      });
+    } catch (e) {
+      // Break the function and display an alert message in case of no response from server
+      alert(e);
+      return 0;
+    }
   };
 
   const handleCommentSubmit = async () => {
-    // add new comment to data array
-    if (newComment.trim() !== "") {
-      // Check if comment is not empty
-      const addComment = {
-        id: "644690e468db717eb80b03b8", // User's ID
-        body: newComment,
-        postId: "001", // Post's ID
-      };
+    try {
+      // add new comment to data array
+      if (newComment.trim() !== "") {
+        // Check if comment is not empty
+        const addComment = {
+          id: "644690e468db717eb80b03b8", // User's ID
+          body: newComment,
+          postId: "001", // Post's ID
+        };
 
-      // Send a post request to create a new comment
-      try {
+        // Send a post request to create a new comment
         const response = await fetch(commentsService + "/api/comments", {
           method: "POST",
           headers: {
@@ -370,36 +393,36 @@ const Comments = ({ comments, bottomSheetRef, handleSheetChanges }) => {
           },
           body: JSON.stringify(addComment),
         });
-      } catch (e) {
-        // Break the function and display an alert message in case of no response from server
-        alert(`HTTP error! status: ${e}`);
-        return 0;
-      }
 
-      // Break the function and display an alert message in case of a non ok response from server
-      if (!response.ok) {
-        alert(`HTTP error! status: ${response.status}`);
-        return 0;
+        // Break the function and display an alert message in case of a non ok response from server
+        if (!response.ok) {
+          alert(`HTTP error! status: ${response.status}`);
+          return 0;
+        }
+        const data = await response.json();
+        // Set data state in case of a valid response
+        setData((prevArray) => {
+          const comment = {
+            id: data.id,
+            author: {
+              id: data.author.id,
+              username: data.author.username,
+              profileImg: data.author.profileImg,
+            },
+            body: newComment,
+            timestamp: data.timestamp,
+            likes: data.likes,
+            replies: data.replies,
+          };
+          prevArray.push(comment);
+          return [...prevArray];
+        });
+        setNewComment(""); // Set new comment body to empty string
       }
-      const data = await response.json();
-      // Set data state in case of a valid response
-      setData((prevArray) => {
-        const comment = {
-          id: data.id,
-          author: {
-            id: data.author.id,
-            username: data.author.username,
-            profileImg: data.author.profileImg,
-          },
-          body: newComment,
-          timestamp: data.timestamp,
-          likes: data.likes,
-          replies: data.replies,
-        };
-        prevArray.push(comment);
-        return [...prevArray];
-      });
-      setNewComment(""); // Set new comment body to empty string
+    } catch (e) {
+      // Break the function and display an alert message in case of no response from server
+      alert(e);
+      return 0;
     }
   };
 
