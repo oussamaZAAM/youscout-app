@@ -1,4 +1,9 @@
-import { AntDesign, FontAwesome, Ionicons } from "@expo/vector-icons";
+import {
+  AntDesign,
+  FontAwesome,
+  Ionicons,
+  MaterialCommunityIcons,
+} from "@expo/vector-icons";
 import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
 import React, {
   useCallback,
@@ -17,6 +22,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { BottomSheet as BottomSheet2 } from "react-native-btr";
 
 import { COLORS, ICONS } from "../assets/styles";
 import { WINDOW_WIDTH } from "../assets/utils";
@@ -51,6 +57,12 @@ const Comment = ({
   // Enables or disables the replying area
   const toggleReply = () => {
     setReplyArea((prevValue) => !prevValue);
+  };
+
+  const [modalVisible, setModalVisible] = useState(false);
+
+  const toggleBottomNavigationView = () => {
+    setModalVisible(!modalVisible);
   };
 
   const handleReply = async () => {
@@ -140,18 +152,28 @@ const Comment = ({
             {getTimeDifference(comment.timestamp)}
           </Text>
         </View>
-        <Text
-          onTextLayout={onTextLayout}
-          style={styles.commentText}
-          numberOfLines={isExpanded ? undefined : 3}
-        >
-          {comment.body}
-        </Text>
-        {showMore && (
-          <Text onPress={handlePress} style={styles.expandButton}>
-            {isExpanded ? "Read less" : "Read more"}
-          </Text>
-        )}
+        <View style={styles.commentContentContainer}>
+          <View style={styles.commentBodyContainer}>
+            <Text
+              onTextLayout={onTextLayout}
+              style={styles.commentText}
+              numberOfLines={isExpanded ? undefined : 3}
+            >
+              {comment.body}
+            </Text>
+            {showMore && (
+              <Text onPress={handlePress} style={styles.expandButton}>
+                {isExpanded ? "Read less" : "Read more"}
+              </Text>
+            )}
+          </View>
+          <TouchableOpacity
+            onPress={toggleBottomNavigationView}
+            style={styles.textEditButton}
+          >
+            <MaterialCommunityIcons name="dots-horizontal" size={24} />
+          </TouchableOpacity>
+        </View>
         {comment.likes && (
           <View style={styles.reactionsContainer}>
             <TouchableOpacity
@@ -250,6 +272,16 @@ const Comment = ({
           </View>
         )}
       </View>
+      <BottomSheet2
+        visible={modalVisible}
+        onBackButtonPress={toggleBottomNavigationView}
+        onBackdropPress={toggleBottomNavigationView}
+      >
+        {/* // Work here ... */}
+        <View>
+          <Text>Test {comment.body}</Text>
+        </View>
+      </BottomSheet2>
     </View>
   );
 };
@@ -574,6 +606,19 @@ const styles = StyleSheet.create({
     color: COLORS.blue,
     marginTop: -7,
     marginBottom: 2,
+  },
+  textEditButton: {
+    marginHorizontal: 5,
+    width: 26,
+  },
+  commentContentContainer: {
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  commentBodyContainer: {
+    flex: 1,
   },
   reactionsContainer: {
     flexDirection: "row",
