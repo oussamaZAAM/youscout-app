@@ -24,6 +24,7 @@ import {
 import { COLORS, ICONS } from "../assets/styles";
 import { WINDOW_WIDTH } from "../assets/utils";
 import { commentsService } from "../constants/env";
+import { getTimeDifference } from "../assets/TimeDifference";
 
 const mockUser = 17;
 
@@ -41,73 +42,93 @@ const Comment = ({
     setIsExpanded(!isExpanded);
   };
 
-  const [showMore, setShowMore] = useState(false);
+  const [showMore, setShowMore] = useState(false); // Showing / Hide long text state
+  // Get the text length (Hide texts > 3 lines by default)
   const onTextLayout = useCallback((e) => {
     setShowMore(e.nativeEvent.lines.length > 3);
   }, []);
 
-  const [replyArea, setReplyArea] = useState(false);
-  const [reply, setReply] = useState("");
+  const [replyArea, setReplyArea] = useState(false); // Stores the reply area switch state
+  const [reply, setReply] = useState(""); // Stores the reply body
 
+  // Enables or disables the replying area
   const toggleReply = () => {
     setReplyArea((prevValue) => !prevValue);
   };
 
-  const handleReply = async() => {
+  const handleReply = async () => {
     if (reply.trim() !== "") {
-      const modifiedCommentReplies = comment.replies;
+      // Check if reply is not empty
+      const modifiedCommentReplies = comment.replies; // Initialize with list of comment's replies
       const newReply = {
-        id: "644690e468db717eb80b03b8",
-        body: reply
+        id: "644690e468db717eb80b03b8", // The user's ID
+        body: reply,
+      };
+
+      // Sent post request to save new reply
+      try {
+        const response = await fetch(
+          commentsService + "/api/comments/" + comment.id + "/replies",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(newReply),
+          }
+        );
+      } catch (e) {
+        // Break the function and display an alert message in case of no response from server
+        alert(`HTTP error! status: ${e}`);
+        return 0;
       }
 
-      const response = await fetch(commentsService+"/api/comments/"+comment.id+"/replies", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(newReply),
-      });
+      // Break function in case of error and send Alert message
       if (!response.ok) {
         alert(`HTTP error! status: ${response.status}`);
         return 0;
       }
       const data = await response.json();
 
-      modifiedCommentReplies.push(data);
+      modifiedCommentReplies.push(data); // Add to new comment's replies in case reply is saved in backend
       const modifiedComment = { ...comment };
       modifiedComment.replies = modifiedCommentReplies;
-      handleReplyOnComment(modifiedComment);
+      handleReplyOnComment(modifiedComment); // Send new comment to Comment Component
       setReply("");
 
       toggleReply(); // Close replying area after creating a new reply
     }
   };
 
+  // Fetch replies of the comment if "View {n} Reply(ies)"" is clicked
   useEffect(() => {
-    if (showReplies){
+    if (showReplies) {
       const fetchData = async () => {
         try {
           const response = await fetch(
-            commentsService+"/api/comments/"+comment.id+"/replies?orderBy=recent"
+            commentsService +
+              "/api/comments/" +
+              comment.id +
+              "/replies?orderBy=recent"
           );
           const replies = await response.json();
           setReplies(replies);
           return replies;
         } catch (error) {
-          console.error("Error fetching data:", error);
+          alert("Error fetching data:", error); // Send alert message in case of error
           throw error;
         }
       };
       fetchData()
         .then((fetchedData) => {
-          // console.log(fetchedData)
+          // Disable Skeleton / Loading
         })
         .catch((error) => {
-          console.error(error)
+          // Disable Skeleton / Loading
+          console.error(error);
         });
     }
-  }, [showReplies])
+  }, [showReplies]);
 
   return (
     <View style={styles.commentContainer}>
@@ -118,7 +139,9 @@ const Comment = ({
       <View style={styles.commentContent}>
         <View style={styles.userAndTime}>
           <Text style={styles.username}>{comment.author.username}</Text>
-          <Text style={styles.timestamp}>{getTimeDifference(comment.timestamp)}</Text>
+          <Text style={styles.timestamp}>
+            {getTimeDifference(comment.timestamp)}
+          </Text>
         </View>
         <Text
           onTextLayout={onTextLayout}
@@ -274,14 +297,15 @@ const Comments = ({ comments, bottomSheetRef, handleSheetChanges }) => {
     // more comments here...
   ]);
 
-  const [loading, setLoading] = useState(true);
-  const [fetching, setFetching] = useState(true);
+  const [loading, setLoading] = useState(true); // Stores the state loading
+  const [fetching, setFetching] = useState(true); // Stores the state of fetching need
 
+  // Fetch comments if Bottomsheet is enabled
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          commentsService+"/api/posts/001/comments?orderBy=recent"
+          commentsService + "/api/posts/001/comments?orderBy=recent"
         );
         const data = await response.json();
         setData(data);
@@ -291,7 +315,8 @@ const Comments = ({ comments, bottomSheetRef, handleSheetChanges }) => {
         throw error;
       }
     };
-    if (fetching){
+    // Fetch only if bottomsheet is enabled
+    if (fetching) {
       fetchData()
         .then((fetchedData) => {
           setLoading(false);
@@ -302,7 +327,8 @@ const Comments = ({ comments, bottomSheetRef, handleSheetChanges }) => {
     }
   }, [fetching]);
 
-  const [newComment, setNewComment] = useState("");
+  const [newComment, setNewComment] = useState(""); //Stores the new comment body
+  // Like / Unlike a comment
   const handleLikeComment = (id) => {
     setData((prevArray) => {
       for (let i = 0; i < prevArray.length; i++) {
@@ -328,41 +354,35 @@ const Comments = ({ comments, bottomSheetRef, handleSheetChanges }) => {
   const handleCommentSubmit = async () => {
     // add new comment to data array
     if (newComment.trim() !== "") {
-      // setData((prevArray) => {
-      //   const comment = {
-      //     id: prevArray.length + 1,
-      //     author: {
-      //       id: mockUser,
-      //       username: "Yunyun",
-      //       profileImg: "https://lthumb.lisimg.com/549/20838549.jpg",
-      //     },
-      //     body: newComment,
-      //     timestamp: "1 minute ago",
-      //     likes: [],
-      //     replies: [],
-      //   };
-      //   prevArray.push(comment);
-      //   return [...prevArray];
-      // });
-
+      // Check if comment is not empty
       const addComment = {
-        id: "644690e468db717eb80b03b8",
+        id: "644690e468db717eb80b03b8", // User's ID
         body: newComment,
-        postId: "001",
+        postId: "001", // Post's ID
       };
 
-      const response = await fetch(commentsService+"/api/comments", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(addComment),
-      });
+      // Send a post request to create a new comment
+      try {
+        const response = await fetch(commentsService + "/api/comments", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(addComment),
+        });
+      } catch (e) {
+        // Break the function and display an alert message in case of no response from server
+        alert(`HTTP error! status: ${e}`);
+        return 0;
+      }
+
+      // Break the function and display an alert message in case of a non ok response from server
       if (!response.ok) {
         alert(`HTTP error! status: ${response.status}`);
         return 0;
       }
       const data = await response.json();
+      // Set data state in case of a valid response
       setData((prevArray) => {
         const comment = {
           id: data.id,
@@ -379,11 +399,11 @@ const Comments = ({ comments, bottomSheetRef, handleSheetChanges }) => {
         prevArray.push(comment);
         return [...prevArray];
       });
-
-      setNewComment("");
+      setNewComment(""); // Set new comment body to empty string
     }
   };
 
+  // Handle adding the comment's new replies to the comments state
   const handleReplyOnComment = (comment) => {
     const id = comment.id;
     setData((prevArray) => {
@@ -394,7 +414,7 @@ const Comments = ({ comments, bottomSheetRef, handleSheetChanges }) => {
     });
   };
 
-  const snapPoints = useMemo(() => ["6%", "85%"], []);
+  const snapPoints = useMemo(() => ["6%", "85%"], []); // State of BottomSheet's snapPoints
 
   if (loading) {
     return <ActivityIndicator size="large" color="#0000ff" />;
