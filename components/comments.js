@@ -1,8 +1,5 @@
 import { AntDesign, FontAwesome, Ionicons } from "@expo/vector-icons";
-import BottomSheet, {
-  BottomSheetScrollView,
-  BottomSheetTextInput,
-} from "@gorhom/bottom-sheet";
+import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
 import React, {
   useCallback,
   useEffect,
@@ -26,7 +23,7 @@ import { WINDOW_WIDTH } from "../assets/utils";
 import { commentsService } from "../constants/env";
 import { getTimeDifference } from "../assets/TimeDifference";
 
-const mockUser = 17;
+const userId = "64409abd6ac950184bd90525";
 
 const Comment = ({
   comment,
@@ -62,7 +59,7 @@ const Comment = ({
         // Check if reply is not empty
         const modifiedCommentReplies = comment.replies; // Initialize with list of comment's replies
         const newReply = {
-          id: "644690e468db717eb80b03b8", // The user's ID
+          id: userId, // The user's ID
           body: reply,
         };
 
@@ -158,10 +155,10 @@ const Comment = ({
         {comment.likes && (
           <View style={styles.reactionsContainer}>
             <TouchableOpacity
-              onPress={() => handleLikeComment(comment.id)}
+              onPress={() => handleLikeComment(comment.id, comment.likes)}
               style={styles.reactionButton}
             >
-              {comment.likes.includes(mockUser) ? (
+              {comment.likes.includes(userId) ? (
                 <AntDesign name="like1" size={16} color="black" />
               ) : (
                 <AntDesign name="like2" size={16} color="black" />
@@ -329,21 +326,35 @@ const Comments = ({ comments, bottomSheetRef, handleSheetChanges }) => {
 
   const [newComment, setNewComment] = useState(""); //Stores the new comment body
   // Like / Unlike a comment
-  const handleLikeComment = async (id) => {
+  const handleLikeComment = async (id, likes) => {
     try {
-      const userId = {
-        id: "64409abd6ac950184bd90525",
+      const user = {
+        id: userId,
       };
-      const response = await fetch(
-        commentsService + "/api/comments/" + id + "/like",
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(userId),
-        }
-      );
+      var response;
+      if (likes.includes(userId)) {
+        response = await fetch(
+          commentsService + "/api/comments/" + id + "/unlike",
+          {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(user),
+          }
+        );
+      } else {
+        response = await fetch(
+          commentsService + "/api/comments/" + id + "/like",
+          {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(user),
+          }
+        );
+      }
       if (!response.ok) {
         alert(`HTTP error! status: ${response.status}`);
         return 0;
@@ -351,15 +362,15 @@ const Comments = ({ comments, bottomSheetRef, handleSheetChanges }) => {
       setData((prevArray) => {
         for (let i = 0; i < prevArray.length; i++) {
           if (prevArray[i].id === id) {
-            if (!prevArray[i].likes.includes(mockUser)) {
+            if (!prevArray[i].likes.includes(userId)) {
               const newLikes = prevArray[i].likes.filter(
-                (user) => user !== mockUser
+                (user) => user !== userId
               );
-              newLikes.push(mockUser);
+              newLikes.push(userId);
               prevArray[i].likes = newLikes;
             } else {
               const newLikes = prevArray[i].likes.filter(
-                (user) => user !== mockUser
+                (user) => user !== userId
               );
               prevArray[i].likes = newLikes;
             }
@@ -380,7 +391,7 @@ const Comments = ({ comments, bottomSheetRef, handleSheetChanges }) => {
       if (newComment.trim() !== "") {
         // Check if comment is not empty
         const addComment = {
-          id: "644690e468db717eb80b03b8", // User's ID
+          id: userId, // User's ID
           body: newComment,
           postId: "001", // Post's ID
         };
