@@ -275,6 +275,7 @@ const Comments = ({ comments, bottomSheetRef, handleSheetChanges }) => {
   ]);
 
   const [loading, setLoading] = useState(true);
+  const [fetching, setFetching] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -290,14 +291,16 @@ const Comments = ({ comments, bottomSheetRef, handleSheetChanges }) => {
         throw error;
       }
     };
-    fetchData()
-      .then((fetchedData) => {
-        setLoading(false);
-      })
-      .catch((error) => {
-        setLoading(false);
-      });
-  }, []);
+    if (fetching){
+      fetchData()
+        .then((fetchedData) => {
+          setLoading(false);
+        })
+        .catch((error) => {
+          setLoading(false);
+        });
+    }
+  }, [fetching]);
 
   const [newComment, setNewComment] = useState("");
   const handleLikeComment = (id) => {
@@ -404,6 +407,11 @@ const Comments = ({ comments, bottomSheetRef, handleSheetChanges }) => {
       snapPoints={snapPoints}
       onChange={(index) => {
         handleSheetChanges(index);
+        if (index === 1) {
+          setFetching(true);
+        } else if (index === 0) {
+          setFetching(false);
+        }
         textinputRef.current.blur();
       }}
       keyboardBlurBehavior="restore"
