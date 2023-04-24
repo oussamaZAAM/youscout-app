@@ -79,6 +79,8 @@ const Comment = ({
       modifiedComment.replies = modifiedCommentReplies;
       handleReplyOnComment(modifiedComment);
       setReply("");
+
+      toggleReply(); // Close replying area after creating a new reply
     }
   };
 
@@ -87,7 +89,7 @@ const Comment = ({
       const fetchData = async () => {
         try {
           const response = await fetch(
-            commentsService+"/api/comments/"+comment.id+"/replies"
+            commentsService+"/api/comments/"+comment.id+"/replies?orderBy=recent"
           );
           const replies = await response.json();
           setReplies(replies);
@@ -116,7 +118,7 @@ const Comment = ({
       <View style={styles.commentContent}>
         <View style={styles.userAndTime}>
           <Text style={styles.username}>{comment.author.username}</Text>
-          <Text style={styles.timestamp}>{comment.timestamp}</Text>
+          <Text style={styles.timestamp}>{getTimeDifference(comment.timestamp)}</Text>
         </View>
         <Text
           onTextLayout={onTextLayout}
@@ -278,7 +280,7 @@ const Comments = ({ comments, bottomSheetRef, handleSheetChanges }) => {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          commentsService+"/api/posts/001/comments?orderBy=timestampAsc"
+          commentsService+"/api/posts/001/comments?orderBy=recent"
         );
         const data = await response.json();
         setData(data);
@@ -360,7 +362,7 @@ const Comments = ({ comments, bottomSheetRef, handleSheetChanges }) => {
       const data = await response.json();
       setData((prevArray) => {
         const comment = {
-          id: prevArray.length + 1,
+          id: data.id,
           author: {
             id: data.author.id,
             username: data.author.username,
