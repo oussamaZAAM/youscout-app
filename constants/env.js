@@ -1,0 +1,1 @@
+export const commentsService = "http://192.168.42.242:8081";

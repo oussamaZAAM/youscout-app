@@ -227,6 +227,32 @@ const Comments = ({ comments, bottomSheetRef, handleSheetChanges }) => {
     },
     // more comments here...
   ]);
+
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(
+          commentsService+"/api/posts/001/comments?orderBy=timestampAsc"
+        );
+        const data = await response.json();
+        setData(data);
+        return data;
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        throw error;
+      }
+    };
+    fetchData()
+      .then((fetchedData) => {
+        setLoading(false);
+      })
+      .catch((error) => {
+        setLoading(false);
+      });
+  }, []);
+
   const [newComment, setNewComment] = useState("");
   const handleLikeComment = (id) => {
     setData((prevArray) => {
@@ -250,24 +276,61 @@ const Comments = ({ comments, bottomSheetRef, handleSheetChanges }) => {
     });
   };
 
-  const handleCommentSubmit = () => {
+  const handleCommentSubmit = async () => {
     // add new comment to data array
     if (newComment.trim() !== "") {
+      // setData((prevArray) => {
+      //   const comment = {
+      //     id: prevArray.length + 1,
+      //     author: {
+      //       id: mockUser,
+      //       username: "Yunyun",
+      //       profileImg: "https://lthumb.lisimg.com/549/20838549.jpg",
+      //     },
+      //     body: newComment,
+      //     timestamp: "1 minute ago",
+      //     likes: [],
+      //     replies: [],
+      //   };
+      //   prevArray.push(comment);
+      //   return [...prevArray];
+      // });
+
+      const addComment = {
+        id: "644690e468db717eb80b03b8",
+        body: newComment,
+        postId: "001",
+      };
+
+      const response = await fetch(commentsService+"/api/comments", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(addComment),
+      });
+      if (!response.ok) {
+        alert(`HTTP error! status: ${response.status}`);
+        return 0;
+      }
+      const data = await response.json();
       setData((prevArray) => {
-        const addComment = {
+        const comment = {
           id: prevArray.length + 1,
-          user: {
-            name: "Yunyun",
-            avatar: "https://lthumb.lisimg.com/549/20838549.jpg",
+          author: {
+            id: data.author.id,
+            username: data.author.username,
+            profileImg: data.author.profileImg,
           },
-          text: newComment,
-          timestamp: "1 minute ago",
-          likes: [],
-          replies: [],
+          body: newComment,
+          timestamp: data.timestamp,
+          likes: data.likes,
+          replies: data.replies,
         };
-        prevArray.push(addComment);
+        prevArray.push(comment);
         return [...prevArray];
       });
+
       setNewComment("");
     }
   };
