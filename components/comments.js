@@ -7,7 +7,6 @@ import {
 } from "@expo/vector-icons";
 import BottomSheet, {
   BottomSheetFlatList,
-  BottomSheetScrollView,
 } from "@gorhom/bottom-sheet";
 import React, {
   useCallback,
