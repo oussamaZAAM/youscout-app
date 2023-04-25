@@ -5,7 +5,10 @@ import {
   MaterialCommunityIcons,
   MaterialIcons,
 } from "@expo/vector-icons";
-import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
+import BottomSheet, {
+  BottomSheetFlatList,
+  BottomSheetScrollView,
+} from "@gorhom/bottom-sheet";
 import React, {
   useCallback,
   useEffect,
@@ -25,14 +28,12 @@ import {
 } from "react-native";
 import { BottomSheet as EditBottomSheet } from "react-native-btr";
 
-import { COLORS, ICONS } from "../assets/utils";
-import { WINDOW_WIDTH } from "../assets/utils";
-import { commentsService } from "../constants/env";
-import { getTimeDifference } from "../assets/functions";
+import FlashMessage, { showMessage } from "react-native-flash-message";
 import { Divider } from "react-native-paper";
 import { copyToClipboard } from "../assets/copyToClipboard";
-import FlashMessage from "react-native-flash-message";
-import { showMessage, hideMessage } from "react-native-flash-message";
+import { getTimeDifference } from "../assets/functions";
+import { COLORS, ICONS, WINDOW_WIDTH } from "../assets/utils";
+import { commentsService } from "../constants/env";
 
 const userId = "64409abd6ac950184bd90525";
 
@@ -41,7 +42,7 @@ const Comment = ({
   handleLikeComment,
   setIsKeyboard,
   handleReplyOnComment,
-  setFetching
+  setFetching,
 }) => {
   const [replies, setReplies] = useState(null);
   const [showReplies, setShowReplies] = useState(false);
@@ -66,6 +67,10 @@ const Comment = ({
   };
 
   const [modalVisible, setModalVisible] = useState(false);
+
+  // Edit the comments
+  const [editedComment, setEditedComment] = useState(comment?.body);
+  const [isCommentEditable, setIsCommentEditable] = useState(false);
 
   const toggleBottomNavigationView = () => {
     setModalVisible(!modalVisible);
@@ -115,7 +120,34 @@ const Comment = ({
     }
   };
 
-  // Delete the comment
+  // Edit a comment (takes commentId and new comment)
+  const handleEditComment = async (commentId, commentBody) => {
+    try {
+      const newComment = {
+        body: commentBody,
+      };
+      const response = await fetch(
+        commentsService + "/api/comments/" + commentId,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(newComment),
+        }
+      );
+      if (!response.ok) {
+        return `HTTP error! status: ${response.status}`;
+      }
+      const data = await response.text();
+      setFetching(true);
+      return data;
+    } catch (error) {
+      return `Server error! ${error}`;
+    }
+  };
+
+  // Delete a comment (takes commentId)
   const handleDeleteComment = async (commentId) => {
     try {
       const response = await fetch(
@@ -128,7 +160,7 @@ const Comment = ({
         return `HTTP error! status: ${response.status}`;
       }
       const data = await response.text();
-      setFetching(true)
+      setFetching(true);
       return data;
     } catch (error) {
       return `Server error! ${error}`;
@@ -169,38 +201,71 @@ const Comment = ({
     <View style={styles.commentContainer}>
       <Image
         style={styles.profileImg}
-        source={{ uri: comment.author.profileImg }}
+        source={{ uri: comment?.author?.profileImg }}
       />
       <View style={styles.commentContent}>
         <View style={styles.userAndTime}>
-          <Text style={styles.username}>{comment.author.username}</Text>
+          <Text style={styles.username}>{comment?.author?.username}</Text>
           <Text style={styles.timestamp}>
-            {getTimeDifference(comment.timestamp)}
+            {getTimeDifference(comment?.timestamp)}
           </Text>
         </View>
         <View style={styles.commentContentContainer}>
-          <View style={styles.commentBodyContainer}>
-            <Text
-              onTextLayout={onTextLayout}
-              style={styles.commentText}
-              numberOfLines={isExpanded ? undefined : 3}
-            >
-              {comment.body}
-            </Text>
-            {showMore && (
-              <Text onPress={handlePress} style={styles.expandButton}>
-                {isExpanded ? "Read less" : "Read more"}
-              </Text>
-            )}
-          </View>
-          <TouchableOpacity
-            onPress={toggleBottomNavigationView}
-            style={styles.textEditButton}
-          >
-            <MaterialCommunityIcons name="dots-horizontal" size={24} />
-          </TouchableOpacity>
+          {!isCommentEditable ? (
+            <View style={styles.commentContentContainer}>
+              <View style={styles.commentBodyContainer}>
+                <Text
+                  onTextLayout={onTextLayout}
+                  style={styles.commentText}
+                  numberOfLines={isExpanded ? undefined : 3}
+                >
+                  {comment?.body}
+                </Text>
+                {showMore && (
+                  <Text onPress={handlePress} style={styles.expandButton}>
+                    {isExpanded ? "Read less" : "Read more"}
+                  </Text>
+                )}
+              </View>
+              <TouchableOpacity
+                onPress={toggleBottomNavigationView}
+                style={styles.textEditButton}
+              >
+                <MaterialCommunityIcons name="dots-horizontal" size={24} />
+              </TouchableOpacity>
+            </View>
+          ) : (
+            <View style={styles.commentContentContainer}>
+              <View style={styles.commentBodyContainer}>
+                <TextInput
+                  autoFocus={true}
+                  value={editedComment}
+                  onChangeText={(text) => setEditedComment(text)}
+                />
+              </View>
+              <View style={styles.commentEditButtonsContainer}>
+                <TouchableOpacity
+                  onPress={() => {
+                    handleEditComment(comment.id, editedComment);
+                    setIsCommentEditable(false);
+                  }}
+                  style={styles.textEditButton}
+                >
+                  <FontAwesome name="check" size={24} />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => {
+                    setIsCommentEditable(false);
+                  }}
+                  style={styles.textEditButton}
+                >
+                  <FontAwesome name="remove" size={24} />
+                </TouchableOpacity>
+              </View>
+            </View>
+          )}
         </View>
-        {comment.likes && (
+        {comment?.likes && (
           <View style={styles.reactionsContainer}>
             <TouchableOpacity
               onPress={() => handleLikeComment(comment.id, comment.likes)}
@@ -241,7 +306,7 @@ const Comment = ({
               style={styles.commentInput}
               value={reply}
               onChangeText={(text) => setReply(text)}
-              placeholder={"Reply to " + comment.author.username}
+              placeholder={"Reply to " + comment?.author?.username}
               placeholderTextColor="#999"
               onFocus={() => setIsKeyboard(2)}
               onBlur={() => setIsKeyboard(0)}
@@ -304,11 +369,11 @@ const Comment = ({
         onBackdropPress={toggleBottomNavigationView}
       >
         {/* Check if user is the author of comment */}
-        {userId === comment.author.id ? (
+        {userId === comment?.author?.id ? (
           <View style={styles.editCommentSection}>
             <TouchableOpacity
               onPress={() => {
-                copyToClipboard(comment.body);
+                copyToClipboard(comment?.body);
                 toggleBottomNavigationView();
                 showMessage({
                   message: "",
@@ -333,9 +398,10 @@ const Comment = ({
             </TouchableOpacity>
             <Divider style={{ width: WINDOW_WIDTH }} />
             <TouchableOpacity
-              onPress={() =>
-                console.log(comment.author.username + " changing ...")
-              }
+              onPress={() => {
+                toggleBottomNavigationView();
+                setIsCommentEditable(true);
+              }}
               style={styles.editCommentButton}
             >
               <MaterialIcons name="edit" size={26} />
@@ -387,7 +453,7 @@ const Comment = ({
           <View style={styles.editCommentSection}>
             <TouchableOpacity
               onPress={() => {
-                copyToClipboard(comment.body);
+                copyToClipboard(comment?.body);
                 toggleBottomNavigationView();
                 showMessage({
                   message: "",
@@ -473,6 +539,7 @@ const Comments = ({ comments, bottomSheetRef, handleSheetChanges }) => {
   // Fetch comments if Bottomsheet is enabled
   useEffect(() => {
     const fetchData = async () => {
+      setLoading(true);
       try {
         const response = await fetch(
           commentsService + "/api/posts/001/comments?orderBy=recent"
@@ -625,10 +692,6 @@ const Comments = ({ comments, bottomSheetRef, handleSheetChanges }) => {
 
   const snapPoints = useMemo(() => ["6%", "85%"], []); // State of BottomSheet's snapPoints
 
-  if (loading) {
-    return <ActivityIndicator size="large" color="#0000ff" />;
-  }
-
   return (
     <BottomSheet
       ref={bottomSheetRef}
@@ -649,8 +712,8 @@ const Comments = ({ comments, bottomSheetRef, handleSheetChanges }) => {
       <Text style={{ alignSelf: "center", fontWeight: 600, fontSize: 16 }}>
         {comments} Comments
       </Text>
-      <BottomSheetScrollView
-        keyboardShouldPersistTaps="handled"
+      {/* <BottomSheetScrollView
+        keyboardShouldPersistTaps="always"
         contentContainerStyle={styles.contentContainer}
       >
         {data.map((comment) => (
@@ -663,7 +726,24 @@ const Comments = ({ comments, bottomSheetRef, handleSheetChanges }) => {
             setFetching={setFetching}
           />
         ))}
-      </BottomSheetScrollView>
+      </BottomSheetScrollView> */}
+      <BottomSheetFlatList
+        contentContainerStyle={styles.contentContainer}
+        keyboardShouldPersistTaps="always"
+        data={data}
+        renderItem={({ item }) => (
+          <Comment
+            key={item.id}
+            handleLikeComment={handleLikeComment}
+            comment={item}
+            setIsKeyboard={setIsKeyboard}
+            handleReplyOnComment={handleReplyOnComment}
+            setFetching={setFetching}
+          />
+        )}
+        refreshing={loading}
+        onRefresh={() => setFetching(true)}
+      />
       <View
         style={[
           styles.commentInputContainer,
@@ -759,6 +839,12 @@ const styles = StyleSheet.create({
   },
   commentContentContainer: {
     flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  commentEditButtonsContainer: {
+    gap: 10,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
