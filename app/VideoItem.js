@@ -163,7 +163,7 @@ export default function VideoItem({ data, isActive }) {
           </View>
           <TouchableOpacity
             onPress={() => {
-              bottomSheetRef.current.expand();
+              bottomSheetRef?.current?.expand();
             }}
             style={styles.verticalBarItem}
           >
