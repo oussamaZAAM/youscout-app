@@ -11,7 +11,7 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-import { COLORS } from "../../assets/styles";
+import { COLORS } from "../../assets/utils";
 import { WINDOW_HEIGHT } from "../../assets/utils";
 
 const data = [

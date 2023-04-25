@@ -13,7 +13,7 @@ import {
 import { FontAwesome, MaterialIcons } from "react-native-vector-icons";
 
 import * as Yup from "yup";
-import { COLORS } from "../../assets/styles";
+import { COLORS } from "../../assets/utils";
 
 const LoginScreen = ({ navigation }) => {
   const scrollViewRef = useRef();

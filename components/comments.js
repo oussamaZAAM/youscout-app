@@ -3,6 +3,7 @@ import {
   FontAwesome,
   Ionicons,
   MaterialCommunityIcons,
+  MaterialIcons,
 } from "@expo/vector-icons";
 import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
 import React, {
@@ -22,12 +23,16 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { BottomSheet as BottomSheet2 } from "react-native-btr";
+import { BottomSheet as EditBottomSheet } from "react-native-btr";
 
-import { COLORS, ICONS } from "../assets/styles";
+import { COLORS, ICONS } from "../assets/utils";
 import { WINDOW_WIDTH } from "../assets/utils";
 import { commentsService } from "../constants/env";
-import { getTimeDifference } from "../assets/TimeDifference";
+import { getTimeDifference } from "../assets/functions";
+import { Divider } from "react-native-paper";
+import { copyToClipboard } from "../assets/copyToClipboard";
+import FlashMessage from "react-native-flash-message";
+import { showMessage, hideMessage } from "react-native-flash-message";
 
 const userId = "64409abd6ac950184bd90525";
 
@@ -108,6 +113,11 @@ const Comment = ({
       return 0;
     }
   };
+
+  // Delete the comment
+  const handleDeleteComment = () => {
+    
+  }
 
   // Fetch replies of the comment if "View {n} Reply(ies)"" is clicked
   useEffect(() => {
@@ -272,16 +282,86 @@ const Comment = ({
           </View>
         )}
       </View>
-      <BottomSheet2
+      <EditBottomSheet
         visible={modalVisible}
         onBackButtonPress={toggleBottomNavigationView}
         onBackdropPress={toggleBottomNavigationView}
       >
-        {/* // Work here ... */}
-        <View>
-          <Text>Test {comment.body}</Text>
-        </View>
-      </BottomSheet2>
+        {/* Check if user is the author of comment */}
+        {userId === comment.author.id ? (
+          <View style={styles.editCommentSection}>
+            <TouchableOpacity
+              onPress={() => {
+                copyToClipboard(comment.body);
+                toggleBottomNavigationView();
+                showMessage({
+                  message: "Copied to clipboard",
+                  type: "success",
+                  duration: 1000
+                });
+              }}
+              style={styles.editCommentButton}
+            >
+              <MaterialIcons name="content-copy" size={26} />
+              <View style={styles.editCommentTextContainer}>
+                <Text style={styles.editCommentText}>Copy this comment</Text>
+              </View>
+            </TouchableOpacity>
+            <Divider style={{ width: WINDOW_WIDTH }} />
+            <TouchableOpacity
+              onPress={() =>
+                console.log(comment.author.username + " changing ...")
+              }
+              style={styles.editCommentButton}
+            >
+              <MaterialIcons name="edit" size={26} />
+              <View style={styles.editCommentTextContainer}>
+                <Text style={styles.editCommentText}>Edit this comment</Text>
+              </View>
+            </TouchableOpacity>
+            <Divider style={{ width: WINDOW_WIDTH }} />
+            <TouchableOpacity
+              onPress={()=>handleDeleteComment()}
+              style={styles.editCommentButton}
+            >
+              <MaterialIcons name="delete" size={26} />
+              <View style={styles.editCommentTextContainer}>
+                <Text style={styles.editCommentText}>Delete this comment</Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+        ) : (
+          <View style={styles.editCommentSection}>
+            <TouchableOpacity
+              onPress={() => {
+                copyToClipboard(comment.body);
+                toggleBottomNavigationView();
+                showMessage({
+                  message: "Copied to clipboard",
+                  type: "success",
+                  duration: 1000
+                });
+              }}
+              style={styles.editCommentButton}
+            >
+              <MaterialIcons name="content-copy" size={26} />
+              <View style={styles.editCommentTextContainer}>
+                <Text style={styles.editCommentText}>Copy this comment</Text>
+              </View>
+            </TouchableOpacity>
+            <Divider style={{ width: WINDOW_WIDTH }} />
+            <TouchableOpacity
+              onPress={() => console.log(comment.body + " deleted!")}
+              style={styles.editCommentButton}
+            >
+              <MaterialIcons name="report" size={26} />
+              <View style={styles.editCommentTextContainer}>
+                <Text style={styles.editCommentText}>Report this comment</Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+        )}
+      </EditBottomSheet>
     </View>
   );
 };
@@ -546,6 +626,8 @@ const Comments = ({ comments, bottomSheetRef, handleSheetChanges }) => {
           <Ionicons name={ICONS.send} size={24} color={COLORS.blue} />
         </TouchableOpacity>
       </View>
+      
+      <FlashMessage position="bottom" />
     </BottomSheet>
   );
 };
@@ -687,5 +769,31 @@ const styles = StyleSheet.create({
   commentButtonText: {
     color: "#fff",
     fontSize: 12,
+  },
+  editCommentSection: {
+    width: WINDOW_WIDTH,
+    borderTopStartRadius: 25,
+    borderTopEndRadius: 25,
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "space-between",
+    backgroundColor: "white",
+  },
+  editCommentButton: {
+    height: 60,
+    paddingVertical: 15,
+    width: WINDOW_WIDTH / 2,
+    alignItems: "center",
+    justifyContent: "space-between",
+    flexDirection: "row",
+  },
+  editCommentText: {
+    fontWeight: "bold",
+    fontSize: 16,
+  },
+  editCommentTextContainer: {
+    flex: 1,
+    justifyContent: "center",
+    flexDirection: "row",
   },
 });
