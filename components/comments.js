@@ -41,6 +41,7 @@ const Comment = ({
   handleLikeComment,
   setIsKeyboard,
   handleReplyOnComment,
+  setFetching
 }) => {
   const [replies, setReplies] = useState(null);
   const [showReplies, setShowReplies] = useState(false);
@@ -115,9 +116,24 @@ const Comment = ({
   };
 
   // Delete the comment
-  const handleDeleteComment = () => {
-    
-  }
+  const handleDeleteComment = async (commentId) => {
+    try {
+      const response = await fetch(
+        commentsService + "/api/comments/" + commentId,
+        {
+          method: "DELETE",
+        }
+      );
+      if (!response.ok) {
+        return `HTTP error! status: ${response.status}`;
+      }
+      const data = await response.text();
+      setFetching(true)
+      return data;
+    } catch (error) {
+      return `Server error! ${error}`;
+    }
+  };
 
   // Fetch replies of the comment if "View {n} Reply(ies)"" is clicked
   useEffect(() => {
@@ -295,9 +311,17 @@ const Comment = ({
                 copyToClipboard(comment.body);
                 toggleBottomNavigationView();
                 showMessage({
-                  message: "Copied to clipboard",
+                  message: "",
                   type: "success",
-                  duration: 1000
+                  duration: 1000,
+                  icon: () => (
+                    <View style={styles.flashMessage}>
+                      <MaterialIcons name="content-copy" size={26} />
+                      <Text style={styles.editCommentText}>
+                        Copied to Clipboard
+                      </Text>
+                    </View>
+                  ),
                 });
               }}
               style={styles.editCommentButton}
@@ -321,7 +345,36 @@ const Comment = ({
             </TouchableOpacity>
             <Divider style={{ width: WINDOW_WIDTH }} />
             <TouchableOpacity
-              onPress={()=>handleDeleteComment()}
+              onPress={() => {
+                handleDeleteComment(comment.id)
+                  .then((response) => {
+                    showMessage({
+                      message: "",
+                      type: "warning",
+                      duration: 500,
+                      icon: () => (
+                        <View style={styles.flashMessage}>
+                          <MaterialIcons name="content-copy" size={26} />
+                          <Text style={styles.editCommentText}>{response}</Text>
+                        </View>
+                      ),
+                    });
+                  })
+                  .catch((error) => {
+                    showMessage({
+                      message: "",
+                      type: "warning",
+                      duration: 1500,
+                      icon: () => (
+                        <View style={styles.flashMessage}>
+                          <MaterialIcons name="content-copy" size={26} />
+                          <Text style={styles.editCommentText}>{error}</Text>
+                        </View>
+                      ),
+                    });
+                  });
+                toggleBottomNavigationView();
+              }}
               style={styles.editCommentButton}
             >
               <MaterialIcons name="delete" size={26} />
@@ -337,9 +390,17 @@ const Comment = ({
                 copyToClipboard(comment.body);
                 toggleBottomNavigationView();
                 showMessage({
-                  message: "Copied to clipboard",
+                  message: "",
                   type: "success",
-                  duration: 1000
+                  duration: 1000,
+                  icon: () => (
+                    <View style={styles.flashMessage}>
+                      <MaterialIcons name="content-copy" size={26} />
+                      <Text style={styles.editCommentText}>
+                        Copied to Clipboard
+                      </Text>
+                    </View>
+                  ),
                 });
               }}
               style={styles.editCommentButton}
@@ -428,9 +489,11 @@ const Comments = ({ comments, bottomSheetRef, handleSheetChanges }) => {
     if (fetching) {
       fetchData()
         .then((fetchedData) => {
+          setFetching(false);
           setLoading(false);
         })
         .catch((error) => {
+          setFetching(false);
           setLoading(false);
         });
     }
@@ -597,6 +660,7 @@ const Comments = ({ comments, bottomSheetRef, handleSheetChanges }) => {
             comment={comment}
             setIsKeyboard={setIsKeyboard}
             handleReplyOnComment={handleReplyOnComment}
+            setFetching={setFetching}
           />
         ))}
       </BottomSheetScrollView>
@@ -626,7 +690,7 @@ const Comments = ({ comments, bottomSheetRef, handleSheetChanges }) => {
           <Ionicons name={ICONS.send} size={24} color={COLORS.blue} />
         </TouchableOpacity>
       </View>
-      
+
       <FlashMessage position="bottom" />
     </BottomSheet>
   );
@@ -795,5 +859,12 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     flexDirection: "row",
+  },
+  flashMessage: {
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 20,
   },
 });

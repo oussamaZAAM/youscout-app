@@ -16,7 +16,9 @@ export function getTimeDifference(timestamp: string): string {
     return `${diffInHours} hour${diffInHours > 1 ? "s" : ""} ago`;
   } else if (diffInMinutes > 0) {
     return `${diffInMinutes} minute${diffInMinutes > 1 ? "s" : ""} ago`;
-  } else {
+  } else if (diffInSeconds > 10){
     return `${diffInSeconds} second${diffInSeconds > 1 ? "s" : ""} ago`;
+  } else {
+    return "Just now";
   }
 }
