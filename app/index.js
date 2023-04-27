@@ -14,6 +14,7 @@ import { NewVideoStack } from "./navigation/NewVideoStack";
 import { ProfileStack } from "./navigation/ProfileStack";
 import videosData from "./videosData";
 import NewVideoButton from "../components/general/NewVideoButton";
+import ChatScreen from "./chat";
 
 ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT);
 
@@ -50,7 +51,7 @@ const App = () => {
           tabBarStyle: { backgroundColor: "black" },
           headerShown: false,
           tabBarActiveTintColor: COLORS.light,
-          tabBarHideOnKeyboard: true,
+          tabBarHideOnKeyboard: true
         }}
       >
         <BottomTab.Screen
@@ -98,7 +99,7 @@ const App = () => {
 
         <BottomTab.Screen
           name="Inbox"
-          component={HomeScreen}
+          component={ChatScreen}
           options={{
             tabBarIcon: ({ focused }) => (
               <Image

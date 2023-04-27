@@ -1,35 +1,82 @@
-import { StyleSheet, Text, View } from "react-native";
-import React from "react";
 import { LinearGradient } from "expo-linear-gradient";
+import React, { useEffect, useRef } from "react";
+import { Keyboard, StyleSheet, View, Animated } from "react-native";
 import { AntDesign } from "react-native-vector-icons";
-import { COLORS } from "../../assets/utils";
 
 const NewVideoButton = () => {
+  const translateY = useRef(new Animated.Value(-10.5)).current;
+
+  const hideTranslate = () => {
+    Animated.timing(translateY, {
+      toValue: 20,
+      duration: 200,
+      useNativeDriver: true,
+    }).start();
+  };
+  const showTranslate = () => {
+    Animated.timing(translateY, {
+      toValue: -10.5,
+      duration: 200,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      "keyboardDidShow",
+      () => {
+        hideTranslate();
+      }
+    );
+    const keyboardDidHideListener = Keyboard.addListener(
+      "keyboardDidHide",
+      () => {
+        showTranslate();
+      }
+    );
+
+    // Don't forget to remove the listeners when the component is unmounted
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
+  }, []);
+
   return (
-    <View style={styles.newVideoButtonContainer}>
+    <Animated.View
+      style={[
+        styles.newVideoButtonContainer,
+        {
+          transform: [
+            {
+              translateY: translateY,
+            },
+          ],
+        },
+      ]}
+    >
       <LinearGradient
         colors={["red", "orange", "purple"]}
         style={styles.gradientBorder}
       />
       <View style={styles.newVideoButton}>
-        <AntDesign name="plus" size={32} />
+        <AntDesign name="plus" size={32} color='white' />
       </View>
-    </View>
+    </Animated.View>
   );
 };
 
 export default NewVideoButton;
 
 const styles = StyleSheet.create({
-    
   newVideoButton: {
     width: 65,
     height: 65,
     borderRadius: 35,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: 'black'
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "black",
   },
   newVideoButtonContainer: {
     width: 70,
@@ -38,12 +85,6 @@ const styles = StyleSheet.create({
     overflow: "hidden",
     alignItems: "center",
     justifyContent: "center",
-    transform: [
-      {
-        translateY: -10.5,
-      },
-    ],
-    
   },
   gradientBorder: {
     position: "absolute",
