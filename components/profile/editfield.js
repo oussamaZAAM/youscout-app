@@ -4,6 +4,7 @@ import { Divider } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import NavbarGeneral from "../general/navbar";
+import { useNavigation } from "@react-navigation/native";
 
 const checkVariable = (field, value, action) => {
   if (field === "username") {
@@ -34,6 +35,7 @@ const checkVariable = (field, value, action) => {
 };
 
 const EditProfileFieldScreen = ({ route }) => {
+  const navigation = useNavigation();
   const { title, field, value, action } = route.params;
   const [newValue, setNewValue] = useState(value);
   const onSave = () => {
@@ -42,6 +44,7 @@ const EditProfileFieldScreen = ({ route }) => {
     } else {
       console.log("error1");
     }
+    navigation.goBack();
   };
   return (
     <SafeAreaView style={styles.container}>
