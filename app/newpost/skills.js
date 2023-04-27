@@ -1,6 +1,6 @@
 import { AntDesign } from "@expo/vector-icons";
-import { useNavigation } from "@react-navigation/native";
-import React, { useEffect, useState } from "react";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   FlatList,
   StyleSheet,
@@ -13,22 +13,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 import { COLORS } from "../../assets/utils";
 import { WINDOW_HEIGHT } from "../../assets/utils";
-
-const data = [
-  { id: 1, name: "Shooting" },
-  { id: 2, name: "Jugging" },
-  { id: 3, name: "Dribbling" },
-  { id: 4, name: "Passing" },
-  { id: 5, name: "Ball Control" },
-  { id: 6, name: "Tackling" },
-  { id: 7, name: "Heading" },
-  { id: 8, name: "Positioning" },
-  { id: 9, name: "Awareness" },
-  { id: 10, name: "Speed" },
-  { id: 11, name: "Agility" },
-  { id: 12, name: "Balance" },
-  { id: 13, name: "Vision" },
-];
+import { skillsService } from "../../constants/env";
 
 const RenderItem = ({ item, handleClickSkill }) => {
   return (
@@ -46,13 +31,12 @@ const RenderItem = ({ item, handleClickSkill }) => {
 
 const SkillsScreen = (props) => {
   const [searchQuery, setSearchQuery] = useState("");
-  const thisData = data;
 
-  const [filteredData, setFilteredData] = useState(data);
+  const [previousSkills, setPreviousSkills] = useState(props.route?.params?.skills);
 
-  const [skillsData, setSkillsData] = useState(
-    props.route.params.skills ? props.route.params.skills : thisData
-  );
+  const [filteredData, setFilteredData] = useState(previousSkills);
+
+  const [skillsData, setSkillsData] = useState(previousSkills);
 
   const navigation = useNavigation();
 
@@ -69,13 +53,39 @@ const SkillsScreen = (props) => {
     });
   };
 
+  useFocusEffect(
+    useCallback(() => {
+      const unsubscribe = navigation.addListener('beforeRemove', (e) => {
+        e.preventDefault();
+
+        unsubscribe();
+        navigation.dispatch(e.data.action);
+      });
+      return unsubscribe;
+    }, [navigation])
+  );
+
+  useEffect(()=>{
+    const fetchSkills = async() => {
+      try {
+        const response = await fetch(skillsService + "/api/skills");
+        const skills = await response.json();
+        setSkillsData(skills);
+        setFilteredData(skills);
+      } catch(e) {
+        alert(e);
+      }
+    }
+    (!props.route.params.skills || props.route.params.skills.length===0) && fetchSkills();
+  },[])
+
   useEffect(() => {
-    const results = skillsData.filter((element) =>
+    const results = skillsData?.filter((element) =>
       element.name.toLowerCase().includes(searchQuery.toLowerCase())
     );
     setFilteredData(results);
     !props.route.params.skills &&
-      thisData.forEach((skill) => (skill.clicked = false));
+      skillsData?.forEach((skill) => (skill.clicked = false));
   }, [searchQuery]);
 
   return (

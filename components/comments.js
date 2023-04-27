@@ -16,7 +16,6 @@ import React, {
   useState,
 } from "react";
 import {
-  ActivityIndicator,
   FlatList,
   Image,
   StyleSheet,
@@ -34,7 +33,7 @@ import { getTimeDifference } from "../assets/functions";
 import { COLORS, ICONS, WINDOW_WIDTH } from "../assets/utils";
 import { commentsService } from "../constants/env";
 
-const userId = "64409abd6ac950184bd90525";
+const userId = 2;
 
 const Comment = ({
   comment,
@@ -234,12 +233,13 @@ const Comment = ({
               </TouchableOpacity>
             </View>
           ) : (
-            <View style={styles.commentContentContainer}>
+            <View style={styles.EditCommentContentContainer}>
               <View style={styles.commentBodyContainer}>
                 <TextInput
                   autoFocus={true}
                   value={editedComment}
                   onChangeText={(text) => setEditedComment(text)}
+                  multiline
                 />
               </View>
               <View style={styles.commentEditButtonsContainer}>
@@ -250,7 +250,7 @@ const Comment = ({
                   }}
                   style={styles.textEditButton}
                 >
-                  <FontAwesome name="check" size={24} />
+                  <MaterialIcons name="check" size={24} />
                 </TouchableOpacity>
                 <TouchableOpacity
                   onPress={() => {
@@ -258,7 +258,7 @@ const Comment = ({
                   }}
                   style={styles.textEditButton}
                 >
-                  <FontAwesome name="remove" size={24} />
+                  <MaterialIcons name="highlight-remove" size={24} />
                 </TouchableOpacity>
               </View>
             </View>
@@ -492,39 +492,42 @@ const Comment = ({
   );
 };
 
-const Comments = ({ comments, bottomSheetRef, handleSheetChanges }) => {
+const Comments = ({ commentsNumber, bottomSheetRef, handleSheetChanges }) => {
   const textinputRef = useRef();
   const [isKeyboard, setIsKeyboard] = useState(0);
-  const [data, setData] = useState([
+  const [comments, setComments] = useState([
     {
       id: 1,
-      user: {
-        name: "Megumin",
-        avatar:
+      author: {
+        id: 1,
+        username: "Megumin",
+        profileImg:
           "https://ih1.redbubble.net/image.3613970471.1584/st,small,845x845-pad,1000x1000,f8f8f8.jpg",
       },
-      text: "Kono Subarashii Sekai ni Bakuen en woKono Subarashii Sekai ni Bakuen woKono Subarashii Sekai ni Bakuen woKono Subarashii Sekai ni Bakuen woKono Subarashii Sekai ni Bakuen wo!",
+      body: "Kono Subarashii Sekai ni Bakuen en woKono Subarashii Sekai ni Bakuen woKono Subarashii Sekai ni Bakuen woKono Subarashii Sekai ni Bakuen woKono Subarashii Sekai ni Bakuen wo!",
       timestamp: "1 hour ago",
       likes: [],
       replies: [
         {
           id: 1,
-          user: {
-            name: "Jane Smith",
-            avatar: "https://randomuser.me/api/portraits/women/1.jpg",
+          author: {
+            id: 2,
+            username: "Jane Smith",
+            profileImg: "https://randomuser.me/api/portraits/women/1.jpg",
           },
-          text: "I agree, thanks for sharing!",
+          body: "I agree, thanks for sharing!",
           timestamp: "30 minutes ago",
         },
       ],
     },
     {
       id: 2,
-      user: {
-        name: "Bob Johnson",
-        avatar: "https://randomuser.me/api/portraits/men/2.jpg",
+      author: {
+        id: 2,
+        username: "Bob Johnson",
+        profileImg: "https://randomuser.me/api/portraits/men/2.jpg",
       },
-      text: "Wow, this is really insightful!",
+      body: "Wow, this is really insightful!",
       timestamp: "2 hours ago",
       likes: [],
       replies: [],
@@ -544,7 +547,7 @@ const Comments = ({ comments, bottomSheetRef, handleSheetChanges }) => {
           commentsService + "/api/posts/001/comments?orderBy=recent"
         );
         const data = await response.json();
-        setData(data);
+        setComments(comments);
         return data;
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -600,7 +603,7 @@ const Comments = ({ comments, bottomSheetRef, handleSheetChanges }) => {
         alert(`HTTP error! status: ${response.status}`);
         return 0;
       }
-      setData((prevArray) => {
+      setComments((prevArray) => {
         for (let i = 0; i < prevArray.length; i++) {
           if (prevArray[i].id === id) {
             if (!prevArray[i].likes.includes(userId)) {
@@ -653,7 +656,7 @@ const Comments = ({ comments, bottomSheetRef, handleSheetChanges }) => {
         }
         const data = await response.json();
         // Set data state in case of a valid response
-        setData((prevArray) => {
+        setComments((prevArray) => {
           const comment = {
             id: data.id,
             author: {
@@ -681,7 +684,7 @@ const Comments = ({ comments, bottomSheetRef, handleSheetChanges }) => {
   // Handle adding the comment's new replies to the comments state
   const handleReplyOnComment = (comment) => {
     const id = comment.id;
-    setData((prevArray) => {
+    setComments((prevArray) => {
       const index = prevArray.findIndex((comment) => comment.id === id);
       const newArray = prevArray.filter((comment) => comment.id !== id);
       newArray.splice(index, 0, comment);
@@ -709,7 +712,7 @@ const Comments = ({ comments, bottomSheetRef, handleSheetChanges }) => {
       keyboardBehavior="interactive"
     >
       <Text style={{ alignSelf: "center", fontWeight: 600, fontSize: 16 }}>
-        {comments} Comments
+        {commentsNumber} Comments
       </Text>
       {/* <BottomSheetScrollView
         keyboardShouldPersistTaps="always"
@@ -728,8 +731,8 @@ const Comments = ({ comments, bottomSheetRef, handleSheetChanges }) => {
       </BottomSheetScrollView> */}
       <BottomSheetFlatList
         contentContainerStyle={styles.contentContainer}
-        keyboardShouldPersistTaps="always"
-        data={data}
+        keyboardDismissMode="none"
+        data={comments}
         renderItem={({ item }) => (
           <Comment
             key={item.id}
@@ -841,6 +844,14 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
+  },
+  EditCommentContentContainer: {
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    backgroundColor: "#ddd",
+    padding: 1,
   },
   commentEditButtonsContainer: {
     gap: 10,

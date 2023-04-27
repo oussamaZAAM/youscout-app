@@ -193,13 +193,14 @@ export default function VideoItem({ data, isActive }) {
         {isComments === 1 && (
           <TouchableWithoutFeedback
             onPress={() => bottomSheetRef.current.collapse()}
+            keyboardShouldPersistTaps="always"
           >
             <View style={styles.overlay} />
           </TouchableWithoutFeedback>
         )}
       </View>
       <Comments
-        comments={comments}
+        commentsNumber={comments}
         bottomSheetRef={bottomSheetRef}
         handleSheetChanges={handleSheetChanges}
       />

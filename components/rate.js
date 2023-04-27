@@ -56,7 +56,7 @@ const Rate = ({
       visible={modalVisible}
       onRequestClose={toggleModal}
     >
-      <TouchableWithoutFeedback onPress={() => setModalVisible(false)}>
+      <TouchableWithoutFeedback onPress={() => setModalVisible(false)} keyboardShouldPersistTaps="always">
         <View style={styles.overlay} />
       </TouchableWithoutFeedback>
       <View
