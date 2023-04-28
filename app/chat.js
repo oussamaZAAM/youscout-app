@@ -1,15 +1,16 @@
+import { useNavigation } from "@react-navigation/native";
+import React, { useEffect, useState } from "react";
 import {
   FlatList,
+  Image,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
-  Image,
 } from "react-native";
-import React, { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import NavbarGeneral from "../components/general/navbar";
 import { COLORS } from "../assets/utils";
+import NavbarGeneral from "../components/general/navbar";
 
 const conversations = [
   {
@@ -54,6 +55,8 @@ const ChatScreen = ({}) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredData, setFilteredData] = useState(conversations);
 
+  const navigation = useNavigation();
+
   useEffect(() => {
     const results = conversations?.filter((element) =>
       element.name.toLowerCase().includes(searchQuery.toLowerCase())
@@ -69,17 +72,23 @@ const ChatScreen = ({}) => {
     return (
       <TouchableOpacity
         style={styles.conversation}
-        onPress={() => navigation.navigate("Chat", { id: item.id })}
+        onPress={() => navigation.navigate("Conversation", { id: item.id })}
       >
+        {item.newMessages > 0 && (
+          <Image
+            style={styles.newMessageIcon}
+            source={require("../assets/images/new.png")}
+          />
+        )}
         <View style={{ flexDirection: "row", alignItems: "center" }}>
           <Image source={{ uri: item.avatar }} style={styles.avatar} />
           <View style={{ marginLeft: 8 }}>
-            {item.newMessages===0 ? (
+            {item.newMessages === 0 ? (
               <Text style={styles.name}>{item.name}</Text>
             ) : (
               <Text style={styles.newMessageName}>{item.name}</Text>
             )}
-            {item.newMessages===0 ? (
+            {item.newMessages === 0 ? (
               <Text numberOfLines={1} style={styles.message}>
                 {item.message}
               </Text>
@@ -91,10 +100,14 @@ const ChatScreen = ({}) => {
           </View>
         </View>
         <View style={styles.messageInfoContainer}>
-            {item.newMessages===0 
-            ? <Text style={styles.time}>12:30 PM</Text>
-            : <Text style={styles.newMessageTime}>12:30 PM</Text>}
-            {item.newMessages !== 0 && <Text style={styles.numOfNewMessages}>{item.newMessages}</Text>}
+          {item.newMessages === 0 ? (
+            <Text style={styles.time}>12:30 PM</Text>
+          ) : (
+            <Text style={styles.newMessageTime}>12:30 PM</Text>
+          )}
+          {item.newMessages !== 0 && (
+            <Text style={styles.numOfNewMessages}>{item.newMessages}</Text>
+          )}
         </View>
       </TouchableOpacity>
     );
@@ -130,10 +143,17 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     paddingHorizontal: 16,
-    paddingVertical: 8,
+    paddingVertical: 12,
     borderBottomWidth: 1,
     borderBottomColor: "#ddd",
     backgroundColor: "#fff",
+  },
+  newMessageIcon: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    height: 25,
+    width: 25,
   },
   avatar: {
     width: 50,
@@ -148,7 +168,7 @@ const styles = StyleSheet.create({
   newMessageName: {
     fontSize: 16,
     fontWeight: 900,
-    color: COLORS.blue,
+    // color: COLORS.blue,
     marginBottom: 4,
   },
   message: {
@@ -158,8 +178,8 @@ const styles = StyleSheet.create({
   },
   newMessage: {
     fontSize: 14,
-    fontWeight: "bold",
-    color: COLORS.blue,
+    fontWeight: 500,
+    // color: COLORS.blue,
     maxWidth: 250,
   },
   time: {
@@ -168,28 +188,27 @@ const styles = StyleSheet.create({
   },
   newMessageTime: {
     fontSize: 12,
-    color: COLORS.blue,
-    fontWeight: 'bold',
-    marginBottom: 5
+    color: COLORS.light,
+    fontWeight: "bold",
+    marginBottom: 5,
   },
   messageInfoContainer: {
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center'
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
   },
   numOfNewMessages: {
-    alignSelf: 'center',
-    textAlign: 'center',
+    alignSelf: "center",
+    textAlign: "center",
     color: COLORS.light,
-    // backgroundColor: COLORS.blue,
     fontSize: 14,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     borderWidth: 1,
     borderColor: COLORS.light,
     minWidth: 25,
     borderRadius: 15,
-    padding: 1
-  }
+    padding: 1,
+  },
 });
 
 export default ChatScreen;

@@ -16,8 +16,6 @@ import videosData from "../videosData";
 
 const Stack = createNativeStackNavigator();
 
-const BottomTab = createBottomTabNavigator();
-
 const HomeScreen = () => {
   const [activeVideoIndex, setActiveVideoIndex] = useState(0);
 
