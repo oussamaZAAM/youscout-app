@@ -49,10 +49,12 @@ const NavbarGeneral = ({
     <View style={styles.container}>
       {!isSearchBarEnabled && (
         <TouchableOpacity
-          onPress={() => navigation.goBack()}
+          onPress={() => {
+            rightButton.name !== "search" && navigation.goBack()
+          }}
           style={styles.button}
         >
-          <Feather name="arrow-left" size={26} />
+          <Feather name="arrow-left" size={26} color={rightButton.name !== "search" ? 'black' : 'transparent'} />
         </TouchableOpacity>
       )}
 
