@@ -11,9 +11,9 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-import { COLORS } from "../../assets/utils";
-import { WINDOW_HEIGHT } from "../../assets/utils";
-import { skillsService } from "../../constants/env";
+import { COLORS } from "../../../assets/utils";
+import { WINDOW_HEIGHT } from "../../../assets/utils";
+import { skillsService } from "../../../constants/env";
 
 const RenderItem = ({ item, handleClickSkill }) => {
   return (

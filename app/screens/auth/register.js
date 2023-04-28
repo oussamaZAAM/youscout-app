@@ -10,24 +10,22 @@ import {
   View,
 } from "react-native";
 
-import { FontAwesome, MaterialIcons } from "react-native-vector-icons";
-
 import * as Yup from "yup";
-import { COLORS } from "../../assets/utils";
+
+import { COLORS } from "../../../assets/utils";
 
 const LoginScreen = ({ navigation }) => {
   const scrollViewRef = useRef();
   const handleInputFocus = () => {
     scrollViewRef.current.scrollToEnd({ animated: true });
   };
-
   return (
     <SafeAreaView style={{ flex: 1, justifyContent: "center" }}>
       <ScrollView style={{ paddingHorizontal: 25 }} ref={scrollViewRef}>
         <View style={{ alignItems: "center" }}>
           <Image
             style={{ width: 200, height: 200, marginTop: 30, marginBottom: 30 }}
-            source={require("../../assets/logoRaw.png")}
+            source={require("../../../assets/logoRaw.png")}
           />
         </View>
 
@@ -40,23 +38,59 @@ const LoginScreen = ({ navigation }) => {
             marginHorizontal: 10,
           }}
         >
-          Login
+          Register
         </Text>
 
         <Formik
           initialValues={{ email: "", password: "" }}
           validationSchema={Yup.object({
+            name: Yup.string()
+              .matches(
+                /^[a-zA-Z]+ [a-zA-Z]+(?: [a-zA-Z]+)*$/,
+                "Full name must contain at least two strings"
+              )
+              .required("Required"),
             email: Yup.string()
               .email("Invalid email address")
               .required("Required"),
             password: Yup.string()
               .min(6, "Must be at least 6 characters")
               .required("Required"),
+            confirmPassword: Yup.string().oneOf(
+              [Yup.ref("password"), null],
+              "Passwords must match"
+            ),
           })}
           onSubmit={(values) => {}}
         >
           {({ handleChange, handleSubmit, values, errors, touched }) => (
             <View>
+              {touched.name && (
+                <Text
+                  style={{
+                    color: "red",
+                    marginHorizontal: 10,
+                    marginVertical: -5,
+                  }}
+                >
+                  {errors.name}
+                </Text>
+              )}
+              <TextInput
+                name="name"
+                placeholder="Full name"
+                style={{
+                  borderWidth: 1,
+                  borderColor: "black",
+                  borderRadius: 10,
+                  padding: 10,
+                  margin: 10,
+                }}
+                onChangeText={handleChange("name")}
+                value={values.name}
+                onFocus={handleInputFocus}
+              />
+
               {touched.email && (
                 <Text
                   style={{
@@ -110,6 +144,33 @@ const LoginScreen = ({ navigation }) => {
                 onFocus={handleInputFocus}
               />
 
+              {touched.confirmPassword && (
+                <Text
+                  style={{
+                    color: "red",
+                    marginHorizontal: 10,
+                    marginVertical: -5,
+                  }}
+                >
+                  {errors.confirmPassword}
+                </Text>
+              )}
+              <TextInput
+                name="confirmPassword"
+                placeholder="Confirm Password"
+                style={{
+                  borderWidth: 1,
+                  borderColor: "black",
+                  borderRadius: 10,
+                  padding: 10,
+                  margin: 10,
+                }}
+                onChangeText={handleChange("confirmPassword")}
+                value={values.confirmPassword}
+                secureTextEntry={true}
+                onFocus={handleInputFocus}
+              />
+
               <TouchableOpacity
                 onPress={handleSubmit}
                 style={{
@@ -122,7 +183,7 @@ const LoginScreen = ({ navigation }) => {
                   display: "flex",
                   justifyContent: "center",
                   alignItems: "center",
-                  backgroundColor: COLORS.light,
+                  backgroundColor: COLORS.blue,
                 }}
               >
                 <Text
@@ -132,61 +193,12 @@ const LoginScreen = ({ navigation }) => {
                     fontWeight: "bold",
                   }}
                 >
-                  Sign in
+                  Register
                 </Text>
               </TouchableOpacity>
             </View>
           )}
         </Formik>
-
-        <Text style={{ textAlign: "center", color: "#666", marginBottom: 30 }}>
-          Or, login with ...
-        </Text>
-
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
-            marginBottom: 30,
-          }}
-        >
-          <TouchableOpacity
-            onPress={() => {}}
-            style={{
-              borderColor: "#ddd",
-              borderWidth: 2,
-              borderRadius: 10,
-              paddingHorizontal: 30,
-              paddingVertical: 10,
-            }}
-          >
-            <FontAwesome color="#DB4437" name="google" size={40} />
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => {}}
-            style={{
-              borderColor: "#ddd",
-              borderWidth: 2,
-              borderRadius: 10,
-              paddingHorizontal: 30,
-              paddingVertical: 10,
-            }}
-          >
-            <MaterialIcons color="#3b5998" name="facebook" size={40} />
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => {}}
-            style={{
-              borderColor: "#ddd",
-              borderWidth: 2,
-              borderRadius: 10,
-              paddingHorizontal: 30,
-              paddingVertical: 10,
-            }}
-          >
-            <FontAwesome color="#1DA1F2" name="twitter" size={40} />
-          </TouchableOpacity>
-        </View>
 
         <View
           style={{
@@ -195,11 +207,9 @@ const LoginScreen = ({ navigation }) => {
             marginBottom: 30,
           }}
         >
-          <Text>New to the app ? </Text>
-          <TouchableOpacity onPress={() => navigation.navigate("Register")}>
-            <Text style={{ color: COLORS.light, fontWeight: "700" }}>
-              Register
-            </Text>
+          <Text>Already have an account ? </Text>
+          <TouchableOpacity onPress={() => navigation.navigate("Login")}>
+            <Text style={{ color: COLORS.blue, fontWeight: "700" }}>Login</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>

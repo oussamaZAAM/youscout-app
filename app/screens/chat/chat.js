@@ -9,8 +9,8 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { COLORS } from "../assets/utils";
-import NavbarGeneral from "../components/general/navbar";
+import { COLORS } from "../../../assets/utils";
+import NavbarGeneral from "../../../components/general/navbar";
 
 const conversations = [
   {
@@ -77,7 +77,7 @@ const ChatScreen = ({}) => {
         {item.newMessages > 0 && (
           <Image
             style={styles.newMessageIcon}
-            source={require("../assets/images/new.png")}
+            source={require("../../../assets/images/new.png")}
           />
         )}
         <View style={{ flexDirection: "row", alignItems: "center" }}>

@@ -1,12 +1,11 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
-import VideoItem from "../VideoItem";
-import LoginScreen from "../auth/login";
-import RegisterScreen from "../auth/register";
+import VideoItem from "../screens/VideoItem";
+import LoginScreen from "../screens/auth/login";
+import RegisterScreen from "../screens/auth/register";
 
 import {
-  createBottomTabNavigator,
   useBottomTabBarHeight,
 } from "@react-navigation/bottom-tabs";
 import { useState } from "react";

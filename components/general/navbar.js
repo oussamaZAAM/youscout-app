@@ -75,6 +75,7 @@ const NavbarGeneral = ({
           placeholderTextColor="gray"
           onChangeText={(text) => rightButton.action(text)}
           value={rightButton.value}
+          autoFocus
         />}
       </Animated.View>
       {!isSearchBarEnabled ? (

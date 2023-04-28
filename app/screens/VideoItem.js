@@ -15,9 +15,9 @@ import {
 
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-import { WINDOW_HEIGHT, WINDOW_WIDTH } from "../assets/utils";
-import Comments from "../components/comments";
-import Rate from "../components/rate";
+import { WINDOW_HEIGHT, WINDOW_WIDTH } from "../../assets/utils";
+import Comments from "../../components/comments";
+import Rate from "../../components/rate";
 
 export default function VideoItem({ data, isActive }) {
   const [isPlaying, setIsPlaying] = useState(true);
@@ -149,7 +149,7 @@ export default function VideoItem({ data, isActive }) {
             <Image style={styles.avatar} source={{ uri: avatarUri }} />
             <View style={styles.followButton}>
               <Image
-                source={require("../assets/images/plus-button.png")}
+                source={require("../../assets/images/plus-button.png")}
                 style={styles.followIcon}
               />
             </View>
@@ -157,7 +157,7 @@ export default function VideoItem({ data, isActive }) {
           <View style={styles.verticalBarItem}>
             <Image
               style={styles.verticalBarIcon}
-              source={require("../assets/images/heart.png")}
+              source={require("../../assets/images/heart.png")}
             />
             <Text style={styles.verticalBarText}>{likes}</Text>
           </View>
@@ -169,7 +169,7 @@ export default function VideoItem({ data, isActive }) {
           >
             <Image
               style={styles.verticalBarIcon}
-              source={require("../assets/images/message-circle.png")}
+              source={require("../../assets/images/message-circle.png")}
             />
             <Text style={styles.verticalBarText}>{comments}</Text>
           </TouchableOpacity>
@@ -177,7 +177,7 @@ export default function VideoItem({ data, isActive }) {
             <View style={styles.verticalBarItem}>
               <Image
                 style={styles.verticalBarIcon}
-                source={require("../assets/images/star.png")}
+                source={require("../../assets/images/star.png")}
               />
               <Text style={styles.verticalBarText}>Rate</Text>
             </View>

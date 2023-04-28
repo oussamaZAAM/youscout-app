@@ -12,10 +12,10 @@ import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context"
 
 import { Feather } from "react-native-vector-icons";
 
-import { WINDOW_HEIGHT, WINDOW_WIDTH } from "../assets/utils";
-import ProfileHeader from "../components/profile/header";
-import ProfileNavbar from "../components/profile/navbar";
-import ProfilePostList from "../components/profile/postList";
+import { WINDOW_HEIGHT, WINDOW_WIDTH } from "../../assets/utils";
+import ProfileHeader from "../../components/profile/header";
+import ProfileNavbar from "../../components/profile/navbar";
+import ProfilePostList from "../../components/profile/postList";
 import VideoItem from "./VideoItem";
 
 const ProfileScreen = () => {

@@ -1,9 +1,9 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
-import NewpostScreen from "../newpost/newvideo";
-import SaveVideoScreen from "../newpost/savevideo";
-import SkillsScreen from "../newpost/skills";
+import NewpostScreen from "../screens/newpost/newvideo";
+import SaveVideoScreen from "../screens/newpost/savevideo";
+import SkillsScreen from "../screens/newpost/skills";
 
 const Stack = createNativeStackNavigator();
 

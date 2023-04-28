@@ -7,9 +7,9 @@ import {
   Send,
 } from "react-native-gifted-chat";
 import { Feather } from "react-native-vector-icons";
-import { COLORS } from "../assets/utils";
+import { COLORS } from "../../../assets/utils";
 import { SafeAreaView } from "react-native-safe-area-context";
-import NavbarGeneral from "../components/general/navbar";
+import NavbarGeneral from "../../../components/general/navbar";
 
 const ConversationScreen = (props) => {
   const id = props.route.params.id;

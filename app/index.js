@@ -4,17 +4,17 @@ import {
 } from "@react-navigation/bottom-tabs";
 import { NavigationContainer } from "@react-navigation/native";
 import React, { useState } from "react";
-import { FlatList, Image, StyleSheet, View } from "react-native";
+import { FlatList, Image, StyleSheet } from "react-native";
 
 import * as ScreenOrientation from "expo-screen-orientation";
 import { COLORS, WINDOW_HEIGHT } from "../assets/utils";
-import VideoItem from "./VideoItem";
+import NewVideoButton from "../components/general/NewVideoButton";
+import { ChatScreenStack } from "./navigation/ChatScreenStack";
 import { MainScreenStack } from "./navigation/MainScreenStack";
 import { NewVideoStack } from "./navigation/NewVideoStack";
 import { ProfileStack } from "./navigation/ProfileStack";
+import VideoItem from "./screens/VideoItem";
 import videosData from "./videosData";
-import NewVideoButton from "../components/general/NewVideoButton";
-import { ChatScreenStack } from "./navigation/ChatScreenStack";
 
 ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT);
 

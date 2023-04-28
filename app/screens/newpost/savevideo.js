@@ -15,7 +15,7 @@ import {
 
 import { MaterialIcons } from "react-native-vector-icons";
 
-import { COLORS } from "../../assets/utils";
+import { COLORS } from "../../../assets/utils";
 
 const renderItem = ({ item }) => {
   if (item.clicked === true) {
