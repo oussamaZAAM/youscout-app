@@ -105,8 +105,8 @@ const NewVideoScreen = () => {
 
   if (!hasCameraPermissions || !hasAudioPermissions || !hasGalleryPermissions) {
     return (
-      <View>
-        <Text>Give Access</Text>
+      <View style={styles.giveAccess}>
+        <Text style={{fontSize: 20, fontWeight: 'bold'}}>Give Access</Text>
       </View>
     );
   }
@@ -188,6 +188,11 @@ const NewVideoScreen = () => {
 export default NewVideoScreen;
 
 const styles = StyleSheet.create({
+  giveAccess: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
   container: {
     flex: 1,
   },
