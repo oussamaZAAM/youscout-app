@@ -15,6 +15,7 @@ import { NewVideoStack } from "./navigation/NewVideoStack";
 import { ProfileStack } from "./navigation/ProfileStack";
 import VideoItem from "./screens/VideoItem";
 import videosData from "./videosData";
+import DiscoverScreen from "./screens/discover";
 
 ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT);
 
@@ -72,7 +73,7 @@ const App = () => {
 
         <BottomTab.Screen
           name="Discover"
-          component={HomeScreen}
+          component={DiscoverScreen}
           options={{
             tabBarIcon: ({ focused }) => (
               <Image

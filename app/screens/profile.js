@@ -78,7 +78,7 @@ const ProfileScreen = (props) => {
 
   return postEnabled === -1 ? (
     <SafeAreaView style={styles.container}>
-      <ProfileNavbar profileUser={profileUser} />
+      <ProfileNavbar profileUserName={profileUser.username} myProfile={user.id === profileUser.id} />
       <ProfileHeader profileUser={profileUser} />
       <ProfilePostList posts={posts} setPostEnabled={setPostEnabled} />
     </SafeAreaView>

@@ -131,7 +131,6 @@ const ProfileHeader = ({ profileUser }) => {
             </TouchableOpacity>
           ) : (
             <TouchableOpacity
-              onPress={() => navigation.navigate("EditProfile")}
               style={styles.followButton}
             >
               <Text style={styles.followText}>Follow</Text>

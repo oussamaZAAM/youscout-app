@@ -1,15 +1,22 @@
+import { useNavigation } from "@react-navigation/native";
 import React from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-
 import { Feather } from "react-native-vector-icons";
 
-const ProfileNavbar = ({ profileUser }) => {
+const ProfileNavbar = ({ profileUserName, myProfile }) => {
+  const navigation = useNavigation();
   return (
     <View style={styles.navContainer}>
-      <TouchableOpacity>
-        <Feather name="search" size={20} />
-      </TouchableOpacity>
-      <Text style={styles.text}>{profileUser.username}</Text>
+      {myProfile ? (
+        <TouchableOpacity>
+          <Feather name="search" size={20} />
+        </TouchableOpacity>
+      ) : (
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <Feather name="arrow-left" size={20} />
+        </TouchableOpacity>
+      )}
+      <Text style={styles.text}>{profileUserName}</Text>
       <TouchableOpacity>
         <Feather name="menu" size={24} />
       </TouchableOpacity>
