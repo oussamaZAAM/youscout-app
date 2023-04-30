@@ -25,9 +25,16 @@ const EditProfileScreen = () => {
   );
   const [username, setUsername] = useState("karenbee7");
   const [email, setEmail] = useState("karenbee7@gmail.com");
+  const [bio, setBio] = useState(
+    "Karen, the main character of Karen Bee, is one of Koyomi's sisters. She is older than Tsukihi and always doing outdoor activities. Despite being younger, Karen is taller than Koyomi, much to Koyomi's dismay."
+  );
+  const [socials, setSocials] = useState({
+    instagram: "",
+    facebook: ""
+  });
 
   const [modalVisible, setModalVisible] = useState(false);
-  const [displayImage, setDisplayImage] = useState(0);
+  const [displayImage, setDisplayImage] = useState(0); // Enabaled when when Viewing current profile image
 
   const toggleBottomNavigationView = () => {
     setModalVisible(!modalVisible);
@@ -80,7 +87,7 @@ const EditProfileScreen = () => {
       ) : (
         <View style={styles.navbarContainer}>
           <TouchableOpacity
-            onPress={()=>setDisplayImage(0)}
+            onPress={() => setDisplayImage(0)}
             style={styles.button}
           >
             <Feather name="arrow-left" size={26} />
@@ -88,14 +95,8 @@ const EditProfileScreen = () => {
 
           <Text style={styles.title}>Profile image</Text>
 
-          <TouchableOpacity
-            style={styles.button}
-          >
-            <Feather
-              name="menu"
-              size={26}
-              color="transparent"
-            />
+          <TouchableOpacity style={styles.button}>
+            <Feather name="menu" size={26} color="transparent" />
           </TouchableOpacity>
         </View>
       )}
@@ -142,8 +143,12 @@ const EditProfileScreen = () => {
           )}
         </TouchableOpacity>
       </View>
+
+      {/* Other Profile Settings */}
       {!displayImage && (
         <View style={styles.fieldsContainer}>
+          <Divider />
+          {/* Username */}
           <TouchableOpacity
             onPress={() =>
               navigation.navigate("EditProfileField", {
@@ -161,6 +166,7 @@ const EditProfileScreen = () => {
               <Feather name="chevron-right" size={20} color="gray" />
             </View>
           </TouchableOpacity>
+          {/* Email */}
           <TouchableOpacity
             onPress={() =>
               navigation.navigate("EditProfileField", {
@@ -178,8 +184,74 @@ const EditProfileScreen = () => {
               <Feather name="chevron-right" size={20} color="gray" />
             </View>
           </TouchableOpacity>
+          {/* Bio */}
+          <TouchableOpacity
+            onPress={() =>
+              navigation.navigate("EditProfileField", {
+                title: "Bio",
+                field: "bio",
+                value: bio,
+                action: setBio,
+              })
+            }
+            style={styles.fieldItemContainer}
+          >
+            <Text>Bio</Text>
+            <View style={styles.fieldValueContainer}>
+              <Text>{bio || "Add a bio"}</Text>
+              <Feather name="chevron-right" size={20} color="gray" />
+            </View>
+          </TouchableOpacity>
+          <Divider />
+
+          {/* Social Media Section */}
+          <View style={styles.socialMediaContainer}>
+            <Text style={styles.socialMediaBanner}>Social Media</Text>
+            {/* Instagram */}
+            <TouchableOpacity
+              onPress={() =>
+                navigation.navigate("EditProfileField", {
+                  title: "Instagram",
+                  field: "instagram",
+                  value: socials.instagram,
+                  action: (value) => {
+                    setSocials({...socials, instagram: value})
+                  },
+                })
+              }
+              style={styles.fieldItemContainer}
+            >
+              <Text>Instagram</Text>
+              <View style={styles.fieldValueContainer}>
+                <Text>{socials.instagram || "Add an account"}</Text>
+                <Feather name="chevron-right" size={20} color="gray" />
+              </View>
+            </TouchableOpacity>
+            {/* Facebook */}
+            <TouchableOpacity
+              onPress={() =>
+                navigation.navigate("EditProfileField", {
+                  title: "Facebook",
+                  field: "facebook",
+                  value: socials.facebook,
+                  action: (value) => {
+                    setSocials({...socials, facebook: value})
+                  },
+                })
+              }
+              style={styles.fieldItemContainer}
+            >
+              <Text>Facebook</Text>
+              <View style={styles.fieldValueContainer}>
+                <Text>{socials.facebook || "Add an account"}</Text>
+                <Feather name="chevron-right" size={20} color="gray" />
+              </View>
+            </TouchableOpacity>
+          </View>
         </View>
       )}
+
+      {/* Bottom Sheet for Profile Image configuration */}
       {!displayImage && (
         <BottomSheet
           visible={modalVisible}
@@ -281,6 +353,19 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     marginVertical: 20,
+    justifyContent: "flex-end",
+    maxWidth: WINDOW_WIDTH / 2,
+  },
+  socialMediaContainer: {
+    // flex: 1,
+    // flexDirection: 'row',
+    // alignItems: 'center',
+    // justifyContent: 'space-between'
+  },
+  socialMediaBanner: {
+    color: 'gray',
+    marginVertical: 10,
+    // marginHorizontal: 10
   },
   bottomNavigationView: {
     backgroundColor: "white",

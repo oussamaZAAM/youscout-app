@@ -14,22 +14,51 @@ const checkVariable = (field, value, action) => {
         if (usernameRegex.test(value)) {
           action(value.toLowerCase());
         } else {
-          alert("username should not contain symbols other than underscores!");
+          alert("Username should not contain symbols other than underscores!");
         }
       } else {
-        alert("username should not contain more than 25 characters!");
+        alert("Username should not contain more than 25 characters!");
       }
     } else {
-      alert("username should be at least 3 characters!");
+      alert("Username should be at least 3 characters!");
     }
   }
 
   if (field === "email") {
     const usernameRegex = /\S+@\S+\.\S+/;
     if (usernameRegex.test(value)) {
-      action(value.toLowerCase());
+      if (value.length <= 30) {
+        action(value.toLowerCase());
+      } else {
+        alert("Email should not contain more than 30 characters!");
+      }
     } else {
       alert("Please insert a valid email address!");
+    }
+  }
+
+  if (field === "bio") {
+    if (value.length <= 100) {
+      action(value);
+    } else {
+      alert("Profile Bio should not contain more than 100 characters!");
+    }
+  }
+
+  if (field === "instagram") {
+    if (value.length <= 25) {
+      action(value);
+    } else {
+      alert("Instagram username should not contain more than 25 characters!");
+    }
+  }
+
+  if (field === "facebook") {
+    const faceebookRegex = /^[a-zA-Z' .]{1,50}$/;
+    if (faceebookRegex.test(value)) {
+      action(value);
+    } else {
+      alert("Please enter a valid Facebook name!");
     }
   }
 };
@@ -55,12 +84,27 @@ const EditProfileFieldScreen = ({ route }) => {
       <Divider />
       <View style={styles.mainContainer}>
         <Text style={styles.title}>{title}</Text>
-        <TextInput
-          style={styles.textInput}
-          value={newValue}
-          onChangeText={(text) => setNewValue(text)}
-          autoFocus={true}
-        />
+        {field === "bio" ? (
+          <View>
+            <TextInput
+              style={styles.textInput}
+              value={newValue}
+              onChangeText={(text) => {
+                setNewValue(text);
+              }}
+              autoFocus={true}
+              multiline
+            />
+            <Text style={styles.characterCount}>{newValue.length}/100</Text>
+          </View>
+        ) : (
+          <TextInput
+            style={styles.textInput}
+            value={newValue}
+            onChangeText={(text) => setNewValue(text)}
+            autoFocus={true}
+          />
+        )}
       </View>
     </SafeAreaView>
   );
@@ -86,5 +130,11 @@ const styles = StyleSheet.create({
   title: {
     fontWeight: "bold",
     color: "gray",
+  },
+  characterCount: {
+    fontSize: 12,
+    fontWeight: "bold",
+    paddingHorizontal: 20,
+    paddingVertical: 5,
   },
 });
