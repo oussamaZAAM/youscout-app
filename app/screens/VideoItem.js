@@ -15,20 +15,26 @@ import {
 
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
+import { useNavigation } from "@react-navigation/native";
 import { WINDOW_HEIGHT, WINDOW_WIDTH } from "../../assets/utils";
 import Comments from "../../components/comments";
 import Rate from "../../components/rate";
-import { useNavigation } from "@react-navigation/native";
 
 export default function VideoItem({ data, isActive }) {
   const navigation = useNavigation();
+  const postUser = {
+    id: 11,
+    username: "tsukihicchi",
+    email: "platinum@disco.com",
+    uri: "https://cdn.myanimelist.net/images/characters/11/301411.jpg",
+  };
+
   const [isPlaying, setIsPlaying] = useState(true);
 
   const handlePlayPause = () => {
     setIsPlaying((prevState) => !prevState);
   };
-  const { channelName, uri, caption, musicName, likes, comments, avatarUri } =
-    data;
+  const { channelName, uri, caption, musicName, likes, comments, avatarUri } = data;
 
   const bottomTabHeight = useBottomTabBarHeight();
 
@@ -147,7 +153,10 @@ export default function VideoItem({ data, isActive }) {
           </View>
         </View>
         <View style={styles.verticalBar}>
-          <TouchableOpacity onPress={() => navigation.navigate('Profile')} style={[styles.verticalBarItem, styles.avatarContainer]}>
+          <TouchableOpacity
+            onPress={() => navigation.navigate("Profile", { postUser: postUser })}
+            style={[styles.verticalBarItem, styles.avatarContainer]}
+          >
             <Image style={styles.avatar} source={{ uri: avatarUri }} />
             <View style={styles.followButton}>
               <Image

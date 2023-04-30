@@ -8,7 +8,7 @@ import { useNavigation } from "expo-router";
 
 const ProfileHeader = ({ profileUser }) => {
   const user = {
-    id: 11,
+    id: 10,
     username: "karenbee",
     email: "karenbee@gmail.com",
     uri: "https://cdn.myanimelist.net/images/characters/9/295367.jpg",
@@ -77,18 +77,18 @@ const ProfileHeader = ({ profileUser }) => {
         isBlocked: false,
       },
       {
-        userId: 17,
+        userId: 10, //Karen Araragi
         isFollowing: false,
         isblocking: false,
         isFollowed: true,
         isBlocked: false,
       },
     ];
-    response.forEach((user) => {
-      if (user.isFollowing) followers++;
-      if (user.isFollowed) followings++;
-      if (user.userId === user.id) {
-        if (user.isFollowing) setIsFollowed(true); else setIsFollowed(false);
+    response.forEach((thisUser) => {
+      if (thisUser.isFollowing) followers++;
+      if (thisUser.isFollowed) followings++;
+      if (thisUser.userId === user.id) {
+        if (thisUser.isFollowing) setIsFollowed(true); else setIsFollowed(false);
         // if (user.isFollowed) setIsFollowing(true); else setIsFollowing(false);
       }
     });
@@ -97,8 +97,8 @@ const ProfileHeader = ({ profileUser }) => {
 
   return (
     <View style={styles.container}>
-      <CheckImage uri={user.uri} />
-      <Text style={styles.emailText}>{user.email}</Text>
+      <CheckImage uri={profileUser.uri} />
+      <Text style={styles.emailText}>{profileUser.email}</Text>
       <View style={styles.counterContainer}>
         <View style={styles.counterItemContainer}>
           <Text style={styles.counterNumberText}>{follows.followings}</Text>

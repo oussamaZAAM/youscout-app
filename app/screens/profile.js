@@ -8,7 +8,10 @@ import {
 } from "react-native";
 
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
-import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
+import {
+  SafeAreaView,
+  useSafeAreaInsets,
+} from "react-native-safe-area-context";
 
 import { Feather } from "react-native-vector-icons";
 
@@ -18,7 +21,7 @@ import ProfileNavbar from "../../components/profile/navbar";
 import ProfilePostList from "../../components/profile/postList";
 import VideoItem from "./VideoItem";
 
-const ProfileScreen = () => {
+const ProfileScreen = (props) => {
   const [postEnabled, setPostEnabled] = useState(-1);
   const [activeVideoIndex, setActiveVideoIndex] = useState(0);
   const bottomTabHeight = useBottomTabBarHeight();
@@ -31,6 +34,9 @@ const ProfileScreen = () => {
     email: "karenbee@gmail.com",
     uri: "https://cdn.myanimelist.net/images/characters/9/295367.jpg",
   };
+  // If params exist, that means that we are accessing the profile page from a user's post 
+  // (which means it's not accessed from the profile button)
+  const profileUser = props.route.params ? props.route.params.postUser : user;
 
   // Fetch the current user's posts
   const posts = [
@@ -72,13 +78,13 @@ const ProfileScreen = () => {
 
   return postEnabled === -1 ? (
     <SafeAreaView style={styles.container}>
-      <ProfileNavbar profileUser={user} />
-      <ProfileHeader profileUser={user} />
+      <ProfileNavbar profileUser={profileUser} />
+      <ProfileHeader profileUser={profileUser} />
       <ProfilePostList posts={posts} setPostEnabled={setPostEnabled} />
     </SafeAreaView>
   ) : (
     <View style={styles.FlatlistContainer}>
-      <View style={[styles.navContainer, {paddingTop: insets.top + 15}]}>
+      <View style={[styles.navContainer, { paddingTop: insets.top + 15 }]}>
         <TouchableOpacity onPress={() => setPostEnabled(-1)}>
           <Feather name="arrow-left" size={20} />
         </TouchableOpacity>
@@ -88,11 +94,15 @@ const ProfileScreen = () => {
         </TouchableOpacity>
       </View>
       <FlatList
-        contentContainerStyle={[styles.Flatlist, {height: WINDOW_HEIGHT - bottomTabHeight + insets.top}]}
+        contentContainerStyle={[
+          styles.Flatlist,
+          { height: WINDOW_HEIGHT - bottomTabHeight + insets.top },
+        ]}
         data={posts}
         onScroll={(e) => {
           const index = Math.round(
-            e.nativeEvent.contentOffset.y / (WINDOW_HEIGHT - bottomTabHeight - 30)
+            e.nativeEvent.contentOffset.y /
+              (WINDOW_HEIGHT - bottomTabHeight - 30)
           );
           setActiveVideoIndex(index);
         }}
@@ -105,9 +115,11 @@ const ProfileScreen = () => {
         horizontal
         showsHorizontalScrollIndicator={false}
         initialScrollIndex={postEnabled}
-        getItemLayout={(data, index) => (
-          {length: WINDOW_WIDTH, offset: WINDOW_WIDTH * index, index}
-        )}
+        getItemLayout={(data, index) => ({
+          length: WINDOW_WIDTH,
+          offset: WINDOW_WIDTH * index,
+          index,
+        })}
       />
     </View>
   );
@@ -121,14 +133,13 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
   },
   FlatlistContainer: {
-    position: 'relative',
+    position: "relative",
     width: WINDOW_WIDTH,
-    height: WINDOW_HEIGHT
+    height: WINDOW_HEIGHT,
   },
-  Flatlist: {
-  },
+  Flatlist: {},
   navContainer: {
-    position: 'absolute',
+    position: "absolute",
     zIndex: 100,
     width: WINDOW_WIDTH,
     flexDirection: "row",
@@ -136,8 +147,8 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
     borderBottomColor: "lightgrey",
     borderBottomWidth: 1,
-    backgroundColor: 'white',
-    opacity: 0.5
+    backgroundColor: "white",
+    opacity: 0.5,
   },
   text: {
     fontSize: 16,
