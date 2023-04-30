@@ -18,8 +18,10 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { WINDOW_HEIGHT, WINDOW_WIDTH } from "../../assets/utils";
 import Comments from "../../components/comments";
 import Rate from "../../components/rate";
+import { useNavigation } from "@react-navigation/native";
 
 export default function VideoItem({ data, isActive }) {
+  const navigation = useNavigation();
   const [isPlaying, setIsPlaying] = useState(true);
 
   const handlePlayPause = () => {
@@ -145,7 +147,7 @@ export default function VideoItem({ data, isActive }) {
           </View>
         </View>
         <View style={styles.verticalBar}>
-          <View style={[styles.verticalBarItem, styles.avatarContainer]}>
+          <TouchableOpacity onPress={() => navigation.navigate('Profile')} style={[styles.verticalBarItem, styles.avatarContainer]}>
             <Image style={styles.avatar} source={{ uri: avatarUri }} />
             <View style={styles.followButton}>
               <Image
@@ -153,7 +155,7 @@ export default function VideoItem({ data, isActive }) {
                 style={styles.followIcon}
               />
             </View>
-          </View>
+          </TouchableOpacity>
           <View style={styles.verticalBarItem}>
             <Image
               style={styles.verticalBarIcon}

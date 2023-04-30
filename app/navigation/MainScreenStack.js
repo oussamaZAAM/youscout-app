@@ -11,6 +11,8 @@ import {
 import { useState } from "react";
 import { FlatList } from "react-native";
 import { WINDOW_HEIGHT } from "../../assets/utils";
+import ConversationScreen from "../screens/chat/conversation";
+import ProfileScreen from "../screens/profile";
 import videosData from "../videosData";
 
 const Stack = createNativeStackNavigator();
@@ -55,6 +57,16 @@ export const MainScreenStack = () => {
         <Stack.Screen
           name="Register"
           component={RegisterScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Profile"
+          component={ProfileScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Conversation"
+          component={ConversationScreen}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>

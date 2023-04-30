@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import {
   FlatList,
   StyleSheet,
@@ -23,8 +23,10 @@ const ProfileScreen = () => {
   const [activeVideoIndex, setActiveVideoIndex] = useState(0);
   const bottomTabHeight = useBottomTabBarHeight();
   const insets = useSafeAreaInsets();
+
   // Fetch the authenticated user
   const user = {
+    id: 10,
     username: "karenbee",
     email: "karenbee@gmail.com",
     uri: "https://cdn.myanimelist.net/images/characters/9/295367.jpg",
@@ -70,8 +72,8 @@ const ProfileScreen = () => {
 
   return postEnabled === -1 ? (
     <SafeAreaView style={styles.container}>
-      <ProfileNavbar user={user} />
-      <ProfileHeader user={user} />
+      <ProfileNavbar profileUser={user} />
+      <ProfileHeader profileUser={user} />
       <ProfilePostList posts={posts} setPostEnabled={setPostEnabled} />
     </SafeAreaView>
   ) : (

@@ -3,13 +3,13 @@ import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 import { Feather } from "react-native-vector-icons";
 
-const ProfileNavbar = ({ user }) => {
+const ProfileNavbar = ({ profileUser }) => {
   return (
     <View style={styles.navContainer}>
       <TouchableOpacity>
         <Feather name="search" size={20} />
       </TouchableOpacity>
-      <Text style={styles.text}>{user.username}</Text>
+      <Text style={styles.text}>{profileUser.username}</Text>
       <TouchableOpacity>
         <Feather name="menu" size={24} />
       </TouchableOpacity>
