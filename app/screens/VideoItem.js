@@ -1,8 +1,9 @@
-import { MaterialIcons } from "@expo/vector-icons";
+import { MaterialIcons, Octicons } from "@expo/vector-icons";
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import { Video } from "expo-av";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
+  Animated,
   BackHandler,
   Image,
   StatusBar,
@@ -33,6 +34,32 @@ export default function VideoItem({ data, isActive }) {
   const bottomTabHeight = useBottomTabBarHeight();
   const insets = useSafeAreaInsets();
   const { channelName, uri, caption, likes, comments, avatarUri } = data;
+  // ---------------------------------------------------
+
+  // ----------------- Like + Animations -----------------
+  const likeAnimation = useRef(new Animated.Value(0)).current;
+  const handleLikeAnimation = () => {
+    Animated.timing(likeAnimation, {
+      toValue: 2,
+      duration: 500,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  const [like, setLike] = useState(false);
+  const handleLike = () => {
+    if (like) {
+      setLike(false);
+      Animated.timing(likeAnimation, {
+        toValue: 0, // Set the value of "likeAnimation" to 0 immediately
+        duration: 0, // Immediately
+        useNativeDriver: true,
+      }).start();
+    } else {
+      setLike(true);
+      handleLikeAnimation();
+    }
+  }
   // ---------------------------------------------------
 
   // ----------------- Handle Video Play / Pause -----------------
@@ -94,6 +121,7 @@ export default function VideoItem({ data, isActive }) {
     return () => backHandler.remove();
   }, []);
   // ---------------------------------------------------
+
   return (
     <View>
       <View
@@ -164,11 +192,43 @@ export default function VideoItem({ data, isActive }) {
               />
             </View>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => {}} style={styles.verticalBarItem}>
-            <Image
-              style={styles.verticalBarIcon}
-              source={require("../../assets/images/heart.png")}
-            />
+          <TouchableOpacity
+            onPress={handleLike}
+            style={styles.verticalBarItem}
+          >
+            <Animated.View
+              style={[
+                styles.verticalBarIcon,
+                {
+                  transform: [
+                    {
+                      translateX: likeAnimation.interpolate({
+                        inputRange: [0, 1, 1.95, 2],
+                        outputRange: [0, -150, -150, 0],
+                      }),
+                    },
+                    {
+                      translateY: likeAnimation.interpolate({
+                        inputRange: [0, 1, 1.95, 2],
+                        outputRange: [0, -100, -100, 0],
+                      }),
+                    },
+                    {
+                      scale: likeAnimation.interpolate({
+                        inputRange: [0, 1, 1.5, 1.95, 2],
+                        outputRange: [1, 4, 8, 4, 1],
+                      }),
+                    },
+                  ],
+                },
+              ]}
+            >
+              {like ? (
+                <Octicons style={styles.verticalBarIcon} name="heart-fill" size={32} color={'white'} />
+              ) : (
+                <Octicons style={styles.verticalBarIcon} name="heart" size={32} color={'white'} />
+              )}
+            </Animated.View>
             <Text style={styles.verticalBarText}>{likes}</Text>
           </TouchableOpacity>
           <TouchableOpacity
