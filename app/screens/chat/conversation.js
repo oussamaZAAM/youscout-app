@@ -13,6 +13,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import ChatNavbarGeneral from "../../../components/general/chatnavbar";
 
 const ConversationScreen = (props) => {
+  console.log(props.route.params)
   const user = props.route.params
     ? {
         id: props.route.params.id,

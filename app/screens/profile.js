@@ -32,7 +32,7 @@ const ProfileScreen = (props) => {
     id: 10,
     username: "karenbee",
     email: "karenbee@gmail.com",
-    uri: "https://cdn.myanimelist.net/images/characters/9/295367.jpg",
+    profileImg: "https://cdn.myanimelist.net/images/characters/9/295367.jpg",
   };
   // If params exist, that means that we are accessing the profile page from a user's post 
   // (which means it's not accessed from the profile button)

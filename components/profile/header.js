@@ -76,7 +76,7 @@ const ProfileHeader = ({ profileUser }) => {
 
   return (
     <View style={styles.container}>
-      <CheckImage uri={profileUser.uri} size={100} />
+      <CheckImage uri={profileUser.profileImg} size={100} />
       <Text style={styles.emailText}>{profileUser.email}</Text>
       <View style={styles.counterContainer}>
         <View style={styles.counterItemContainer}>
@@ -116,7 +116,7 @@ const ProfileHeader = ({ profileUser }) => {
             </TouchableOpacity>
           )}
           <TouchableOpacity
-            onPress={() => navigation.navigate("Conversation", {id: 7})}
+            onPress={() => navigation.navigate("Conversation", {id: profileUser.id, username: profileUser.username, profileImg: profileUser.profileImg})}
             style={styles.grayOutlinedButton}
           >
             <Text>Chat</Text>
