@@ -20,31 +20,33 @@ import { WINDOW_HEIGHT, WINDOW_WIDTH } from "../../assets/utils";
 import Comments from "../../components/comments";
 import Rate from "../../components/rate";
 
+const postUser = {
+  id: 11,
+  username: "tsukihicchi",
+  email: "platinum@disco.com",
+  uri: "https://cdn.myanimelist.net/images/characters/11/301411.jpg",
+};
+
 export default function VideoItem({ data, isActive }) {
+  // ----------------- Basic Parameters -----------------
   const navigation = useNavigation();
-  const postUser = {
-    id: 11,
-    username: "tsukihicchi",
-    email: "platinum@disco.com",
-    uri: "https://cdn.myanimelist.net/images/characters/11/301411.jpg",
-  };
+  const bottomTabHeight = useBottomTabBarHeight();
+  const insets = useSafeAreaInsets();
+  const { channelName, uri, caption, likes, comments, avatarUri } = data;
+  // ---------------------------------------------------
 
+  // ----------------- Handle Video Play / Pause -----------------
   const [isPlaying, setIsPlaying] = useState(true);
-
   const handlePlayPause = () => {
     setIsPlaying((prevState) => !prevState);
   };
-  const { channelName, uri, caption, musicName, likes, comments, avatarUri } = data;
+  // ---------------------------------------------------
 
-  const bottomTabHeight = useBottomTabBarHeight();
-
+  // ----------------- Skills Rating -----------------
   const [modalVisible, setModalVisible] = useState(false);
-
   const toggleModal = () => {
     setModalVisible(!modalVisible);
   };
-
-  // The structure can be changed after
   const [skills, setSkills] = useState([
     {
       skill: "Dribble",
@@ -59,7 +61,6 @@ export default function VideoItem({ data, isActive }) {
       rating: 0,
     },
   ]);
-
   const handleRate = (value, skill) => {
     setSkills((prevList) => {
       for (let i = 0; i < skills.length; i++) {
@@ -70,17 +71,15 @@ export default function VideoItem({ data, isActive }) {
       return [...prevList];
     });
   };
+  // ---------------------------------------------------
 
+  // ----------------- Comments Sheet Handling -----------------
   const bottomSheetRef = useRef(null);
-
   const [isComments, setIsComments] = useState(0);
-
-  // callbacks
   const handleSheetChanges = useCallback((index) => {
     // Fetch Comments if enabled
     setIsComments(index);
   }, []);
-
   useEffect(() => {
     const backAction = () => {
       bottomSheetRef.current.collapse();
@@ -94,9 +93,7 @@ export default function VideoItem({ data, isActive }) {
 
     return () => backHandler.remove();
   }, []);
-
-  const insets = useSafeAreaInsets();
-
+  // ---------------------------------------------------
   return (
     <View>
       <View
@@ -154,7 +151,9 @@ export default function VideoItem({ data, isActive }) {
         </View>
         <View style={styles.verticalBar}>
           <TouchableOpacity
-            onPress={() => navigation.navigate("Profile", { postUser: postUser })}
+            onPress={() =>
+              navigation.navigate("Profile", { postUser: postUser })
+            }
             style={[styles.verticalBarItem, styles.avatarContainer]}
           >
             <Image style={styles.avatar} source={{ uri: avatarUri }} />
@@ -165,13 +164,13 @@ export default function VideoItem({ data, isActive }) {
               />
             </View>
           </TouchableOpacity>
-          <View style={styles.verticalBarItem}>
+          <TouchableOpacity onPress={() => {}} style={styles.verticalBarItem}>
             <Image
               style={styles.verticalBarIcon}
               source={require("../../assets/images/heart.png")}
             />
             <Text style={styles.verticalBarText}>{likes}</Text>
-          </View>
+          </TouchableOpacity>
           <TouchableOpacity
             onPress={() => {
               bottomSheetRef?.current?.expand();
