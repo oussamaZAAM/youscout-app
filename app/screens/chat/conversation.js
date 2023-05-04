@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import { StyleSheet, View, TouchableOpacity, Text } from "react-native";
 import {
   Bubble,
+  GiftedAvatar,
   GiftedChat,
   InputToolbar,
   Send,
@@ -9,10 +10,20 @@ import {
 import { Feather } from "react-native-vector-icons";
 import { COLORS } from "../../../assets/utils";
 import { SafeAreaView } from "react-native-safe-area-context";
-import NavbarGeneral from "../../../components/general/navbar";
+import ChatNavbarGeneral from "../../../components/general/chatnavbar";
 
 const ConversationScreen = (props) => {
-  const id = props.route.params.id;
+  const user = props.route.params
+    ? {
+        id: props.route.params.id,
+        username: props.route.params.username,
+        profileImg: props.route.params.profileImg,
+      }
+    : {
+        id: "",
+        username: "",
+        profileImg: "",
+      };
   const [messages, setMessages] = useState([]);
 
   useEffect(() => {
@@ -98,15 +109,13 @@ const ConversationScreen = (props) => {
 
   const renderChatFooter = () => {
     return (
-      <View style={styles.messagesContainer}>
-        <GiftedChat />
-      </View>
+      <View style={styles.messagesContainer}></View>
     );
-  }
+  };
 
   return (
     <SafeAreaView style={styles.container}>
-      <NavbarGeneral title={id} />
+      <ChatNavbarGeneral username={user.username} profileImg={user.profileImg} />
       <GiftedChat
         messages={messages}
         onSend={(messages) => onSend(messages)}
@@ -117,6 +126,7 @@ const ConversationScreen = (props) => {
         renderSend={renderSend}
         renderInputToolbar={renderInputToolbar}
         renderChatFooter={renderChatFooter}
+        renderAvatar={()=>void(0)} // Remove the avatar near the message
       />
     </SafeAreaView>
   );
@@ -165,7 +175,7 @@ const styles = StyleSheet.create({
 
   // Render Chat Footer
   messagesContainer: {
-    backgroundColor: '#f0f0f0',
+    backgroundColor: "#f0f0f0",
     padding: 10,
     borderRadius: 10,
   },
