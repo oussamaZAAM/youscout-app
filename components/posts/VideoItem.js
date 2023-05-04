@@ -18,8 +18,8 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { useNavigation } from "@react-navigation/native";
 import { WINDOW_HEIGHT, WINDOW_WIDTH } from "../../assets/utils";
-import Comments from "../../components/comments";
-import Rate from "../../components/rate";
+import Comments from "./comments";
+import Rate from "./rate";
 
 const postUser = {
   id: 11,

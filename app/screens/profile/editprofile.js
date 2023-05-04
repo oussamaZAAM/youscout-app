@@ -15,8 +15,8 @@ import { Divider } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Feather } from "react-native-vector-icons";
 
-import { WINDOW_HEIGHT, WINDOW_WIDTH } from "../../assets/utils";
-import NavbarGeneral from "../../components/general/navbar";
+import { WINDOW_HEIGHT, WINDOW_WIDTH } from "../../../assets/utils";
+import NavbarGeneral from "../../../components/general/navbar";
 
 const EditProfileScreen = () => {
   const navigation = useNavigation();

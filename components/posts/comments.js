@@ -28,10 +28,10 @@ import { BottomSheet as EditBottomSheet } from "react-native-btr";
 
 import FlashMessage, { showMessage } from "react-native-flash-message";
 import { Divider } from "react-native-paper";
-import { copyToClipboard } from "../assets/copyToClipboard";
-import { getTimeDifference } from "../assets/functions";
-import { COLORS, ICONS, WINDOW_WIDTH } from "../assets/utils";
-import { commentsService } from "../constants/env";
+import { copyToClipboard } from "../../assets/copyToClipboard";
+import { getTimeDifference } from "../../assets/functions";
+import { COLORS, ICONS, WINDOW_WIDTH } from "../../assets/utils";
+import { commentsService } from "../../constants/env";
 
 const userId = 2;
 

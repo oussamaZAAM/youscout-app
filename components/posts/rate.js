@@ -7,8 +7,8 @@ import {
   View,
 } from "react-native";
 
-import Rating from "../assets/Rating";
-import { WINDOW_HEIGHT, WINDOW_WIDTH } from "../assets/utils";
+import { WINDOW_HEIGHT, WINDOW_WIDTH } from "../../assets/utils";
+import Rating from "../../assets/Rating";
 
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 

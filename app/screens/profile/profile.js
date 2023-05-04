@@ -15,15 +15,14 @@ import {
 
 import { Feather } from "react-native-vector-icons";
 
-import { WINDOW_HEIGHT, WINDOW_WIDTH } from "../../assets/utils";
-import ProfileHeader from "../../components/profile/header";
-import ProfileNavbar from "../../components/profile/navbar";
-import ProfilePostList from "../../components/profile/postList";
-import VideoItem from "./VideoItem";
+import { WINDOW_HEIGHT, WINDOW_WIDTH } from "../../../assets/utils";
+import ProfileHeader from "../../../components/profile/header";
+import ProfileNavbar from "../../../components/profile/navbar";
+import ProfilePostList from "../../../components/profile/postList";
+import VideosFlatList from "../../../components/posts/videosFlatlist";
 
 const ProfileScreen = (props) => {
   const [postEnabled, setPostEnabled] = useState(-1);
-  const [activeVideoIndex, setActiveVideoIndex] = useState(0);
   const bottomTabHeight = useBottomTabBarHeight();
   const insets = useSafeAreaInsets();
 
@@ -34,7 +33,7 @@ const ProfileScreen = (props) => {
     email: "karenbee@gmail.com",
     profileImg: "https://cdn.myanimelist.net/images/characters/9/295367.jpg",
   };
-  // If params exist, that means that we are accessing the profile page from a user's post 
+  // If params exist, that means that we are accessing the profile page from a user's post
   // (which means it's not accessed from the profile button)
   const profileUser = props.route.params ? props.route.params.postUser : user;
 
@@ -78,7 +77,10 @@ const ProfileScreen = (props) => {
 
   return postEnabled === -1 ? (
     <SafeAreaView style={styles.container}>
-      <ProfileNavbar profileUserName={profileUser.username} myProfile={user.id === profileUser.id} />
+      <ProfileNavbar
+        profileUserName={profileUser.username}
+        myProfile={user.id === profileUser.id}
+      />
       <ProfileHeader profileUser={profileUser} />
       <ProfilePostList posts={posts} setPostEnabled={setPostEnabled} />
     </SafeAreaView>
@@ -93,33 +95,12 @@ const ProfileScreen = (props) => {
           <Feather name="menu" color="transparent" size={24} />
         </TouchableOpacity>
       </View>
-      <FlatList
-        contentContainerStyle={[
-          styles.Flatlist,
-          { height: WINDOW_HEIGHT - bottomTabHeight + insets.top },
-        ]}
-        data={posts}
-        onScroll={(e) => {
-          const index = Math.round(
-            e.nativeEvent.contentOffset.y /
-              (WINDOW_HEIGHT - bottomTabHeight - 30)
-          );
-          setActiveVideoIndex(index);
+      <VideosFlatList
+        videosData={posts}
+        styles={{
+          height: WINDOW_HEIGHT - bottomTabHeight + insets.top,
         }}
-        pagingEnabled
-        renderItem={({ item, index }) => {
-          return (
-            <VideoItem data={item} isActive={activeVideoIndex === index} />
-          );
-        }}
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        initialScrollIndex={postEnabled}
-        getItemLayout={(data, index) => ({
-          length: WINDOW_WIDTH,
-          offset: WINDOW_WIDTH * index,
-          index,
-        })}
+        postEnabled={postEnabled}
       />
     </View>
   );
@@ -137,7 +118,6 @@ const styles = StyleSheet.create({
     width: WINDOW_WIDTH,
     height: WINDOW_HEIGHT,
   },
-  Flatlist: {},
   navContainer: {
     position: "absolute",
     zIndex: 100,
