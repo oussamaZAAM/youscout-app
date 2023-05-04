@@ -1,43 +1,18 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
-import VideoItem from "../screens/VideoItem";
 import LoginScreen from "../screens/auth/login";
 import RegisterScreen from "../screens/auth/register";
 
-import {
-  useBottomTabBarHeight,
-} from "@react-navigation/bottom-tabs";
-import { useState } from "react";
-import { FlatList } from "react-native";
-import { WINDOW_HEIGHT } from "../../assets/utils";
+import VideosFlatList from "../../components/posts/videosFlatlist";
 import ConversationScreen from "../screens/chat/conversation";
-import ProfileScreen from "../screens/profile";
+import ProfileScreen from "../screens/profile/profile";
 import videosData from "../videosData";
 
 const Stack = createNativeStackNavigator();
 
 const HomeScreen = () => {
-  const [activeVideoIndex, setActiveVideoIndex] = useState(0);
-
-  const bottomTabHeight = useBottomTabBarHeight();
-  return (
-    <FlatList
-      data={videosData}
-      pagingEnabled
-      renderItem={({ item, index }) => {
-        return <VideoItem data={item} isActive={activeVideoIndex === index} />;
-      }}
-      onScroll={(e) => {
-        const index = Math.round(
-          e.nativeEvent.contentOffset.y / (WINDOW_HEIGHT - bottomTabHeight)
-        );
-        setActiveVideoIndex(index);
-      }}
-      horizontal
-      showsHorizontalScrollIndicator={false}
-    />
-  );
+  return <VideosFlatList videosData={videosData} />;
 };
 
 export const MainScreenStack = () => {
