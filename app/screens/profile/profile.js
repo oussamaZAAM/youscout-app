@@ -1,10 +1,9 @@
 import React, { useState } from "react";
 import {
-  FlatList,
   StyleSheet,
   Text,
   TouchableOpacity,
-  View,
+  View
 } from "react-native";
 
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
@@ -16,14 +15,13 @@ import {
 import { Feather } from "react-native-vector-icons";
 
 import { WINDOW_HEIGHT, WINDOW_WIDTH } from "../../../assets/utils";
+import VideosFlatList from "../../../components/posts/videosFlatlist";
 import ProfileHeader from "../../../components/profile/header";
 import ProfileNavbar from "../../../components/profile/navbar";
 import ProfilePostList from "../../../components/profile/postList";
-import VideosFlatList from "../../../components/posts/videosFlatlist";
 
 const ProfileScreen = (props) => {
   const [postEnabled, setPostEnabled] = useState(-1);
-  const bottomTabHeight = useBottomTabBarHeight();
   const insets = useSafeAreaInsets();
 
   // Fetch the authenticated user
@@ -82,10 +80,10 @@ const ProfileScreen = (props) => {
         myProfile={user.id === profileUser.id}
       />
       <ProfileHeader profileUser={profileUser} />
-      <ProfilePostList posts={posts} setPostEnabled={setPostEnabled} />
+      <ProfilePostList posts={posts} setPostEnabled={setPostEnabled} numColumns={3} />
     </SafeAreaView>
   ) : (
-    <View style={styles.FlatlistContainer}>
+    <View>
       <View style={[styles.navContainer, { paddingTop: insets.top + 15 }]}>
         <TouchableOpacity onPress={() => setPostEnabled(-1)}>
           <Feather name="arrow-left" size={20} />
@@ -97,9 +95,6 @@ const ProfileScreen = (props) => {
       </View>
       <VideosFlatList
         videosData={posts}
-        styles={{
-          height: WINDOW_HEIGHT - bottomTabHeight + insets.top,
-        }}
         postEnabled={postEnabled}
       />
     </View>
@@ -112,11 +107,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "white",
-  },
-  FlatlistContainer: {
-    position: "relative",
-    width: WINDOW_WIDTH,
-    height: WINDOW_HEIGHT,
   },
   navContainer: {
     position: "absolute",

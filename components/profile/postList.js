@@ -18,11 +18,11 @@ const ProfilePostListItem = ({ item, index, setPostEnabled }) => {
   );
 };
 
-const ProfilePostList = ({ posts, setPostEnabled }) => {
+const ProfilePostList = ({ posts, setPostEnabled, numColumns }) => {
   return (
     <View style={styles.container}>
       <FlatList
-        numColumns={3}
+        numColumns={numColumns}
         removeClippedSubviews
         data={posts}
         keyExtractor={(item) => item.id}
