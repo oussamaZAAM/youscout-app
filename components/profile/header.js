@@ -1,10 +1,10 @@
 // import { useNavigation } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
-import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { Avatar } from "react-native-paper";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Entypo } from "react-native-vector-icons";
 import { COLORS } from "../../assets/utils";
 import { useNavigation } from "expo-router";
+import { CheckImage } from "../../assets/checkImage";
 
 const ProfileHeader = ({ profileUser }) => {
   const user = {
@@ -15,27 +15,6 @@ const ProfileHeader = ({ profileUser }) => {
   };
 
   const navigation = useNavigation();
-
-  const CheckImage = ({ uri }) => {
-    const [valid, setValid] = useState(false);
-    Image.getSize(
-      uri,
-      (width, height) => {
-        setValid(true);
-      },
-      (error) => {
-        setValid(false);
-      }
-    );
-    return valid ? (
-      <Image
-        style={{ height: 100, width: 100, borderRadius: 50 }}
-        source={{ uri }}
-      />
-    ) : (
-      <Avatar.Icon size={100} icon={"account"} />
-    );
-  };
 
   // Here we get the state of the user in the User Interactions service
   const [follows, setFollows] = useState({
@@ -97,7 +76,7 @@ const ProfileHeader = ({ profileUser }) => {
 
   return (
     <View style={styles.container}>
-      <CheckImage uri={profileUser.uri} />
+      <CheckImage uri={profileUser.uri} size={100} />
       <Text style={styles.emailText}>{profileUser.email}</Text>
       <View style={styles.counterContainer}>
         <View style={styles.counterItemContainer}>
