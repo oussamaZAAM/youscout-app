@@ -714,24 +714,9 @@ const Comments = ({ commentsNumber, bottomSheetRef, handleSheetChanges }) => {
       <Text style={{ alignSelf: "center", fontWeight: 600, fontSize: 16 }}>
         {commentsNumber} Comments
       </Text>
-      {/* <BottomSheetScrollView
-        keyboardShouldPersistTaps="always"
-        contentContainerStyle={styles.contentContainer}
-      >
-        {data.map((comment) => (
-          <Comment
-            key={comment.id}
-            handleLikeComment={handleLikeComment}
-            comment={comment}
-            setIsKeyboard={setIsKeyboard}
-            handleReplyOnComment={handleReplyOnComment}
-            setFetching={setFetching}
-          />
-        ))}
-      </BottomSheetScrollView> */}
       <BottomSheetFlatList
         contentContainerStyle={styles.contentContainer}
-        keyboardDismissMode="none"
+        keyboardShouldPersistTaps="handled"
         data={comments}
         renderItem={({ item }) => (
           <Comment
