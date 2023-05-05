@@ -2,10 +2,9 @@ import React, { useState } from "react";
 import {
   SafeAreaView,
   StyleSheet,
-  Text,
+  TextInput,
   TouchableOpacity,
   View,
-  TextInput
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Feather } from "react-native-vector-icons";
@@ -85,11 +84,11 @@ const styles = StyleSheet.create({
     marginVertical: 5,
     borderRadius: 100,
     backgroundColor: "lightgray",
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   searchBarIcon: {
-    marginHorizontal: 10
+    marginHorizontal: 10,
   },
 
   // For videoFlatlist player

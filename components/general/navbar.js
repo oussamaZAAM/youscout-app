@@ -1,12 +1,12 @@
 import { useNavigation } from "@react-navigation/native";
 import React, { useRef, useState } from "react";
 import {
+  Animated,
   StyleSheet,
   Text,
+  TextInput,
   TouchableOpacity,
   View,
-  Animated,
-  TextInput,
 } from "react-native";
 import { Feather } from "react-native-vector-icons";
 import { WINDOW_WIDTH } from "../../assets/utils";
@@ -40,7 +40,7 @@ const NavbarGeneral = ({
       duration: 200,
       useNativeDriver: true,
     }).start();
-    setTimeout(()=>{
+    setTimeout(() => {
       setIsSearchBarEnabled(false);
     }, 100);
   };
@@ -50,11 +50,15 @@ const NavbarGeneral = ({
       {!isSearchBarEnabled && (
         <TouchableOpacity
           onPress={() => {
-            rightButton.name !== "search" && navigation.goBack()
+            rightButton.name !== "search" && navigation.goBack();
           }}
           style={styles.button}
         >
-          <Feather name="arrow-left" size={26} color={rightButton.name !== "search" ? 'black' : 'transparent'} />
+          <Feather
+            name="arrow-left"
+            size={26}
+            color={rightButton.name !== "search" ? "black" : "transparent"}
+          />
         </TouchableOpacity>
       )}
 
@@ -69,14 +73,16 @@ const NavbarGeneral = ({
           },
         ]}
       >
-        {isSearchBarEnabled && <TextInput
-          style={styles.searchBar}
-          placeholder="Search for users"
-          placeholderTextColor="gray"
-          onChangeText={(text) => rightButton.action(text)}
-          value={rightButton.value}
-          autoFocus
-        />}
+        {isSearchBarEnabled && (
+          <TextInput
+            style={styles.searchBar}
+            placeholder="Search for users"
+            placeholderTextColor="gray"
+            onChangeText={(text) => rightButton.action(text)}
+            value={rightButton.value}
+            autoFocus
+          />
+        )}
       </Animated.View>
       {!isSearchBarEnabled ? (
         <TouchableOpacity
@@ -90,10 +96,7 @@ const NavbarGeneral = ({
           />
         </TouchableOpacity>
       ) : (
-        <TouchableOpacity
-          onPress={disableSearchBar}
-          style={styles.button}
-        >
+        <TouchableOpacity onPress={disableSearchBar} style={styles.button}>
           <Feather name={"check"} size={26} color={"black"} />
         </TouchableOpacity>
       )}

@@ -29,7 +29,7 @@ const ProfilePostListItem = ({ item, index, setPostEnabled }) => {
       onPress={() => setPostEnabled(index)}
       style={styles.itemContainer}
     >
-      <Image style={styles.image} source={{ uri: thumbUri }} />
+      {thumbUri !== "" && <Image style={styles.image} source={{ uri: thumbUri }} />}
     </TouchableOpacity>
   );
 };
