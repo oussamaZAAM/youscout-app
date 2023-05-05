@@ -18,6 +18,7 @@ import React, {
 import {
   FlatList,
   Image,
+  Keyboard,
   StyleSheet,
   Text,
   TextInput,
@@ -691,6 +692,20 @@ const Comments = ({ commentsNumber, bottomSheetRef, handleSheetChanges }) => {
       return [...newArray];
     });
   };
+
+  useEffect(() => {
+    const keyboardDidHideListener = Keyboard.addListener(
+      "keyboardDidHide",
+      () => {
+        textinputRef.current.blur();
+      }
+    );
+
+    // Don't forget to remove the listeners when the component is unmounted
+    return () => {
+      keyboardDidHideListener.remove();
+    };
+  }, []);
 
   const snapPoints = useMemo(() => ["6%", "85%"], []); // State of BottomSheet's snapPoints
 
