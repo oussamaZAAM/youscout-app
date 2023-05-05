@@ -11,7 +11,7 @@ export interface VideoModel {
 
 const videosData = [
   {
-    id: 2,
+    id: 1,
     channelName: "karenbee7",
     uri: "https://www.shutterstock.com/shutterstock/videos/1071557398/preview/stock-footage-cute-anime-girl-virtual-streamer-on-gaming-chair-with-neon-lights-kitchen-in-background-k.mp4",
     caption: "Brown little puppy #cute #puppy",
@@ -21,9 +21,19 @@ const videosData = [
     avatarUri: "https://cdn.myanimelist.net/images/characters/9/295367.jpg",
   },
   {
+    id: 2,
+    channelName: "karenbee7",
+    uri: "https://editorial-cdn.shutterstock.com/wm-preview-mp4/13028521a/MeT6MaxcN9D4E7zcMDI0MDk=/Shutterstock_13028521a.mp4",
+    caption: "Brown little puppy #cute #puppy",
+    musicName: "Song #3",
+    likes: 3100,
+    comments: 801,
+    avatarUri: "https://cdn.myanimelist.net/images/characters/9/295367.jpg",
+  },
+  {
     id: 3,
     channelName: "karenbee7",
-    uri: "https://v.ftcdn.net/04/40/69/53/700_F_440695362_zS2hlnGdO6S3Z9iXqTjqWKp5YQw2InZt_ST.mp4",
+    uri: "https://editorial-cdn.shutterstock.com/wm-preview-mp4/13436279a/M2T1M71cNdTcM148NTQ1MTQ=/Shutterstock_13436279a.mp4",
     caption: "Brown little puppy #cute #puppy",
     musicName: "Song #3",
     likes: 3100,

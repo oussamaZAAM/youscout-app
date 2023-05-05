@@ -142,7 +142,7 @@ export default function VideoItem({ data, isActive }) {
             { width: WINDOW_WIDTH, height: WINDOW_HEIGHT - bottomTabHeight },
           ]}
           resizeMode="cover"
-          shouldPlay={isPlaying && isActive}
+          // shouldPlay={isPlaying && isActive}
           isLooping
           isMuted={false}
         />

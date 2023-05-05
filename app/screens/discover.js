@@ -5,6 +5,7 @@ import {
   Text,
   TouchableOpacity,
   View,
+  TextInput
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Feather } from "react-native-vector-icons";
@@ -19,8 +20,17 @@ const DiscoverScreen = () => {
   return (
     <SafeAreaView style={styles.container}>
       {postEnabled === -1 ? (
-        <SafeAreaView style={styles.container}>
-          <Text>DiscoverScreen</Text>
+        <SafeAreaView style={styles.discoverContainer}>
+          <View style={styles.searchBarContainer}>
+            <Feather style={styles.searchBarIcon} name="search" size={16} />
+            <TextInput
+              style={styles.searchBar}
+              placeholder="Search for users"
+              placeholderTextColor="gray"
+              // onChangeText={(text) => rightButton.action(text)}
+              // value={rightButton.value}
+            />
+          </View>
           <ProfilePostList
             posts={videosData}
             setPostEnabled={setPostEnabled}
@@ -30,18 +40,18 @@ const DiscoverScreen = () => {
       ) : (
         <View>
           <View style={[styles.navContainer, { paddingTop: insets.top + 15 }]}>
-            <TouchableOpacity onPress={() => setPostEnabled(-1)}>
+            <TouchableOpacity
+              style={styles.returnButton}
+              onPress={() => setPostEnabled(-1)}
+            >
               <Feather name="arrow-left" size={20} />
             </TouchableOpacity>
-            <Text style={styles.text}>user.username</Text>
+            {/* <Text style={styles.text}>user.username</Text> */}
             <TouchableOpacity>
               <Feather name="menu" color="transparent" size={24} />
             </TouchableOpacity>
           </View>
-          <VideosFlatList
-            videosData={videosData}
-            postEnabled={postEnabled}
-          />
+          <VideosFlatList videosData={videosData} postEnabled={postEnabled} />
         </View>
       )}
     </SafeAreaView>
@@ -55,6 +65,34 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "white",
   },
+  discoverContainer: {
+    flex: 1,
+    backgroundColor: "white",
+    marginTop: 30,
+    flexDirection: "column",
+  },
+  searchBar: {
+    flex: 1,
+    backgroundColor: "lightgray",
+    paddingVertical: 5,
+    borderTopRightRadius: 100,
+    borderBottomRightRadius: 100,
+    width: 0,
+  },
+  searchBarContainer: {
+    flexDirection: "row",
+    marginHorizontal: 15,
+    marginVertical: 5,
+    borderRadius: 100,
+    backgroundColor: "lightgray",
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  searchBarIcon: {
+    marginHorizontal: 10
+  },
+
+  // For videoFlatlist player
   navContainer: {
     position: "absolute",
     zIndex: 100,
@@ -62,16 +100,14 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     paddingHorizontal: 20,
     paddingVertical: 15,
-    borderBottomColor: "lightgrey",
-    borderBottomWidth: 1,
-    backgroundColor: "white",
     opacity: 0.5,
   },
-  text: {
-    fontSize: 16,
-    color: "black",
-    flex: 1,
-    textAlign: "center",
-    fontWeight: "600",
+  returnButton: {
+    backgroundColor: "white",
+    alignItems: "center",
+    justifyContent: "center",
+    width: 50,
+    height: 50,
+    borderRadius: 15,
   },
 });
