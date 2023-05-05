@@ -1,19 +1,35 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   FlatList,
   Image,
   StyleSheet,
   TouchableOpacity,
-  View
+  View,
 } from "react-native";
 
+import * as VideoThumbnails from "expo-video-thumbnails";
+
 const ProfilePostListItem = ({ item, index, setPostEnabled }) => {
+  const [thumbUri, setThumbUri] = useState("");
+  const generateThumbnail = async (videoUrl) => {
+    try {
+      const { uri } = await VideoThumbnails.getThumbnailAsync(videoUrl, {
+        time: 1000,
+      });
+      setThumbUri(uri);
+    } catch (e) {
+      console.warn(e);
+    }
+  };
+  useEffect(() => {
+    generateThumbnail(item.uri);
+  }, []);
   return (
     <TouchableOpacity
       onPress={() => setPostEnabled(index)}
       style={styles.itemContainer}
     >
-      <Image style={styles.image} source={{ uri: item.thumbUri }} />
+      <Image style={styles.image} source={{ uri: thumbUri }} />
     </TouchableOpacity>
   );
 };

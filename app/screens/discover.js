@@ -1,4 +1,3 @@
-import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import React, { useState } from "react";
 import {
   SafeAreaView,
@@ -41,9 +40,6 @@ const DiscoverScreen = () => {
           </View>
           <VideosFlatList
             videosData={videosData}
-            // styles={{
-            //   height: WINDOW_HEIGHT - bottomTabHeight + insets.top,
-            // }}
             postEnabled={postEnabled}
           />
         </View>
