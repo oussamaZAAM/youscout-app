@@ -49,12 +49,11 @@ const ProfileScreen = (props) => {
   ) : (
     <View>
       <View style={[styles.navContainer, { paddingTop: insets.top + 15 }]}>
-        <TouchableOpacity onPress={() => setPostEnabled(-1)}>
+        <TouchableOpacity
+          style={styles.returnButton}
+          onPress={() => setPostEnabled(-1)}
+        >
           <Feather name="arrow-left" size={20} />
-        </TouchableOpacity>
-        <Text style={styles.text}>{user.username}</Text>
-        <TouchableOpacity>
-          <Feather name="menu" color="transparent" size={24} />
         </TouchableOpacity>
       </View>
       <VideosFlatList videosData={posts} postEnabled={postEnabled} />
@@ -69,6 +68,8 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "white",
   },
+  
+  // For videoFlatlist player navbar
   navContainer: {
     position: "absolute",
     zIndex: 100,
@@ -76,16 +77,14 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     paddingHorizontal: 20,
     paddingVertical: 15,
-    borderBottomColor: "lightgrey",
-    borderBottomWidth: 1,
-    backgroundColor: "white",
     opacity: 0.5,
   },
-  text: {
-    fontSize: 16,
-    color: "black",
-    flex: 1,
-    textAlign: "center",
-    fontWeight: "600",
+  returnButton: {
+    backgroundColor: "white",
+    alignItems: "center",
+    justifyContent: "center",
+    width: 50,
+    height: 50,
+    borderRadius: 15,
   },
 });

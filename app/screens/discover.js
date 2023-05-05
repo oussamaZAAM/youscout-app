@@ -45,10 +45,6 @@ const DiscoverScreen = () => {
             >
               <Feather name="arrow-left" size={20} />
             </TouchableOpacity>
-            {/* <Text style={styles.text}>user.username</Text> */}
-            <TouchableOpacity>
-              <Feather name="menu" color="transparent" size={24} />
-            </TouchableOpacity>
           </View>
           <VideosFlatList videosData={videosData} postEnabled={postEnabled} />
         </View>
@@ -91,7 +87,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
   },
 
-  // For videoFlatlist player
+  // For videoFlatlist player navbar
   navContainer: {
     position: "absolute",
     zIndex: 100,
