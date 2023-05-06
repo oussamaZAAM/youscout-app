@@ -13,7 +13,7 @@ import VideosFlatList from "../../../components/posts/videosFlatlist";
 import ProfileHeader from "../../../components/profile/header";
 import ProfileNavbar from "../../../components/profile/navbar";
 import ProfilePostList from "../../../components/profile/postList";
-import videosData from "../../videosData";
+import { videosData } from "../../videosData";
 
 const ProfileScreen = (props) => {
   const [postEnabled, setPostEnabled] = useState(-1);

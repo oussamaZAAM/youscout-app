@@ -11,7 +11,7 @@ import { Feather } from "react-native-vector-icons";
 import { WINDOW_WIDTH } from "../../assets/utils";
 import VideosFlatList from "../../components/posts/videosFlatlist";
 import ProfilePostList from "../../components/profile/postList";
-import videosData from "../videosData";
+import { videosData } from "../videosData";
 
 const DiscoverScreen = () => {
   const [postEnabled, setPostEnabled] = useState(-1);

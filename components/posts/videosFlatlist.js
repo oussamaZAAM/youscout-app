@@ -1,16 +1,15 @@
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import React, { useState } from "react";
 import { FlatList } from "react-native";
-import VideoItem from "./VideoItem";
 import { WINDOW_HEIGHT, WINDOW_WIDTH } from "../../assets/utils";
+import VideoItem from "./VideoItem";
 
-const VideosFlatList = ({ videosData, styles={}, postEnabled = 1 }) => {
+const VideosFlatList = ({ videosData, postEnabled = 1 }) => {
   const [activeVideoIndex, setActiveVideoIndex] = useState(0);
 
   const bottomTabHeight = useBottomTabBarHeight();
   return (
     <FlatList
-      contentContainerStyle={styles}
       data={videosData}
       pagingEnabled
       renderItem={({ item, index }) => {

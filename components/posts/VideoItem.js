@@ -143,6 +143,7 @@ export default function VideoItem({ data, isActive }) {
           ]}
           resizeMode="cover"
           // shouldPlay={isPlaying && isActive}
+          shouldPlay={false}
           isLooping
           isMuted={false}
         />

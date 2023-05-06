@@ -1,11 +1,10 @@
-import {
-  createBottomTabNavigator
-} from "@react-navigation/bottom-tabs";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { NavigationContainer } from "@react-navigation/native";
-import React from "react";
+import React, { useEffect } from "react";
 import { Image, StyleSheet } from "react-native";
 
 import * as ScreenOrientation from "expo-screen-orientation";
+import PushNotification from "react-native-push-notification";
 import { COLORS } from "../assets/utils";
 import NewVideoButton from "../components/general/NewVideoButton";
 import { ChatScreenStack } from "./navigation/ChatScreenStack";
@@ -19,6 +18,26 @@ ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT);
 const BottomTab = createBottomTabNavigator();
 
 const App = () => {
+  // useEffect(() => {
+  //   // Set up the push notification service
+  //   PushNotification.configure({
+  //     onNotification: function (notification) {
+  //       console.log("NOTIFICATION:", notification);
+  //     },
+  //     popInitialNotification: true,
+  //     requestPermissions: true,
+  //   });
+
+  //   // Schedule a mock notification after 5 seconds
+  //   const notificationDelay = setTimeout(() => {
+  //     PushNotification.localNotification({
+  //       title: "Test Notification",
+  //       message: "This is a test notification.",
+  //     });
+  //   }, 5000);
+
+  //   return () => clearTimeout(notificationDelay);
+  // }, []);
   return (
     <NavigationContainer independent={true}>
       <BottomTab.Navigator
@@ -66,9 +85,7 @@ const App = () => {
           component={NewVideoStack}
           options={{
             tabBarLabel: () => null,
-            tabBarIcon: ({ focused }) => (
-              <NewVideoButton />
-            ),
+            tabBarIcon: ({ focused }) => <NewVideoButton />,
           }}
         />
 

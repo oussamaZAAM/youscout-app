@@ -29,7 +29,7 @@ import { BottomSheet as EditBottomSheet } from "react-native-btr";
 
 import FlashMessage, { showMessage } from "react-native-flash-message";
 import { Divider } from "react-native-paper";
-import { copyToClipboard } from "../../assets/copyToClipboard";
+import { copyToClipboard } from "../../assets/functions";
 import { getTimeDifference } from "../../assets/functions";
 import { COLORS, ICONS, WINDOW_WIDTH } from "../../assets/utils";
 import { commentsService } from "../../constants/env";
