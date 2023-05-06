@@ -9,7 +9,7 @@ export interface VideoModel {
   avatarUri: string;
 }
 
-const videosData = [
+export const videosData = [
   {
     id: 1,
     channelName: "karenbee7",
@@ -40,6 +40,14 @@ const videosData = [
     comments: 18,
     avatarUri: "https://c4.wallpaperflare.com/wallpaper/915/255/776/hat-anime-senjougahara-hitagi-anime-girls-wallpaper-preview.jpg",
   },
+];
+
+export const notificationsData = [
+  { id: "1", title: "Notification 1", message: "This is notification 1.", seen: true },
+  { id: "2", title: "Notification 2", message: "This is notification 2.", seen: false },
+  { id: "3", title: "Notification 3", message: "This is notification 3.", seen: true },
+  { id: "4", title: "Notification 4", message: "This is notification 4.", seen: true },
+  { id: "5", title: "Notification 5", message: "This is notification 5.", seen: false },
 ];
 
 
@@ -80,4 +88,4 @@ const videosData = [
   //   },
   // ];
 
-export default videosData;
+videosData;
