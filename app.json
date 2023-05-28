@@ -8,5 +8,11 @@
     },
     "name": "YouScout",
     "slug": "YouScout",
-    "orientation": "portrait"
+    "orientation": "portrait",
+    "icon": "./assets/logoRaw.png",
+    "splash": {
+      "image": "./assets/logoRaw.png",
+      "resizeMode": "contain",
+      "background": "#ffffff"
+    }
 }
