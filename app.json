@@ -1,18 +1,20 @@
 {
   "expo": {
-    "scheme": "acme",
-    "web": {
-      "bundler": "metro",
-      "config": {}
-      }
-    },
     "name": "YouScout",
+    "version": "1.0.0",
     "slug": "YouScout",
     "orientation": "portrait",
     "icon": "./assets/logoRaw.png",
+    "scheme": "acme",
     "splash": {
       "image": "./assets/logoRaw.png",
-      "resizeMode": "contain",
-      "background": "#ffffff"
+      "resizeMode": "center",
+      "text": "YouScout",
+      "backgroundColor": "#ffffff"
+    },
+    "web": {
+      "bundler": "metro",
+      "config": {}
     }
+  }
 }
