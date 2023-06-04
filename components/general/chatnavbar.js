@@ -2,7 +2,7 @@ import { useNavigation } from "@react-navigation/native";
 import React from "react";
 import { StyleSheet, Text, TouchableOpacity, View, Image } from "react-native";
 import { Feather } from "react-native-vector-icons";
-import { CheckImage } from "../../assets/functions";
+import { CheckImage } from "../../assets/functions/functions";
 
 const ChatNavbarGeneral = ({ username = "Unknown", profileImg }) => {
   const navigation = useNavigation();

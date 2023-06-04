@@ -11,10 +11,12 @@ import {
 } from "react-native";
 
 import * as Yup from "yup";
+import axios from "axios";
 
 import { COLORS } from "../../../assets/utils";
+import { authenticationService } from "../../../constants/env";
 
-const LoginScreen = ({ navigation }) => {
+const RegisterScreen = ({ navigation }) => {
   const scrollViewRef = useRef();
   const handleInputFocus = () => {
     scrollViewRef.current.scrollToEnd({ animated: true });
@@ -22,7 +24,7 @@ const LoginScreen = ({ navigation }) => {
   return (
     <SafeAreaView style={{ flex: 1, justifyContent: "center" }}>
       <ScrollView style={{ paddingHorizontal: 25 }} ref={scrollViewRef}>
-        <View style={{ alignItems: "center" }}>
+        <View style={{ alignItems: "center", marginTop: 20 }}>
           <Image
             style={{ width: 200, height: 200, marginTop: 30, marginBottom: 30 }}
             source={require("../../../assets/logoRaw.png")}
@@ -54,14 +56,29 @@ const LoginScreen = ({ navigation }) => {
               .email("Invalid email address")
               .required("Required"),
             password: Yup.string()
-              .min(6, "Must be at least 6 characters")
+              .min(8, "Must be at least 8 characters")
               .required("Required"),
             confirmPassword: Yup.string().oneOf(
               [Yup.ref("password"), null],
               "Passwords must match"
             ),
           })}
-          onSubmit={(values) => {}}
+          onSubmit={async (values) => {
+            console.log(values.email);
+            console.log(authenticationService + "/api/v1/auth/register");
+
+            try {
+              await axios.post(authenticationService + '/api/v1/auth/register', {
+                fullName: values.name,
+                username: values.name,
+                email: values.email,
+                password: values.password
+              });
+              console.log('good')
+            } catch (error) {
+              console.error('Error fetching data:', error);
+            }
+          }}
         >
           {({ handleChange, handleSubmit, values, errors, touched }) => (
             <View>
@@ -207,7 +224,7 @@ const LoginScreen = ({ navigation }) => {
             marginBottom: 30,
           }}
         >
-          <Text>Already have an account ? </Text>
+          <Text>Already have an account? </Text>
           <TouchableOpacity onPress={() => navigation.navigate("Login")}>
             <Text style={{ color: COLORS.blue, fontWeight: "700" }}>Login</Text>
           </TouchableOpacity>
@@ -217,4 +234,4 @@ const LoginScreen = ({ navigation }) => {
   );
 };
 
-export default LoginScreen;
+export default RegisterScreen;

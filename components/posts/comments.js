@@ -29,12 +29,12 @@ import { BottomSheet as EditBottomSheet } from "react-native-btr";
 
 import FlashMessage, { showMessage } from "react-native-flash-message";
 import { Divider } from "react-native-paper";
-import { copyToClipboard } from "../../assets/functions";
-import { getTimeDifference } from "../../assets/functions";
+import { copyToClipboard } from "../../assets/functions/functions";
+import { getTimeDifference } from "../../assets/functions/functions";
 import { COLORS, ICONS, WINDOW_WIDTH } from "../../assets/utils";
 import { commentsService } from "../../constants/env";
 
-const userId = 2;
+const userId = "64409abd6ac950184bd90525";
 
 const Comment = ({
   comment,
@@ -548,7 +548,7 @@ const Comments = ({ commentsNumber, bottomSheetRef, handleSheetChanges }) => {
           commentsService + "/api/posts/001/comments?orderBy=recent"
         );
         const data = await response.json();
-        setComments(comments);
+        setComments(data);
         return data;
       } catch (error) {
         console.error("Error fetching data:", error);

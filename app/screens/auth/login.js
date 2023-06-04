@@ -1,5 +1,5 @@
 import { Formik } from "formik";
-import React, { useRef } from "react";
+import React, { useContext, useRef } from "react";
 import {
   Image,
   SafeAreaView,
@@ -14,6 +14,9 @@ import { FontAwesome, MaterialIcons } from "react-native-vector-icons";
 
 import * as Yup from "yup";
 import { COLORS } from "../../../assets/utils";
+import { authenticationService } from "../../../constants/env";
+import { storeLocalData } from "../../../assets/functions/asyncStore";
+import AuthContext from "../../../components/auth/authContext";
 
 const LoginScreen = ({ navigation }) => {
   const scrollViewRef = useRef();
@@ -21,10 +24,12 @@ const LoginScreen = ({ navigation }) => {
     scrollViewRef.current.scrollToEnd({ animated: true });
   };
 
+  const { accessToken, saveAccessToken } = useContext(AuthContext);
+
   return (
     <SafeAreaView style={{ flex: 1, justifyContent: "center" }}>
       <ScrollView style={{ paddingHorizontal: 25 }} ref={scrollViewRef}>
-        <View style={{ alignItems: "center" }}>
+        <View style={{ alignItems: "center", marginTop: 20 }}>
           <Image
             style={{ width: 200, height: 200, marginTop: 30, marginBottom: 30 }}
             source={require("../../../assets/logoRaw.png")}
@@ -50,10 +55,36 @@ const LoginScreen = ({ navigation }) => {
               .email("Invalid email address")
               .required("Required"),
             password: Yup.string()
-              .min(6, "Must be at least 6 characters")
+              .min(8, "Must be at least 8 characters")
               .required("Required"),
           })}
-          onSubmit={(values) => {}}
+          onSubmit={async (values) => {
+            try {
+              const payload = {
+                grantType: 'PASSWORD',
+                username: values.email,
+                password: values.password
+              };
+
+              const response = await fetch(authenticationService + "/api/v1/auth/login", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify(payload),
+              });
+
+              if (response.ok) {
+                const data = await response.json();
+                saveAccessToken(data);
+
+              } else {
+                throw new Error('Error: ' + response.status);
+              }
+            } catch (error) {
+              console.error('Error fetching data:', error);
+            }
+          }}
         >
           {({ handleChange, handleSubmit, values, errors, touched }) => (
             <View>
@@ -151,7 +182,7 @@ const LoginScreen = ({ navigation }) => {
           }}
         >
           <TouchableOpacity
-            onPress={() => {}}
+            onPress={() => { }}
             style={{
               borderColor: "#ddd",
               borderWidth: 2,
@@ -163,7 +194,7 @@ const LoginScreen = ({ navigation }) => {
             <FontAwesome color="#DB4437" name="google" size={40} />
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={() => {}}
+            onPress={() => { }}
             style={{
               borderColor: "#ddd",
               borderWidth: 2,
@@ -175,7 +206,7 @@ const LoginScreen = ({ navigation }) => {
             <MaterialIcons color="#3b5998" name="facebook" size={40} />
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={() => {}}
+            onPress={() => { }}
             style={{
               borderColor: "#ddd",
               borderWidth: 2,
@@ -195,7 +226,7 @@ const LoginScreen = ({ navigation }) => {
             marginBottom: 30,
           }}
         >
-          <Text>New to the app ? </Text>
+          <Text>New to the app? </Text>
           <TouchableOpacity onPress={() => navigation.navigate("Register")}>
             <Text style={{ color: COLORS.light, fontWeight: "700" }}>
               Register

@@ -20,7 +20,7 @@ export const MainScreenStack = () => {
           component={HomeScreen}
           options={{ headerShown: false }}
         />
-        <Stack.Screen
+        {/* <Stack.Screen
           name="Login"
           component={LoginScreen}
           options={{ headerShown: false }}
@@ -29,7 +29,7 @@ export const MainScreenStack = () => {
           name="Register"
           component={RegisterScreen}
           options={{ headerShown: false }}
-        />
+        /> */}
         <Stack.Screen
           name="Profile"
           component={ProfileScreen}

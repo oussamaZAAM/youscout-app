@@ -61,6 +61,7 @@ const NewVideoScreen = () => {
         if (videoRecordPromise) {
           const data = await videoRecordPromise;
           const source = data.uri;
+          console.log(source);
           let sourceThumb = await generateThumbnail(source);
           navigation.navigate("SaveVideo", { source, sourceThumb });
         }
@@ -83,6 +84,7 @@ const NewVideoScreen = () => {
       aspect: [16, 12],
       quality: 1,
     });
+    console.log(result.assets[0].uri);
     if (!result.canceled) {
       let sourceThumb = await generateThumbnail(result.assets[0].uri);
       navigation.navigate("SaveVideo", {

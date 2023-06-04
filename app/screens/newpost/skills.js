@@ -67,6 +67,7 @@ const SkillsScreen = (props) => {
 
   useEffect(()=>{
     const fetchSkills = async() => {
+      console.log(skillsService + "/api/skills")
       try {
         const response = await fetch(skillsService + "/api/skills");
         const skills = await response.json();

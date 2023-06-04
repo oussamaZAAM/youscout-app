@@ -4,7 +4,7 @@ import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Entypo } from "react-native-vector-icons";
 import { COLORS } from "../../assets/utils";
 import { useNavigation } from "expo-router";
-import { CheckImage } from "../../assets/functions";
+import { CheckImage } from "../../assets/functions/functions";
 
 const ProfileHeader = ({ profileUser }) => {
   const user = {
