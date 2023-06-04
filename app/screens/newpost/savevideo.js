@@ -33,7 +33,14 @@ const SaveVideoScreen = (props) => {
   const navigation = useNavigation();
 
   const handlePost = () => {
-    // Handle Posting the video
+    const chosenSkills = (props.route?.params?.skills) 
+        ? (props.route.params.skills
+            .filter(skill => skill.clicked))
+            .map(skill => skill.name)
+        : [];
+    if (chosenSkills.length < 1) {
+      alert("Please select at least one Skill!");
+    }
   };
 
   return (
