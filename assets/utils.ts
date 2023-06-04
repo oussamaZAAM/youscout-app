@@ -12,3 +12,5 @@ export const COLORS = {
 export const ICONS = {
   send: "send-outline",
 };
+
+export const timeout = 4000;

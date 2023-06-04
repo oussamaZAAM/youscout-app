@@ -1,3 +1,6 @@
+import {
+  Octicons
+} from "@expo/vector-icons";
 import { Formik } from "formik";
 import React, { useRef } from "react";
 import {
@@ -10,10 +13,12 @@ import {
   View,
 } from "react-native";
 
-import * as Yup from "yup";
 import axios from "axios";
+import * as Yup from "yup";
 
-import { COLORS } from "../../../assets/utils";
+import { StyleSheet } from "react-native";
+import FlashMessage, { showMessage } from "react-native-flash-message";
+import { COLORS, WINDOW_WIDTH, timeout } from "../../../assets/utils";
 import { authenticationService } from "../../../constants/env";
 
 const RegisterScreen = ({ navigation }) => {
@@ -36,7 +41,7 @@ const RegisterScreen = ({ navigation }) => {
             fontSize: 28,
             fontWeight: "500",
             color: "#333",
-            marginBottom: 30,
+            marginBottom: 15,
             marginHorizontal: 10,
           }}
         >
@@ -52,6 +57,9 @@ const RegisterScreen = ({ navigation }) => {
                 "Full name must contain at least two strings"
               )
               .required("Required"),
+            username: Yup.string()
+              .matches(/^[A-Za-z0-9.]{1,50}$/, "Username must be between 1 and 50 characters")
+              .required("Required"),
             email: Yup.string()
               .email("Invalid email address")
               .required("Required"),
@@ -64,20 +72,44 @@ const RegisterScreen = ({ navigation }) => {
             ),
           })}
           onSubmit={async (values) => {
-            console.log(values.email);
-            console.log(authenticationService + "/api/v1/auth/register");
+            await axios.post(authenticationService + '/api/v1/auth/register', {
+              fullName: values.name,
+              username: values.name,
+              email: values.email,
+              password: values.password
+            })
+              .then(response => {
+                showMessage({
+                  message: "response",
+                  type: "success",
+                  duration: timeout,
 
-            try {
-              await axios.post(authenticationService + '/api/v1/auth/register', {
-                fullName: values.name,
-                username: values.name,
-                email: values.email,
-                password: values.password
+                  icon: () => (
+                    <View style={styles.flashMessage}>
+                      <Octicons name="sign-in" size={26} />
+                      <Text style={styles.editCommentText}>An email is sent to {values.name}</Text>
+                    </View>
+                  ),
+                });
+                setTimeout(() => {
+                  navigation.navigate("Login");
+                }, timeout);
+              })
+              .catch(error => {
+                showMessage({
+                  message: "",
+                  type: "danger",
+                  duration: 500,
+                  icon: () => (
+                    <View style={styles.flashMessage}>
+                      <Octicons name="sign-in" size={26} />
+                      <Text style={styles.editCommentText}>Error while registering {error.message}</Text>
+                    </View>
+                  ),
+                  // message: "Error while registering" + error
+                });
+                console.log('bad')
               });
-              console.log('good')
-            } catch (error) {
-              console.error('Error fetching data:', error);
-            }
           }}
         >
           {({ handleChange, handleSubmit, values, errors, touched }) => (
@@ -100,11 +132,41 @@ const RegisterScreen = ({ navigation }) => {
                   borderWidth: 1,
                   borderColor: "black",
                   borderRadius: 10,
-                  padding: 10,
-                  margin: 10,
+                  paddingHorizontal: 10,
+                  paddingVertical: 7,
+                  marginHorizontal: 10,
+                  marginVertical: 7,
                 }}
                 onChangeText={handleChange("name")}
                 value={values.name}
+                onFocus={handleInputFocus}
+              />
+
+              {touched.username && (
+                <Text
+                  style={{
+                    color: "red",
+                    marginHorizontal: 10,
+                    marginVertical: -5,
+                  }}
+                >
+                  {errors.username}
+                </Text>
+              )}
+              <TextInput
+                name="username"
+                placeholder="Username"
+                style={{
+                  borderWidth: 1,
+                  borderColor: "black",
+                  borderRadius: 10,
+                  paddingHorizontal: 10,
+                  paddingVertical: 7,
+                  marginHorizontal: 10,
+                  marginVertical: 7,
+                }}
+                onChangeText={handleChange("username")}
+                value={values.username}
                 onFocus={handleInputFocus}
               />
 
@@ -126,8 +188,10 @@ const RegisterScreen = ({ navigation }) => {
                   borderWidth: 1,
                   borderColor: "black",
                   borderRadius: 10,
-                  padding: 10,
-                  margin: 10,
+                  paddingHorizontal: 10,
+                  paddingVertical: 7,
+                  marginHorizontal: 10,
+                  marginVertical: 7,
                 }}
                 onChangeText={handleChange("email")}
                 value={values.email}
@@ -152,8 +216,10 @@ const RegisterScreen = ({ navigation }) => {
                   borderWidth: 1,
                   borderColor: "black",
                   borderRadius: 10,
-                  padding: 10,
-                  margin: 10,
+                  paddingHorizontal: 10,
+                  paddingVertical: 7,
+                  marginHorizontal: 10,
+                  marginVertical: 7,
                 }}
                 onChangeText={handleChange("password")}
                 value={values.password}
@@ -179,8 +245,10 @@ const RegisterScreen = ({ navigation }) => {
                   borderWidth: 1,
                   borderColor: "black",
                   borderRadius: 10,
-                  padding: 10,
-                  margin: 10,
+                  paddingHorizontal: 10,
+                  paddingVertical: 7,
+                  marginHorizontal: 10,
+                  marginVertical: 7,
                 }}
                 onChangeText={handleChange("confirmPassword")}
                 value={values.confirmPassword}
@@ -230,8 +298,22 @@ const RegisterScreen = ({ navigation }) => {
           </TouchableOpacity>
         </View>
       </ScrollView>
+      <FlashMessage position="bottom" />
     </SafeAreaView>
   );
 };
+
+const styles = StyleSheet.create({
+  editCommentText: {
+    fontWeight: "bold",
+    fontSize: 16,
+  },
+  flashMessage: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 20,
+  },
+});
 
 export default RegisterScreen;
