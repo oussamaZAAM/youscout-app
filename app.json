@@ -8,7 +8,7 @@
     "scheme": "acme",
     "splash": {
       "image": "./assets/logoRaw.png",
-      "resizeMode": "center",
+      "resizeMode": "contain",
       "text": "YouScout",
       "backgroundColor": "#ffffff"
     },

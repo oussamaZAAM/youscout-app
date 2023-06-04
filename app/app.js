@@ -19,9 +19,7 @@ ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT);
 const BottomTab = createBottomTabNavigator();
 
 const App = () => {
-    // const { accessToken, saveAccessToken } = useContext(AuthContext);
-
-    const accessToken = "12"
+    const { accessToken, saveAccessToken } = useContext(AuthContext);
 
     return (accessToken && accessToken.length !== 0
         ? (

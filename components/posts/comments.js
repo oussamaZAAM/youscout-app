@@ -551,7 +551,7 @@ const Comments = ({ commentsNumber, bottomSheetRef, handleSheetChanges }) => {
         setComments(data);
         return data;
       } catch (error) {
-        console.error("Error fetching data:", error);
+        console.error("Error fetching comments data:", error);
         throw error;
       }
     };

@@ -82,7 +82,7 @@ const LoginScreen = ({ navigation }) => {
                 throw new Error('Error: ' + response.status);
               }
             } catch (error) {
-              console.error('Error fetching data:', error);
+              console.error('Error fetching authentication data:', error);
             }
           }}
         >

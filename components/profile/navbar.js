@@ -22,7 +22,7 @@ const ProfileNavbar = ({ profileUserName, myProfile }) => {
         }
       );
   
-      console.log('Logout successful:', response);
+      console.log('Logout successful');
   
       deleteAccessToken();
     } catch (error) {

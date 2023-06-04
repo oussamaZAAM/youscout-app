@@ -14,7 +14,7 @@ const AuthProvider = ({ children }) => {
                     value = response;
                 }))
 
-                if (value?.access_token !== accessToken) {
+                if (value && (value.access_token !== accessToken)) {
                     setAccessToken(value.access_token);
                 }
             } catch (e) {
@@ -29,7 +29,7 @@ const AuthProvider = ({ children }) => {
         try {
             const jsonValue = JSON.stringify(value)
             await AsyncStorage.setItem("@tokens", jsonValue)
-            setAccessToken(value.access_token)
+            setAccessToken(value ? value.access_token : '')
         } catch (e) {
             console.error(e)
         }
