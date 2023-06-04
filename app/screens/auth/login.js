@@ -1,9 +1,11 @@
+import { Octicons } from "@expo/vector-icons";
 import { Formik } from "formik";
 import React, { useContext, useRef } from "react";
 import {
   Image,
   SafeAreaView,
   ScrollView,
+  StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
@@ -12,11 +14,11 @@ import {
 
 import { FontAwesome, MaterialIcons } from "react-native-vector-icons";
 
+import FlashMessage, { showMessage } from "react-native-flash-message";
 import * as Yup from "yup";
-import { COLORS } from "../../../assets/utils";
-import { authenticationService } from "../../../constants/env";
-import { storeLocalData } from "../../../assets/functions/asyncStore";
+import { COLORS, timeout } from "../../../assets/utils";
 import AuthContext from "../../../components/auth/authContext";
+import { authenticationService } from "../../../constants/env";
 
 const LoginScreen = ({ navigation }) => {
   const scrollViewRef = useRef();
@@ -75,15 +77,39 @@ const LoginScreen = ({ navigation }) => {
               });
 
               if (response.ok) {
+                showMessage({
+                  message: "",
+                  type: "success",
+                  duration: timeout,
+                  icon: () => (
+                    <View style={styles.flashMessage}>
+                      <Octicons name="sign-in" size={26} />
+                      <Text style={styles.editCommentText}>Logged in successfully 👍</Text>
+                    </View>
+                  ),
+                });
                 const data = await response.json();
-                saveAccessToken(data);
-
+                setTimeout(() => {
+                  saveAccessToken(data);
+                }, timeout);
               } else {
-                throw new Error('Error: ' + response.status);
+                console.log(response)
+                showMessage({
+                  message: "",
+                  type: "danger",
+                  duration: timeout,
+                  icon: () => (
+                    <View style={styles.flashMessage}>
+                      <Octicons name="sign-in" size={26} />
+                      <Text style={styles.editCommentText}>Error while logging in</Text>
+                    </View>
+                  ),
+                });
               }
             } catch (error) {
-              console.error('Error fetching authentication data:', error);
+              console.log(error);
             }
+
           }}
         >
           {({ handleChange, handleSubmit, values, errors, touched }) => (
@@ -234,8 +260,22 @@ const LoginScreen = ({ navigation }) => {
           </TouchableOpacity>
         </View>
       </ScrollView>
+      <FlashMessage position="bottom" />
     </SafeAreaView>
   );
 };
+
+const styles = StyleSheet.create({
+  editCommentText: {
+    fontWeight: "bold",
+    fontSize: 16,
+  },
+  flashMessage: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 20,
+  },
+});
 
 export default LoginScreen;

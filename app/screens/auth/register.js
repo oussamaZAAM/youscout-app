@@ -1,6 +1,4 @@
-import {
-  Octicons
-} from "@expo/vector-icons";
+import { Octicons } from "@expo/vector-icons";
 import { Formik } from "formik";
 import React, { useRef } from "react";
 import {
@@ -18,7 +16,7 @@ import * as Yup from "yup";
 
 import { StyleSheet } from "react-native";
 import FlashMessage, { showMessage } from "react-native-flash-message";
-import { COLORS, WINDOW_WIDTH, timeout } from "../../../assets/utils";
+import { COLORS, timeout } from "../../../assets/utils";
 import { authenticationService } from "../../../constants/env";
 
 const RegisterScreen = ({ navigation }) => {
@@ -72,6 +70,7 @@ const RegisterScreen = ({ navigation }) => {
             ),
           })}
           onSubmit={async (values) => {
+            console.log(authenticationService)
             await axios.post(authenticationService + '/api/v1/auth/register', {
               fullName: values.name,
               username: values.name,
@@ -83,7 +82,7 @@ const RegisterScreen = ({ navigation }) => {
                   message: "response",
                   type: "success",
                   duration: timeout,
-
+ 
                   icon: () => (
                     <View style={styles.flashMessage}>
                       <Octicons name="sign-in" size={26} />
@@ -108,7 +107,6 @@ const RegisterScreen = ({ navigation }) => {
                   ),
                   // message: "Error while registering" + error
                 });
-                console.log('bad')
               });
           }}
         >

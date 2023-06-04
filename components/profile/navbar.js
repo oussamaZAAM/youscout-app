@@ -1,34 +1,12 @@
 import { useNavigation } from "@react-navigation/native";
-import React, { useContext } from "react";
+import React from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Feather } from "react-native-vector-icons";
-import AuthContext from "../auth/authContext";
-import { authenticationService } from "../../constants/env";
-import axios from "axios";
 
-const ProfileNavbar = ({ profileUserName, myProfile }) => {
-  const { accessToken, saveAccessToken, deleteAccessToken } = useContext(AuthContext);
+const ProfileNavbar = ({ profileUserName, myProfile, toggleBottomNavigationView }) => {
 
   const navigation = useNavigation();
-  const handleLogout = async() => {
-    try {
-      const response = await axios.post(
-        authenticationService + '/api/v1/auth/logout',
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
-  
-      console.log('Logout successful');
-  
-      deleteAccessToken();
-    } catch (error) {
-      console.error('Error logging out:', error);
-    }
-  }
+
   return (
     <View style={styles.navContainer}>
       {myProfile ? (
@@ -41,7 +19,7 @@ const ProfileNavbar = ({ profileUserName, myProfile }) => {
         </TouchableOpacity>
       )}
       <Text style={styles.text}>{profileUserName}</Text>
-      <TouchableOpacity onPress={handleLogout}>
+      <TouchableOpacity onPress={toggleBottomNavigationView}>
         <Feather name="menu" size={24} />
       </TouchableOpacity>
     </View>

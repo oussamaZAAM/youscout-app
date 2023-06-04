@@ -13,4 +13,4 @@ export const ICONS = {
   send: "send-outline",
 };
 
-export const timeout = 4000;
+export const timeout = 1000;
