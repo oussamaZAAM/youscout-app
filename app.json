@@ -15,6 +15,14 @@
     "web": {
       "bundler": "metro",
       "config": {}
+    },
+    "extra": {
+      "eas": {
+        "projectId": "dd2fdb84-7b58-4e50-8814-55bdadc58b48"
+      }
+    },
+    "android": {
+      "package": "com.aseds.YouScout"
     }
   }
 }
