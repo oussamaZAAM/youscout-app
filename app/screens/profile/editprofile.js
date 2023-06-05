@@ -52,20 +52,20 @@ const EditProfileScreen = () => {
 
 
 
-  const convertImageToFormData = async (uri) => {
-    try {
-      const response = await fetch(uri);
-      const blob = await response.blob();
-      const filename = uri.split('/').pop();
+  // const convertImageToFormData = async (uri) => {
+  //   try {
+  //     const response = await fetch(uri);
+  //     const blob = await response.blob();
+  //     const filename = uri.split('/').pop();
 
-      const formData = new FormData();
-      formData.append('file', blob, filename);
+  //     const formData = new FormData();
+  //     formData.append('file', blob, filename);
 
-      return formData;
-    } catch (error) {
-      console.error('Error:', error);
-    }
-  };
+  //     return formData;
+  //   } catch (error) {
+  //     console.error('Error:', error);
+  //   }
+  // };
 
   const takeImage = async () => {
     let result = await ImagePicker.launchCameraAsync({
@@ -89,13 +89,19 @@ const EditProfileScreen = () => {
     });
     if (!result.canceled) {
       // Transform to Form Data
-      convertImageToFormData(result.assets[0].uri)
-        .then(async (formdata) => {
+      // convertImageToFormData(result.assets[0].uri)
+      //   .then(async (formdata) => {
           // Send Image to Backend
+          let formData = new FormData();
+          formData.append('file', {
+            uri: result.assets[0].uri,
+            name: result.assets[0].uri.split('/').pop(),
+            type: 'image/jpeg', // Adjust the type based on your image format
+          });
           try {
             await axios.post(
               `${authenticationService}/api/v1/users/me/profile/picture`,
-              formdata,
+              formData,
               {
                 headers: {
                   Authorization: `Bearer ${accessToken}`,
@@ -105,15 +111,16 @@ const EditProfileScreen = () => {
             );
             console.log('good')
           } catch (error) {
+            console.log(error.response)
             throw error;
           }
-        })
-        .catch(async (error) => {
-          // Handle error
-          if (error.response) {
-            alert(error.response.data.message);
-          }
-        });
+        // })
+        // .catch(async (error) => {
+        //   // Handle error
+        //   if (error.response) {
+        //     console.log(error.response.data.error);
+        //   }
+        // });
       setImage(result.assets[0].uri);
     }
   };

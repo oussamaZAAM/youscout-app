@@ -2,6 +2,7 @@ import React, { createContext, useState, useContext } from 'react';
 import axios from 'axios';
 import { authenticationService } from '../constants/env';
 import AuthContext from '../components/auth/authContext';
+import { handleRefreshToken } from '../assets/functions/refreshToken';
 
 // Create the UserContext
 export const UserContext = createContext();
@@ -50,8 +51,8 @@ const UserProvider = ({ children }) => {
       }
     } catch (error) {
       console.error("An error occurred:", error.message);
-      if (error.response.status) {
-        deleteAccessToken();
+      if (error.response.status === 401) {
+        handleRefreshToken(accessToken, saveAccessToken);
       }
     }
   };
