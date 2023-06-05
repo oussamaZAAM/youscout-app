@@ -71,7 +71,7 @@ const RegisterScreen = ({ navigation }) => {
           })}
           onSubmit={async (values) => {
             console.log(authenticationService)
-            await axios.post(authenticationService + '/api/v1/auth/register', {
+            await axios.post(authenticationService + '/auth/register', {
               fullName: values.name,
               username: values.name,
               email: values.email,
@@ -79,7 +79,7 @@ const RegisterScreen = ({ navigation }) => {
             })
               .then(response => {
                 showMessage({
-                  message: "response",
+                  message: "",
                   type: "success",
                   duration: timeout,
  

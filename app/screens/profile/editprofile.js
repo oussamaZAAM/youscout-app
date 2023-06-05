@@ -95,7 +95,7 @@ const EditProfileScreen = () => {
       });
       try {
         await axios.post(
-          `${authenticationService}/api/v1/users/me/profile/picture`,
+          `${authenticationService}/users/me/profile/picture`,
           formData,
           {
             headers: {

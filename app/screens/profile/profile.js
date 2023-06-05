@@ -38,7 +38,7 @@ const ProfileScreen = (props) => {
   const handleLogout = async () => {
     try {
       const response = await axios.post(
-        authenticationService + '/api/v1/auth/logout',
+        authenticationService + '/auth/logout',
         {},
         {
           headers: {

@@ -14,7 +14,7 @@ import NavbarGeneral from "../general/navbar";
 const updateNormalProfile = async (userData, accessToken, saveAccessToken, deleteAccessToken) => {
   try {
     await axios.patch(
-      `${authenticationService}/api/v1/users/me/profile`,
+      `${authenticationService}/users/me/profile`,
       userData,
       {
         headers: {
@@ -44,7 +44,7 @@ const updateNormalProfile = async (userData, accessToken, saveAccessToken, delet
 const updateProtectedProfile = async (userData, accessToken, saveAccessToken, deleteAccessToken) => {
   try {
     await axios.patch(
-      `${authenticationService}/api/v1/users/me`,
+      `${authenticationService}/users/me`,
       userData,
       {
         headers: {
@@ -54,7 +54,7 @@ const updateProtectedProfile = async (userData, accessToken, saveAccessToken, de
     ).then(async () => {
       deleteAccessToken();
       await axios.post(
-        authenticationService + '/api/v1/auth/logout',
+        authenticationService + '/auth/logout',
         {},
         {
           headers: {

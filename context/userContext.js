@@ -25,7 +25,7 @@ const UserProvider = ({ children }) => {
 
   const fetchUser = async () => {
     try {
-      const url = authenticationService + "/api/v1/users/me/profile";
+      const url = authenticationService + "/users/me/profile";
       const response = await axios.get(url, {
         headers: {
           Authorization: `Bearer ${accessToken}`

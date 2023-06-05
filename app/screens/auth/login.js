@@ -69,7 +69,7 @@ const LoginScreen = ({ navigation }) => {
                 withRefreshToken: "true"
               };
 
-              const response = await fetch(authenticationService + "/api/v1/auth/login", {
+              const response = await fetch(authenticationService + "/auth/login", {
                 method: "POST",
                 headers: {
                   "Content-Type": "application/json",
@@ -94,20 +94,21 @@ const LoginScreen = ({ navigation }) => {
                   saveAccessToken(data);
                 }, timeout);
               } else {
+                const body = JSON.parse(await response.text())
                 showMessage({
                   message: "",
-                  type: "danger",
+                  type: "info",
                   duration: timeout,
                   icon: () => (
                     <View style={styles.flashMessage}>
                       <Octicons name="sign-in" size={26} />
-                      <Text style={styles.editCommentText}>Error while logging in</Text>
+                      <Text style={[styles.editCommentText, {}]}>{body.message.split("Please check your inbox")[0]}</Text>
                     </View>
                   ),
                 });
               }
             } catch (error) {
-              console.log(error);
+              console.log(error.response);
             }
 
           }}

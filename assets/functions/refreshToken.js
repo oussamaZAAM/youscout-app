@@ -8,7 +8,7 @@ export const handleRefreshToken = async(accessToken, saveAccessToken, deleteAcce
     try {
         const store = await getLocalData("@tokens");
         const refreshToken = store.refresh_token;
-        const response = await axios.post(authenticationService + "/api/v1/auth/login", {
+        const response = await axios.post(authenticationService + "/auth/login", {
             grantType: 'REFRESH_TOKEN',
             withRefreshToken: true,
             refreshToken: refreshToken,
@@ -19,7 +19,7 @@ export const handleRefreshToken = async(accessToken, saveAccessToken, deleteAcce
         if (error.response.status === 401) {
             console.log("Refreshing unauthorized")
             await axios.post(
-                authenticationService + '/api/v1/auth/logout',
+                authenticationService + '/auth/logout',
                 {},
                 {
                     headers: {
