@@ -25,6 +25,7 @@ const UserProvider = ({ children }) => {
 
     useEffect(() => {
         const fetchUser = async () => {
+            console.log('test')
             try {
                 const url = authenticationService + "/api/v1/users/me/profile";
                 const response = await axios.get(url, {
@@ -35,6 +36,7 @@ const UserProvider = ({ children }) => {
 
                 if (response.status === 200) {
                     const data = response.data;
+                    console.log('good')
                     setUser({
                         username: data.username,
                         email: data.email,
@@ -52,6 +54,7 @@ const UserProvider = ({ children }) => {
                 }
             } catch (error) {
                 console.error("An error occurred:", error.message);
+                console.log('bad')
                 if (error.response.status) {
                     // Refresh Token for the future
                     deleteAccessToken(); // For the moment

@@ -1,12 +1,44 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { StyleSheet, Text, TextInput, View } from "react-native";
 import { Divider } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import NavbarGeneral from "../general/navbar";
 import { useNavigation } from "@react-navigation/native";
+import { authenticationService } from "../../constants/env";
+import axios from "axios";
+import AuthContext from "../auth/authContext";
 
-const checkVariable = (field, value, action) => {
+const updateNormalProfile = async (userData, accessToken) => {
+  try {
+    await axios.patch(
+      `${authenticationService}/api/v1/users/me/profile`,
+      userData,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    )
+      .then((response) => {
+        console.log(response.data)
+      })
+      .catch((error) => {
+        console.log(error.response.error)
+      })
+  } catch (error) {
+    // Handle error
+    if (error.response) {
+      if (error.response.status === 401) {
+        //logout
+      }
+      console.error('Response data:', error.response.data);
+    }
+    console.error('No response received:', error.request);
+  }
+};
+
+const checkVariable = (field, value, action, accessToken) => {
   if (field === "username") {
     const usernameRegex = /^[a-zA-Z0-9_]+$/;
     if (value.length > 3) {
@@ -37,8 +69,27 @@ const checkVariable = (field, value, action) => {
     }
   }
 
+  if (field === "fullName") {
+    const fullNameRegex = /^[A-Za-z]+\s[A-Za-z]+$/;
+    if (fullNameRegex.test(value)) {
+      if (value.length <= 50) {
+        updateNormalProfile({
+          fullName: value
+        }, accessToken);
+        action(value);
+      } else {
+        alert("Full name should not contain more than 50 characters!");
+      }
+    } else {
+      alert("Please insert a valid first name and last name!");
+    }
+  }
+
   if (field === "bio") {
     if (value.length <= 100) {
+      updateNormalProfile({
+        bio: value
+      }, accessToken);
       action(value);
     } else {
       alert("Profile Bio should not contain more than 100 characters!");
@@ -64,12 +115,14 @@ const checkVariable = (field, value, action) => {
 };
 
 const EditProfileFieldScreen = ({ route }) => {
+  const { accessToken } = useContext(AuthContext);
+
   const navigation = useNavigation();
   const { title, field, value, action } = route.params;
   const [newValue, setNewValue] = useState(value);
   const onSave = () => {
     if (newValue !== "") {
-      checkVariable(field, newValue, action);
+      checkVariable(field, newValue, action, accessToken);
     } else {
       console.log("error1");
     }

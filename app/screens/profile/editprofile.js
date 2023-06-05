@@ -1,6 +1,6 @@
 import { useNavigation } from "@react-navigation/native";
 import * as ImagePicker from "expo-image-picker";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import {
   Animated,
   Image,
@@ -17,20 +17,79 @@ import { Feather } from "react-native-vector-icons";
 
 import { WINDOW_HEIGHT, WINDOW_WIDTH } from "../../../assets/utils";
 import NavbarGeneral from "../../../components/general/navbar";
+import { UserContext } from "../../../context/userContext";
+import { authenticationService } from "../../../constants/env";
+import axios from "axios";
+import AuthContext from "../../../components/auth/authContext";
 
 const EditProfileScreen = () => {
   const navigation = useNavigation();
-  const [image, setImage] = useState(
-    "https://cdn.myanimelist.net/images/characters/9/295367.jpg"
-  );
-  const [username, setUsername] = useState("karenbee7");
-  const [email, setEmail] = useState("karenbee7@gmail.com");
-  const [bio, setBio] = useState(
-    "Karen, the main character of Karen Bee, is one of Koyomi's sisters. She is older than Tsukihi and always doing outdoor activities. Despite being younger, Karen is taller than Koyomi, much to Koyomi's dismay."
-  );
+
+  const { accessToken, saveAccessToken, deleteAccessToken } = useContext(AuthContext);
+
+  const user = useContext(UserContext);
+  // const [user, setUser] = useState({
+  //   username: "",
+  //   email: "",
+  //   profilePicture: "",
+  //   fullName: "",
+  //   dateOfBirth: null,
+  //   gender: null,
+  //   country: null,
+  //   cityOrRegion: null,
+  //   bio: null,
+  //   socialMediaLinks: {}
+  // });
+
+  // useEffect(() => {
+  //   const fetchUser = async () => {
+  //     try {
+  //       const url = authenticationService + "/api/v1/users/me/profile";
+  //       const response = await axios.get(url, {
+  //         headers: {
+  //           Authorization: `Bearer ${accessToken}`
+  //         }
+  //       });
+
+  //       if (response.status === 200) {
+  //         const data = response.data;
+  //         setUser({
+  //           username: data.username,
+  //           email: data.email,
+  //           profilePicture: data.profilePicture,
+  //           fullName: data.fullName,
+  //           dateOfBirth: data.dateOfBirth,
+  //           gender: data.gender,
+  //           country: data.country,
+  //           cityOrRegion: data.cityOrRegion,
+  //           bio: data.bio,
+  //           socialMediaLinks: data.socialMediaLinks
+  //         });
+  //       } else {
+  //         throw new Error("Request failed with status: " + response.status);
+  //       }
+  //     } catch (error) {
+  //       console.error("An error occurred:", error.message);
+  //       if (error.response.status) {
+  //         // Refresh Token for the future
+  //         deleteAccessToken(); // For the moment
+  //       }
+  //     }
+  //   };
+
+  //   fetchUser();
+  // }, []);
+
+  console.log(user.email)
+
+  const [image, setImage] = useState(user.profilePicture || "");
+  const [username, setUsername] = useState(user.username || "");
+  const [email, setEmail] = useState(user.email || "");
+  const [fullName, setFullName] = useState(user.fullName || "");
+  const [bio, setBio] = useState(user.bio || "");
   const [socials, setSocials] = useState({
-    instagram: "",
-    facebook: ""
+    instagram: user.socialMediaLinks?.instagram || "",
+    facebook: user.socialMediaLinks?.facebook || ""
   });
 
   const [modalVisible, setModalVisible] = useState(false);
@@ -184,6 +243,25 @@ const EditProfileScreen = () => {
               <Feather name="chevron-right" size={20} color="gray" />
             </View>
           </TouchableOpacity>
+          {/* Full Name */}
+          <TouchableOpacity
+            onPress={() =>
+              navigation.navigate("EditProfileField", {
+                title: "fullName",
+                field: "fullName",
+                value: fullName,
+                action: setFullName,
+              })
+            }
+            style={styles.fieldItemContainer}
+          >
+            <Text>Full Name</Text>
+            <View style={styles.fieldValueContainer}>
+              <Text>{fullName || "Add your name"}</Text>
+              <Feather name="chevron-right" size={20} color="gray" />
+            </View>
+          </TouchableOpacity>
+          <Divider />
           {/* Bio */}
           <TouchableOpacity
             onPress={() =>
@@ -215,7 +293,7 @@ const EditProfileScreen = () => {
                   field: "instagram",
                   value: socials.instagram,
                   action: (value) => {
-                    setSocials({...socials, instagram: value})
+                    setSocials({ ...socials, instagram: value })
                   },
                 })
               }
@@ -235,7 +313,7 @@ const EditProfileScreen = () => {
                   field: "facebook",
                   value: socials.facebook,
                   action: (value) => {
-                    setSocials({...socials, facebook: value})
+                    setSocials({ ...socials, facebook: value })
                   },
                 })
               }

@@ -25,7 +25,7 @@ const postUser = {
   id: 11,
   username: "tsukihicchi",
   email: "platinum@disco.com",
-  profileImg: "https://cdn.myanimelist.net/images/characters/11/301411.jpg",
+  profilePicture: "https://cdn.myanimelist.net/images/characters/11/301411.jpg",
 };
 
 export default function VideoItem({ data, isActive }) {

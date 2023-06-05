@@ -6,9 +6,68 @@ import { COLORS } from "../../assets/utils";
 import { useNavigation } from "expo-router";
 import { CheckImage } from "../../assets/functions/functions";
 import { UserContext } from "../../context/userContext";
+import axios from "axios";
+import { authenticationService } from "../../constants/env";
+import AuthContext from "../auth/authContext";
 
 const ProfileHeader = ({ profileUser }) => {
+  const { accessToken, saveAccessToken, deleteAccessToken } = useContext(AuthContext);
+
   const user = useContext(UserContext);
+//   const [user, setUser] = useState({
+//     username: "",
+//     email: "",
+//     profilePicture: "",
+//     fullName: "",
+//     dateOfBirth: null,
+//     gender: null,
+//     country: null,
+//     cityOrRegion: null,
+//     bio: null,
+//     socialMediaLinks: {}
+// });
+
+// useEffect(() => {
+//     const fetchUser = async () => {
+//         console.log('test')
+//         try {
+//             const url = authenticationService + "/api/v1/users/me/profile";
+//             const response = await axios.get(url, {
+//                 headers: {
+//                     Authorization: `Bearer ${accessToken}`
+//                 }
+//             });
+
+//             if (response.status === 200) {
+//                 const data = response.data;
+//                 console.log('good')
+//                 setUser({
+//                     username: data.username,
+//                     email: data.email,
+//                     profilePicture: data.profilePicture,
+//                     fullName: data.fullName,
+//                     dateOfBirth: data.dateOfBirth,
+//                     gender: data.gender,
+//                     country: data.country,
+//                     cityOrRegion: data.cityOrRegion,
+//                     bio: data.bio,
+//                     socialMediaLinks: data.socialMediaLinks
+//                 });
+//             } else {
+//                 throw new Error("Request failed with status: " + response.status);
+//             }
+//         } catch (error) {
+//             console.error("An error occurred:", error.message);
+//             console.log('bad')
+//             if (error.response.status) {
+//                 // Refresh Token for the future
+//                 deleteAccessToken(); // For the moment
+//             }
+//         }
+//     };
+
+//     fetchUser();
+// }, []);
 
   const navigation = useNavigation();
 
@@ -72,7 +131,7 @@ const ProfileHeader = ({ profileUser }) => {
 
   return (
     <View style={styles.container}>
-      <CheckImage uri={profileUser.profileImg} size={100} />
+      <CheckImage uri={profileUser.profilePicture} size={100} />
       <Text style={styles.emailText}>{profileUser.email}</Text>
       <View style={styles.counterContainer}>
         <View style={styles.counterItemContainer}>
@@ -88,7 +147,7 @@ const ProfileHeader = ({ profileUser }) => {
           <Text style={styles.counterLabelText}>Likes</Text>
         </View>
       </View>
-      {profileUser.id === user.id ? (
+      {profileUser.username === user.username ? (
         <TouchableOpacity
           onPress={() => navigation.navigate("EditProfile")}
           style={styles.grayOutlinedButton}
@@ -112,7 +171,7 @@ const ProfileHeader = ({ profileUser }) => {
             </TouchableOpacity>
           )}
           <TouchableOpacity
-            onPress={() => navigation.navigate("Conversation", {id: profileUser.id, username: profileUser.username, profileImg: profileUser.profileImg})}
+            onPress={() => navigation.navigate("Conversation", {username: profileUser.username, profilePicture: profileUser.profilePicture})}
             style={styles.grayOutlinedButton}
           >
             <Text>Chat</Text>

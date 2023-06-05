@@ -199,8 +199,8 @@ const Comment = ({
   return (
     <View style={styles.commentContainer}>
       <Image
-        style={styles.profileImg}
-        source={{ uri: comment?.author?.profileImg }}
+        style={styles.profilePicture}
+        source={{ uri: comment?.author?.profilePicture }}
       />
       <View style={styles.commentContent}>
         <View style={styles.userAndTime}>
@@ -502,7 +502,7 @@ const Comments = ({ commentsNumber, bottomSheetRef, handleSheetChanges }) => {
       author: {
         id: 1,
         username: "Megumin",
-        profileImg:
+        profilePicture:
           "https://ih1.redbubble.net/image.3613970471.1584/st,small,845x845-pad,1000x1000,f8f8f8.jpg",
       },
       body: "Kono Subarashii Sekai ni Bakuen en woKono Subarashii Sekai ni Bakuen woKono Subarashii Sekai ni Bakuen woKono Subarashii Sekai ni Bakuen woKono Subarashii Sekai ni Bakuen wo!",
@@ -514,7 +514,7 @@ const Comments = ({ commentsNumber, bottomSheetRef, handleSheetChanges }) => {
           author: {
             id: 2,
             username: "Jane Smith",
-            profileImg: "https://randomuser.me/api/portraits/women/1.jpg",
+            profilePicture: "https://randomuser.me/api/portraits/women/1.jpg",
           },
           body: "I agree, thanks for sharing!",
           timestamp: "30 minutes ago",
@@ -526,7 +526,7 @@ const Comments = ({ commentsNumber, bottomSheetRef, handleSheetChanges }) => {
       author: {
         id: 2,
         username: "Bob Johnson",
-        profileImg: "https://randomuser.me/api/portraits/men/2.jpg",
+        profilePicture: "https://randomuser.me/api/portraits/men/2.jpg",
       },
       body: "Wow, this is really insightful!",
       timestamp: "2 hours ago",
@@ -663,7 +663,7 @@ const Comments = ({ commentsNumber, bottomSheetRef, handleSheetChanges }) => {
             author: {
               id: data.author.id,
               username: data.author.username,
-              profileImg: data.author.profileImg,
+              profilePicture: data.author.profilePicture,
             },
             body: newComment,
             timestamp: data.timestamp,
@@ -804,7 +804,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 10,
   },
-  profileImg: {
+  profilePicture: {
     width: 40,
     height: 40,
     borderRadius: 20,

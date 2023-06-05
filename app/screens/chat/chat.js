@@ -17,35 +17,35 @@ const conversations = [
     id: 1,
     username: "John Doe",
     lastMessage: "Hey there, how are you?",
-    profileImg: "https://randomuser.me/api/portraits/men/5.jpg",
+    profilePicture: "https://randomuser.me/api/portraits/men/5.jpg",
     newMessages: 1114,
   },
   {
     id: 2,
     username: "Jane Doe",
     lastMessage: "I am good, thanks! What about you?",
-    profileImg: "https://randomuser.me/api/portraits/women/31.jpg",
+    profilePicture: "https://randomuser.me/api/portraits/women/31.jpg",
     newMessages: 1,
   },
   {
     id: 3,
     username: "Mark Smith",
     lastMessage: "Have you seen the new movie?",
-    profileImg: "https://randomuser.me/api/portraits/lego/5.jpg",
+    profilePicture: "https://randomuser.me/api/portraits/lego/5.jpg",
     newMessages: 1,
   },
   {
     id: 4,
     username: "Mia Johnson",
     lastMessage: "Can you help me with this task?",
-    profileImg: "https://randomuser.me/api/portraits/women/60.jpg",
+    profilePicture: "https://randomuser.me/api/portraits/women/60.jpg",
     newMessages: 0,
   },
   {
     id: 5,
     username: "Steve Rogers",
     lastMessage: "Assemble!",
-    profileImg: "https://randomuser.me/api/portraits/men/83.jpg",
+    profilePicture: "https://randomuser.me/api/portraits/men/83.jpg",
     newMessages: 0,
   },
   // add more conversations here
@@ -72,7 +72,7 @@ const ChatScreen = () => {
     return (
       <TouchableOpacity
         style={styles.conversation}
-        onPress={() => navigation.navigate("Conversation", { id: item.id, username: item.username, profileImg: item.profileImg})}
+        onPress={() => navigation.navigate("Conversation", { id: item.id, username: item.username, profilePicture: item.profilePicture})}
       >
         {item.newMessages > 0 && (
           <Image
@@ -81,7 +81,7 @@ const ChatScreen = () => {
           />
         )}
         <View style={{ flexDirection: "row", alignItems: "center" }}>
-          <Image source={{ uri: item.profileImg }} style={styles.profileImg} />
+          <Image source={{ uri: item.profilePicture }} style={styles.profilePicture} />
           <View style={{ marginLeft: 8 }}>
             {item.newMessages === 0 ? (
               <Text style={styles.username}>{item.username}</Text>
@@ -155,7 +155,7 @@ const styles = StyleSheet.create({
     height: 25,
     width: 25,
   },
-  profileImg: {
+  profilePicture: {
     width: 50,
     height: 50,
     borderRadius: 25,

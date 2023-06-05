@@ -4,7 +4,7 @@ import { StyleSheet, Text, TouchableOpacity, View, Image } from "react-native";
 import { Feather } from "react-native-vector-icons";
 import { CheckImage } from "../../assets/functions/functions";
 
-const ChatNavbarGeneral = ({ username = "Unknown", profileImg }) => {
+const ChatNavbarGeneral = ({ username = "Unknown", profilePicture }) => {
   const navigation = useNavigation();
 
   return (
@@ -19,7 +19,7 @@ const ChatNavbarGeneral = ({ username = "Unknown", profileImg }) => {
       </TouchableOpacity>
 
       <View style={styles.userBanner}>
-        <CheckImage uri={profileImg} />
+        <CheckImage uri={profilePicture} />
         <Text style={styles.title}>{username}</Text>
       </View>
       <TouchableOpacity style={styles.button}>

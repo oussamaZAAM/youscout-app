@@ -17,12 +17,12 @@ const ConversationScreen = (props) => {
     ? {
         id: props.route.params.id,
         username: props.route.params.username,
-        profileImg: props.route.params.profileImg,
+        profilePicture: props.route.params.profilePicture,
       }
     : {
         id: "",
         username: "",
-        profileImg: "",
+        profilePicture: "",
       };
   const [messages, setMessages] = useState([]);
 
@@ -115,7 +115,7 @@ const ConversationScreen = (props) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ChatNavbarGeneral username={user.username} profileImg={user.profileImg} />
+      <ChatNavbarGeneral username={user.username} profilePicture={user.profilePicture} />
       <GiftedChat
         messages={messages}
         onSend={(messages) => onSend(messages)}
