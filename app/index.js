@@ -10,13 +10,12 @@ ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT);
 const Main = () => {
 
   return (
-      <AuthProvider>
-    <UserProvider>
+    <AuthProvider>
+      <UserProvider>
         <App />
-    </UserProvider>
-      </AuthProvider>
+      </UserProvider>
+    </AuthProvider>
   );
 };
 
 export default Main;
-

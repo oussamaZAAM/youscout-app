@@ -3,14 +3,15 @@ import { StyleSheet, Text, TextInput, View } from "react-native";
 import { Divider } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-import NavbarGeneral from "../general/navbar";
 import { useNavigation } from "@react-navigation/native";
-import { authenticationService } from "../../constants/env";
 import axios from "axios";
-import AuthContext from "../auth/authContext";
+import { handleRefreshToken } from "../../assets/functions/refreshToken";
 import { WINDOW_WIDTH } from "../../assets/utils";
+import { authenticationService } from "../../constants/env";
+import AuthContext from "../auth/authContext";
+import NavbarGeneral from "../general/navbar";
 
-const updateNormalProfile = async (userData, accessToken) => {
+const updateNormalProfile = async (userData, accessToken, saveAccessToken, deleteAccessToken) => {
   try {
     await axios.patch(
       `${authenticationService}/api/v1/users/me/profile`,
@@ -22,24 +23,17 @@ const updateNormalProfile = async (userData, accessToken) => {
       }
     )
       .then((response) => {
-        console.log(response.data)
+        console.log("Updating normal profile:" + response.data)
+        // Display flash message
       })
       .catch((error) => {
-        console.log(error.response.error)
+        console.error("Error while updating normal profile:" + error.response.data)
       })
   } catch (error) {
     // Handle error
     if (error.response) {
       if (error.response.status === 401) {
-        await axios.post(
-          authenticationService + '/api/v1/auth/logout',
-          {},
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          }
-        ).then(() => { }).catch((error) => { });
+        handleRefreshToken(accessToken, saveAccessToken, deleteAccessToken);
       }
       console.error('Response data:', error.response.data);
     }
@@ -47,7 +41,7 @@ const updateNormalProfile = async (userData, accessToken) => {
   }
 };
 
-const updateProtectedProfile = async (userData, accessToken) => {
+const updateProtectedProfile = async (userData, accessToken, saveAccessToken, deleteAccessToken) => {
   try {
     await axios.patch(
       `${authenticationService}/api/v1/users/me`,
@@ -58,6 +52,7 @@ const updateProtectedProfile = async (userData, accessToken) => {
         },
       }
     ).then(async () => {
+      deleteAccessToken();
       await axios.post(
         authenticationService + '/api/v1/auth/logout',
         {},
@@ -66,29 +61,20 @@ const updateProtectedProfile = async (userData, accessToken) => {
             Authorization: `Bearer ${accessToken}`,
           },
         }
-      ).then(() => { }).catch((error) => { });
+      ).then(() => {}).catch((error) => { });
     });
   } catch (error) {
     // Handle error
     if (error.response) {
       if (error.response.status === 401) {
-        //logout
-        await axios.post(
-          authenticationService + '/api/v1/auth/logout',
-          {},
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          }
-        ).then(() => { }).catch((error) => { });
+        handleRefreshToken(accessToken, saveAccessToken, deleteAccessToken);
       }
       alert(error.response.data.message);
     }
   }
 };
 
-const checkVariable = (field, value, action, accessToken, password) => {
+const checkVariable = (field, value, action, password, accessToken, saveAccessToken, deleteAccessToken) => {
   if (field === "username") {
     const usernameRegex = /^[a-zA-Z0-9_]+$/;
     if (password.length > 0) {
@@ -98,7 +84,7 @@ const checkVariable = (field, value, action, accessToken, password) => {
             updateProtectedProfile({
               newUsername: value,
               password: password
-            }, accessToken);
+            }, accessToken, saveAccessToken, deleteAccessToken);
             action(value.toLowerCase());
           } else {
             alert("Username should not contain symbols other than underscores!");
@@ -122,7 +108,7 @@ const checkVariable = (field, value, action, accessToken, password) => {
           updateProtectedProfile({
             newEmail: value,
             password: password
-          }, accessToken);
+          }, accessToken, saveAccessToken, deleteAccessToken);
           action(value.toLowerCase());
         } else {
           alert("Email should not contain more than 30 characters!");
@@ -141,7 +127,7 @@ const checkVariable = (field, value, action, accessToken, password) => {
         updateProtectedProfile({
           newPassword: value,
           password: password
-        }, accessToken);
+        }, accessToken, saveAccessToken, deleteAccessToken);
       } else {
         alert("Password should contain more than 8 characters!");
       }
@@ -156,7 +142,7 @@ const checkVariable = (field, value, action, accessToken, password) => {
       if (value.length <= 50) {
         updateNormalProfile({
           fullName: value
-        }, accessToken);
+        }, accessToken, saveAccessToken, deleteAccessToken);
         action(value);
       } else {
         alert("Full name should not contain more than 50 characters!");
@@ -170,33 +156,27 @@ const checkVariable = (field, value, action, accessToken, password) => {
     if (value.length <= 100) {
       updateNormalProfile({
         bio: value
-      }, accessToken);
+      }, accessToken, saveAccessToken, deleteAccessToken);
       action(value);
     } else {
       alert("Profile Bio should not contain more than 100 characters!");
     }
   }
 
-  if (field === "instagram") {
-    if (value.length <= 25) {
-      action(value);
-    } else {
-      alert("Instagram username should not contain more than 25 characters!");
-    }
-  }
-
-  if (field === "facebook") {
-    const faceebookRegex = /^[a-zA-Z' .]{1,50}$/;
-    if (faceebookRegex.test(value)) {
-      action(value);
-    } else {
-      alert("Please enter a valid Facebook name!");
-    }
+  if (field === "socialMedia") {
+    // if (value.length <= 25) {
+    updateNormalProfile({
+      socialMediaLinks: value
+    }, accessToken, saveAccessToken, deleteAccessToken)
+    action(value);
+    // } else {
+    //   alert("Instagram username should not contain more than 25 characters!");
+    // }
   }
 };
 
 const EditProfileFieldScreen = ({ route }) => {
-  const { accessToken } = useContext(AuthContext);
+  const { accessToken, saveAccessToken, deleteAccessToken } = useContext(AuthContext);
 
   // Password to verify some entries
   const [password, setPassword] = useState('');
@@ -206,7 +186,7 @@ const EditProfileFieldScreen = ({ route }) => {
   const [newValue, setNewValue] = useState(value);
   const onSave = () => {
     if (newValue !== "") {
-      checkVariable(field, newValue, action, accessToken, password);
+      checkVariable(field, newValue, action, password, accessToken, saveAccessToken, deleteAccessToken);
     } else {
       console.log("error1");
     }
@@ -220,7 +200,7 @@ const EditProfileFieldScreen = ({ route }) => {
       />
       <Divider />
       <View style={styles.mainContainer}>
-        <Text style={styles.title}>{title}</Text>
+        <Text style={styles.title}>{field !== "socialMedia" && title}</Text>
         {field === "bio" ? (
           <View>
             <TextInput
@@ -254,7 +234,7 @@ const EditProfileFieldScreen = ({ route }) => {
           )
           : (field === "password")
             ? <View style={styles.columnContainer}>
-              <Text style={[styles.verifyText, {color: 'black'}]}>New password</Text>
+              <Text style={[styles.verifyText, { color: 'black' }]}>New password</Text>
               <TextInput
                 secureTextEntry={true}
                 style={styles.textInput}
@@ -262,7 +242,7 @@ const EditProfileFieldScreen = ({ route }) => {
                 onChangeText={(text) => setNewValue(text)}
                 autoFocus={true}
               />
-              <Text style={[styles.verifyText, {color: 'black'}]}>Current password</Text>
+              <Text style={[styles.verifyText, { color: 'black' }]}>Current password</Text>
               <TextInput
                 secureTextEntry={true}
                 style={styles.textInput}
@@ -270,13 +250,27 @@ const EditProfileFieldScreen = ({ route }) => {
                 onChangeText={(text) => setPassword(text)}
               />
             </View>
-            : (<TextInput
-              secureTextEntry={field === "password"}
-              style={styles.textInput}
-              value={newValue}
-              onChangeText={(text) => setNewValue(text)}
-              autoFocus={true}
-            />)}
+            : (field === "socialMedia")
+              ? Object.keys(newValue).map(socialMedia => {
+                return (
+                  <View>
+                    <Text>{socialMedia}</Text>
+                    <TextInput
+                      style={styles.textInput}
+                      value={newValue[socialMedia]}
+                      onChangeText={(text) => setNewValue({ ...newValue, [socialMedia]: text })}
+                      autoFocus={true}
+                    />
+                  </View>
+                )
+              })
+              : <TextInput
+                secureTextEntry={field === "password"}
+                style={styles.textInput}
+                value={newValue}
+                onChangeText={(text) => setNewValue(text)}
+                autoFocus={true}
+              />}
       </View>
     </SafeAreaView>
   );

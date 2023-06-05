@@ -65,7 +65,8 @@ const LoginScreen = ({ navigation }) => {
               const payload = {
                 grantType: 'PASSWORD',
                 username: values.email,
-                password: values.password
+                password: values.password,
+                withRefreshToken: "true"
               };
 
               const response = await fetch(authenticationService + "/api/v1/auth/login", {
@@ -93,7 +94,6 @@ const LoginScreen = ({ navigation }) => {
                   saveAccessToken(data);
                 }, timeout);
               } else {
-                console.log(response)
                 showMessage({
                   message: "",
                   type: "danger",
@@ -195,6 +195,12 @@ const LoginScreen = ({ navigation }) => {
             </View>
           )}
         </Formik>
+
+        <TouchableOpacity style={{alignSelf: "center", marginTop: -20, marginBottom: 20}} onPress={() => navigation.navigate("Reset")}>
+            <Text style={{ color: COLORS.light, fontWeight: "700" }}>
+              Forgot password?
+            </Text>
+          </TouchableOpacity>
 
         <Text style={{ textAlign: "center", color: "#666", marginBottom: 30 }}>
           Or, login with ...

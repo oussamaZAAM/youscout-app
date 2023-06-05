@@ -34,8 +34,6 @@ const ProfileScreen = (props) => {
     setModalVisible(!modalVisible);
   };
 
-
-
   const handleLogout = async () => {
     try {
       const response = await axios.post(

@@ -6,7 +6,8 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
-  View
+  View,
+  ScrollView
 } from "react-native";
 
 import { BottomSheet } from "react-native-btr";
@@ -17,16 +18,21 @@ import { Feather } from "react-native-vector-icons";
 import { WINDOW_HEIGHT, WINDOW_WIDTH } from "../../../assets/utils";
 import NavbarGeneral from "../../../components/general/navbar";
 import { UserContext } from "../../../context/userContext";
+import { authenticationService } from "../../../constants/env";
+import axios from "axios";
+import AuthContext from "../../../components/auth/authContext";
+import { handleRefreshToken } from "../../../assets/functions/refreshToken";
 
 const EditProfileScreen = () => {
   const navigation = useNavigation();
 
+  const { accessToken, saveAccessToken } = useContext(AuthContext);
   const { user, fetchUser } = useContext(UserContext);
   useEffect(() => {
     fetchUser();
   }, []);
 
-  const [image, setImage] = useState(user.profilePicture || "");
+  const [image, setImage] = useState(user.profilePicture || "aa");
   const [username, setUsername] = useState(user.username || "");
   const [email, setEmail] = useState(user.email || "");
   const password = "";
@@ -42,6 +48,23 @@ const EditProfileScreen = () => {
 
   const toggleBottomNavigationView = () => {
     setModalVisible(!modalVisible);
+  };
+
+
+
+  const convertImageToFormData = async (uri) => {
+    try {
+      const response = await fetch(uri);
+      const blob = await response.blob();
+      const filename = uri.split('/').pop();
+
+      const formData = new FormData();
+      formData.append('file', blob, filename);
+
+      return formData;
+    } catch (error) {
+      console.error('Error:', error);
+    }
   };
 
   const takeImage = async () => {
@@ -65,8 +88,33 @@ const EditProfileScreen = () => {
       quality: 1,
     });
     if (!result.canceled) {
+      // Transform to Form Data
+      convertImageToFormData(result.assets[0].uri)
+        .then(async (formdata) => {
+          // Send Image to Backend
+          try {
+            await axios.post(
+              `${authenticationService}/api/v1/users/me/profile/picture`,
+              formdata,
+              {
+                headers: {
+                  Authorization: `Bearer ${accessToken}`,
+                  'Content-Type': "multipart/form-data"
+                },
+              }
+            );
+            console.log('good')
+          } catch (error) {
+            throw error;
+          }
+        })
+        .catch(async (error) => {
+          // Handle error
+          if (error.response) {
+            alert(error.response.data.message);
+          }
+        });
       setImage(result.assets[0].uri);
-      // Send Image to Backend
     }
   };
 
@@ -150,7 +198,7 @@ const EditProfileScreen = () => {
 
       {/* Other Profile Settings */}
       {!displayImage && (
-        <View style={styles.fieldsContainer}>
+        <ScrollView style={styles.fieldsContainer}>
           <Divider />
           {/* Username */}
           <TouchableOpacity
@@ -248,48 +296,31 @@ const EditProfileScreen = () => {
           {/* Social Media Section */}
           <View style={styles.socialMediaContainer}>
             <Text style={styles.socialMediaBanner}>Social Media</Text>
-            {/* Instagram */}
-            <TouchableOpacity
-              onPress={() =>
-                navigation.navigate("EditProfileField", {
-                  title: "Instagram",
-                  field: "instagram",
-                  value: socials.instagram,
-                  action: (value) => {
-                    setSocials({ ...socials, instagram: value })
-                  },
-                })
-              }
-              style={styles.fieldItemContainer}
-            >
-              <Text>Instagram</Text>
-              <View style={styles.fieldValueContainer}>
-                <Text>{socials.instagram || "Add an account"}</Text>
-                <Feather name="chevron-right" size={20} color="gray" />
-              </View>
-            </TouchableOpacity>
-            {/* Facebook */}
-            <TouchableOpacity
-              onPress={() =>
-                navigation.navigate("EditProfileField", {
-                  title: "Facebook",
-                  field: "facebook",
-                  value: socials.facebook,
-                  action: (value) => {
-                    setSocials({ ...socials, facebook: value })
-                  },
-                })
-              }
-              style={styles.fieldItemContainer}
-            >
-              <Text>Facebook</Text>
-              <View style={styles.fieldValueContainer}>
-                <Text>{socials.facebook || "Add an account"}</Text>
-                <Feather name="chevron-right" size={20} color="gray" />
-              </View>
-            </TouchableOpacity>
+            {Object.keys(socials).map((socialMedia, index) => {
+              return (
+                <TouchableOpacity
+                  onPress={() =>
+                    navigation.navigate("EditProfileField", {
+                      title: socialMedia.toLocaleUpperCase(),
+                      field: "socialMedia",
+                      value: socials,
+                      action: (value) => {
+                        setSocials(value)
+                      },
+                    })
+                  }
+                  style={styles.fieldItemContainer}
+                >
+                  <Text>{socialMedia.toLocaleUpperCase()}</Text>
+                  <View style={styles.fieldValueContainer}>
+                    <Text>{socials[socialMedia] || "Add an account"}</Text>
+                    <Feather name="chevron-right" size={20} color="gray" />
+                  </View>
+                </TouchableOpacity>
+              )
+            })}
           </View>
-        </View>
+        </ScrollView>
       )}
 
       {/* Bottom Sheet for Profile Image configuration */}
