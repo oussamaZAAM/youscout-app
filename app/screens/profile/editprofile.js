@@ -3,11 +3,10 @@ import * as ImagePicker from "expo-image-picker";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import {
   Animated,
-  Image,
   StyleSheet,
   Text,
   TouchableOpacity,
-  View,
+  View
 } from "react-native";
 
 import { BottomSheet } from "react-native-btr";
@@ -18,69 +17,15 @@ import { Feather } from "react-native-vector-icons";
 import { WINDOW_HEIGHT, WINDOW_WIDTH } from "../../../assets/utils";
 import NavbarGeneral from "../../../components/general/navbar";
 import { UserContext } from "../../../context/userContext";
-import { authenticationService } from "../../../constants/env";
-import axios from "axios";
-import AuthContext from "../../../components/auth/authContext";
 
 const EditProfileScreen = () => {
   const navigation = useNavigation();
 
-  const { accessToken, saveAccessToken, deleteAccessToken } = useContext(AuthContext);
-
-  const user = useContext(UserContext);
-  // const [user, setUser] = useState({
-  //   username: "",
-  //   email: "",
-  //   profilePicture: "",
-  //   fullName: "",
-  //   dateOfBirth: null,
-  //   gender: null,
-  //   country: null,
-  //   cityOrRegion: null,
-  //   bio: null,
-  //   socialMediaLinks: {}
-  // });
-
-  // useEffect(() => {
-  //   const fetchUser = async () => {
-  //     try {
-  //       const url = authenticationService + "/api/v1/users/me/profile";
-  //       const response = await axios.get(url, {
-  //         headers: {
-  //           Authorization: `Bearer ${accessToken}`
-  //         }
-  //       });
-
-  //       if (response.status === 200) {
-  //         const data = response.data;
-  //         setUser({
-  //           username: data.username,
-  //           email: data.email,
-  //           profilePicture: data.profilePicture,
-  //           fullName: data.fullName,
-  //           dateOfBirth: data.dateOfBirth,
-  //           gender: data.gender,
-  //           country: data.country,
-  //           cityOrRegion: data.cityOrRegion,
-  //           bio: data.bio,
-  //           socialMediaLinks: data.socialMediaLinks
-  //         });
-  //       } else {
-  //         throw new Error("Request failed with status: " + response.status);
-  //       }
-  //     } catch (error) {
-  //       console.error("An error occurred:", error.message);
-  //       if (error.response.status) {
-  //         // Refresh Token for the future
-  //         deleteAccessToken(); // For the moment
-  //       }
-  //     }
-  //   };
-
-  //   fetchUser();
-  // }, []);
-
-  console.log(user.email)
+  const { user, fetchUser } = useContext(UserContext);
+  useEffect(() => {
+    console.log('test')
+    fetchUser();
+  }, []);
 
   const [image, setImage] = useState(user.profilePicture || "");
   const [username, setUsername] = useState(user.username || "");
@@ -247,7 +192,7 @@ const EditProfileScreen = () => {
           <TouchableOpacity
             onPress={() =>
               navigation.navigate("EditProfileField", {
-                title: "fullName",
+                title: "Full name",
                 field: "fullName",
                 value: fullName,
                 action: setFullName,

@@ -38,6 +38,35 @@ const updateNormalProfile = async (userData, accessToken) => {
   }
 };
 
+const updateProtectedProfile = async (userData, accessToken,) => {
+  try {
+    await axios.patch(
+      `${authenticationService}/api/v1/users/me/profile`,
+      userData,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    )
+      .then((response) => {
+        console.log(response.data)
+      })
+      .catch((error) => {
+        console.log(error.response.error)
+      })
+  } catch (error) {
+    // Handle error
+    if (error.response) {
+      if (error.response.status === 401) {
+        //logout
+      }
+      console.error('Response data:', error.response.data);
+    }
+    console.error('No response received:', error.request);
+  }
+};
+
 const checkVariable = (field, value, action, accessToken) => {
   if (field === "username") {
     const usernameRegex = /^[a-zA-Z0-9_]+$/;
@@ -150,14 +179,30 @@ const EditProfileFieldScreen = ({ route }) => {
             />
             <Text style={styles.characterCount}>{newValue.length}/100</Text>
           </View>
-        ) : (
-          <TextInput
+        ) : field === ("password" || "username" || "email")
+          ? (
+            <View style={{flex: 1, flexDirection: "column", gap: 10}}>
+              <TextInput
+                style={styles.textInput}
+                value={newValue}
+                onChangeText={(text) => setNewValue(text)}
+                autoFocus={true}
+              />
+              <Text style={{marginTop: 20, marginBottom: 10}}>Validate with your current password</Text>
+              <TextInput
+                style={styles.textInput}
+                value={newValue}
+                onChangeText={(text) => setNewValue(text)}
+                autoFocus={true}
+              />
+            </View>
+          )
+          : (<TextInput
             style={styles.textInput}
             value={newValue}
             onChangeText={(text) => setNewValue(text)}
             autoFocus={true}
-          />
-        )}
+          />)}
       </View>
     </SafeAreaView>
   );

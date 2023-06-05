@@ -13,61 +13,10 @@ import AuthContext from "../auth/authContext";
 const ProfileHeader = ({ profileUser }) => {
   const { accessToken, saveAccessToken, deleteAccessToken } = useContext(AuthContext);
 
-  const user = useContext(UserContext);
-//   const [user, setUser] = useState({
-//     username: "",
-//     email: "",
-//     profilePicture: "",
-//     fullName: "",
-//     dateOfBirth: null,
-//     gender: null,
-//     country: null,
-//     cityOrRegion: null,
-//     bio: null,
-//     socialMediaLinks: {}
-// });
-
-// useEffect(() => {
-//     const fetchUser = async () => {
-//         console.log('test')
-//         try {
-//             const url = authenticationService + "/api/v1/users/me/profile";
-//             const response = await axios.get(url, {
-//                 headers: {
-//                     Authorization: `Bearer ${accessToken}`
-//                 }
-//             });
-
-//             if (response.status === 200) {
-//                 const data = response.data;
-//                 console.log('good')
-//                 setUser({
-//                     username: data.username,
-//                     email: data.email,
-//                     profilePicture: data.profilePicture,
-//                     fullName: data.fullName,
-//                     dateOfBirth: data.dateOfBirth,
-//                     gender: data.gender,
-//                     country: data.country,
-//                     cityOrRegion: data.cityOrRegion,
-//                     bio: data.bio,
-//                     socialMediaLinks: data.socialMediaLinks
-//                 });
-//             } else {
-//                 throw new Error("Request failed with status: " + response.status);
-//             }
-//         } catch (error) {
-//             console.error("An error occurred:", error.message);
-//             console.log('bad')
-//             if (error.response.status) {
-//                 // Refresh Token for the future
-//                 deleteAccessToken(); // For the moment
-//             }
-//         }
-//     };
-
-//     fetchUser();
-// }, []);
+  const { user, fetchUser } = useContext(UserContext);
+  useEffect(() => {
+    fetchUser();
+  }, []);
 
   const navigation = useNavigation();
 
