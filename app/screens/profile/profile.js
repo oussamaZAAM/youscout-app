@@ -19,6 +19,7 @@ import axios from "axios";
 import { authenticationService } from "../../../constants/env";
 import AuthContext from "../../../components/auth/authContext";
 import FlashMessage, { showMessage } from "react-native-flash-message";
+import { UserContext } from "../../../context/userContext";
 
 const ProfileScreen = (props) => {
   const { accessToken, saveAccessToken, deleteAccessToken } = useContext(AuthContext);
@@ -31,6 +32,8 @@ const ProfileScreen = (props) => {
   const toggleBottomNavigationView = () => {
     setModalVisible(!modalVisible);
   };
+
+
 
   const handleLogout = async () => {
     try {
@@ -67,12 +70,8 @@ const ProfileScreen = (props) => {
   }
 
   // Fetch the authenticated user
-  const user = {
-    id: 10,
-    username: "karenbee",
-    email: "karenbee@gmail.com",
-    profileImg: "https://cdn.myanimelist.net/images/characters/9/295367.jpg",
-  };
+  const user = useContext(UserContext);
+
   // If params exist, that means that we are accessing the profile page from a user's post
   // (which means it's not accessed from the profile button) 
   const profileUser = props.route.params ? props.route.params.postUser : user;
@@ -84,7 +83,7 @@ const ProfileScreen = (props) => {
     <SafeAreaView style={styles.container}>
       <ProfileNavbar
         profileUserName={profileUser.username}
-        myProfile={user.id === profileUser.id}
+        myProfile={user.username === profileUser.username}
         toggleBottomNavigationView={toggleBottomNavigationView}
       />
       <ProfileHeader profileUser={profileUser} />

@@ -1,18 +1,14 @@
 // import { useNavigation } from "@react-navigation/native";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Entypo } from "react-native-vector-icons";
 import { COLORS } from "../../assets/utils";
 import { useNavigation } from "expo-router";
 import { CheckImage } from "../../assets/functions/functions";
+import { UserContext } from "../../context/userContext";
 
 const ProfileHeader = ({ profileUser }) => {
-  const user = {
-    id: 10,
-    username: "karenbee",
-    email: "karenbee@gmail.com",
-    uri: "https://cdn.myanimelist.net/images/characters/9/295367.jpg",
-  };
+  const user = useContext(UserContext);
 
   const navigation = useNavigation();
 

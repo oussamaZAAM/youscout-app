@@ -4,4 +4,4 @@ export const commentsService = "http://"+hostname+":8071";
 
 export const skillsService = "http://"+hostname+":8072";
 
-export const authenticationService = "http://"+hostname+":8088";
+export const authenticationService = "http://"+hostname+":8082";
