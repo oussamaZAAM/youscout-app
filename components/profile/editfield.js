@@ -8,6 +8,7 @@ import { useNavigation } from "@react-navigation/native";
 import { authenticationService } from "../../constants/env";
 import axios from "axios";
 import AuthContext from "../auth/authContext";
+import { WINDOW_WIDTH } from "../../assets/utils";
 
 const updateNormalProfile = async (userData, accessToken) => {
   try {
@@ -30,7 +31,15 @@ const updateNormalProfile = async (userData, accessToken) => {
     // Handle error
     if (error.response) {
       if (error.response.status === 401) {
-        //logout
+        await axios.post(
+          authenticationService + '/api/v1/auth/logout',
+          {},
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        ).then(() => { }).catch((error) => { });
       }
       console.error('Response data:', error.response.data);
     }
@@ -38,63 +47,106 @@ const updateNormalProfile = async (userData, accessToken) => {
   }
 };
 
-const updateProtectedProfile = async (userData, accessToken,) => {
+const updateProtectedProfile = async (userData, accessToken) => {
   try {
     await axios.patch(
-      `${authenticationService}/api/v1/users/me/profile`,
+      `${authenticationService}/api/v1/users/me`,
       userData,
       {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
       }
-    )
-      .then((response) => {
-        console.log(response.data)
-      })
-      .catch((error) => {
-        console.log(error.response.error)
-      })
+    ).then(async () => {
+      await axios.post(
+        authenticationService + '/api/v1/auth/logout',
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      ).then(() => { }).catch((error) => { });
+    });
   } catch (error) {
     // Handle error
     if (error.response) {
       if (error.response.status === 401) {
         //logout
+        await axios.post(
+          authenticationService + '/api/v1/auth/logout',
+          {},
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        ).then(() => { }).catch((error) => { });
       }
-      console.error('Response data:', error.response.data);
+      alert(error.response.data.message);
     }
-    console.error('No response received:', error.request);
   }
 };
 
-const checkVariable = (field, value, action, accessToken) => {
+const checkVariable = (field, value, action, accessToken, password) => {
   if (field === "username") {
     const usernameRegex = /^[a-zA-Z0-9_]+$/;
-    if (value.length > 3) {
-      if (value.length < 25) {
-        if (usernameRegex.test(value)) {
-          action(value.toLowerCase());
+    if (password.length > 0) {
+      if (value.length > 3) {
+        if (value.length < 25) {
+          if (usernameRegex.test(value)) {
+            updateProtectedProfile({
+              newUsername: value,
+              password: password
+            }, accessToken);
+            action(value.toLowerCase());
+          } else {
+            alert("Username should not contain symbols other than underscores!");
+          }
         } else {
-          alert("Username should not contain symbols other than underscores!");
+          alert("Username should not contain more than 25 characters!");
         }
       } else {
-        alert("Username should not contain more than 25 characters!");
+        alert("Username should be at least 3 characters!");
       }
     } else {
-      alert("Username should be at least 3 characters!");
+      alert("Please don't forget your password");
     }
   }
 
   if (field === "email") {
     const usernameRegex = /\S+@\S+\.\S+/;
-    if (usernameRegex.test(value)) {
-      if (value.length <= 30) {
-        action(value.toLowerCase());
+    if (password.length > 0) {
+      if (usernameRegex.test(value)) {
+        if (value.length <= 30) {
+          updateProtectedProfile({
+            newEmail: value,
+            password: password
+          }, accessToken);
+          action(value.toLowerCase());
+        } else {
+          alert("Email should not contain more than 30 characters!");
+        }
       } else {
-        alert("Email should not contain more than 30 characters!");
+        alert("Please insert a valid email address!");
       }
     } else {
-      alert("Please insert a valid email address!");
+      alert("Please don't forget your password");
+    }
+  }
+
+  if (field === "password") {
+    if (password.length > 0) {
+      if (value.length >= 8) {
+        updateProtectedProfile({
+          newPassword: value,
+          password: password
+        }, accessToken);
+      } else {
+        alert("Password should contain more than 8 characters!");
+      }
+    } else {
+      alert("Please don't forget your password");
     }
   }
 
@@ -146,12 +198,15 @@ const checkVariable = (field, value, action, accessToken) => {
 const EditProfileFieldScreen = ({ route }) => {
   const { accessToken } = useContext(AuthContext);
 
+  // Password to verify some entries
+  const [password, setPassword] = useState('');
+
   const navigation = useNavigation();
   const { title, field, value, action } = route.params;
   const [newValue, setNewValue] = useState(value);
   const onSave = () => {
     if (newValue !== "") {
-      checkVariable(field, newValue, action, accessToken);
+      checkVariable(field, newValue, action, accessToken, password);
     } else {
       console.log("error1");
     }
@@ -179,30 +234,49 @@ const EditProfileFieldScreen = ({ route }) => {
             />
             <Text style={styles.characterCount}>{newValue.length}/100</Text>
           </View>
-        ) : field === ("password" || "username" || "email")
+        ) : (field === "username" || field === "email")
           ? (
-            <View style={{flex: 1, flexDirection: "column", gap: 10}}>
+            <View style={styles.columnContainer}>
               <TextInput
                 style={styles.textInput}
                 value={newValue}
                 onChangeText={(text) => setNewValue(text)}
                 autoFocus={true}
               />
-              <Text style={{marginTop: 20, marginBottom: 10}}>Validate with your current password</Text>
+              <Text style={styles.verifyText}>Verify with your current password</Text>
               <TextInput
+                secureTextEntry={true}
                 style={styles.textInput}
-                value={newValue}
-                onChangeText={(text) => setNewValue(text)}
-                autoFocus={true}
+                value={password}
+                onChangeText={(text) => setPassword(text)}
               />
             </View>
           )
-          : (<TextInput
-            style={styles.textInput}
-            value={newValue}
-            onChangeText={(text) => setNewValue(text)}
-            autoFocus={true}
-          />)}
+          : (field === "password")
+            ? <View style={styles.columnContainer}>
+              <Text style={[styles.verifyText, {color: 'black'}]}>New password</Text>
+              <TextInput
+                secureTextEntry={true}
+                style={styles.textInput}
+                value={newValue}
+                onChangeText={(text) => setNewValue(text)}
+                autoFocus={true}
+              />
+              <Text style={[styles.verifyText, {color: 'black'}]}>Current password</Text>
+              <TextInput
+                secureTextEntry={true}
+                style={styles.textInput}
+                value={password}
+                onChangeText={(text) => setPassword(text)}
+              />
+            </View>
+            : (<TextInput
+              secureTextEntry={field === "password"}
+              style={styles.textInput}
+              value={newValue}
+              onChangeText={(text) => setNewValue(text)}
+              autoFocus={true}
+            />)}
       </View>
     </SafeAreaView>
   );
@@ -215,12 +289,27 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "white",
   },
+  columnContainer: {
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+    width: '100%',
+  },
   textInput: {
-    borderColor: "lightgray",
+    borderColor: 'lightgray',
     borderBottomWidth: 1,
-    borderStyle: "solid",
+    borderStyle: 'solid',
     paddingVertical: 10,
     paddingHorizontal: 20,
+    marginBottom: 10,
+    width: WINDOW_WIDTH
+  },
+  verifyText: {
+    marginTop: 20,
+    marginBottom: 10,
+    fontWeight: 'bold',
+    color: 'red',
   },
   mainContainer: {
     padding: 20,

@@ -23,13 +23,13 @@ const EditProfileScreen = () => {
 
   const { user, fetchUser } = useContext(UserContext);
   useEffect(() => {
-    console.log('test')
     fetchUser();
   }, []);
 
   const [image, setImage] = useState(user.profilePicture || "");
   const [username, setUsername] = useState(user.username || "");
   const [email, setEmail] = useState(user.email || "");
+  const password = "";
   const [fullName, setFullName] = useState(user.fullName || "");
   const [bio, setBio] = useState(user.bio || "");
   const [socials, setSocials] = useState({
@@ -185,6 +185,24 @@ const EditProfileScreen = () => {
             <Text>Email</Text>
             <View style={styles.fieldValueContainer}>
               <Text>{email}</Text>
+              <Feather name="chevron-right" size={20} color="gray" />
+            </View>
+          </TouchableOpacity>
+          {/* Password */}
+          <TouchableOpacity
+            onPress={() =>
+              navigation.navigate("EditProfileField", {
+                title: "Password",
+                field: "password",
+                value: password,
+                // action: setEmail,
+              })
+            }
+            style={styles.fieldItemContainer}
+          >
+            <Text>Password</Text>
+            <View style={styles.fieldValueContainer}>
+              <Text>Change Password</Text>
               <Feather name="chevron-right" size={20} color="gray" />
             </View>
           </TouchableOpacity>
