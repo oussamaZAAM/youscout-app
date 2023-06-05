@@ -50,8 +50,6 @@ const EditProfileScreen = () => {
     setModalVisible(!modalVisible);
   };
 
-
-
   // const convertImageToFormData = async (uri) => {
   //   try {
   //     const response = await fetch(uri);
@@ -88,39 +86,31 @@ const EditProfileScreen = () => {
       quality: 1,
     });
     if (!result.canceled) {
-      // Transform to Form Data
-      // convertImageToFormData(result.assets[0].uri)
-      //   .then(async (formdata) => {
-          // Send Image to Backend
-          let formData = new FormData();
-          formData.append('file', {
-            uri: result.assets[0].uri,
-            name: result.assets[0].uri.split('/').pop(),
-            type: 'image/jpeg', // Adjust the type based on your image format
-          });
-          try {
-            await axios.post(
-              `${authenticationService}/api/v1/users/me/profile/picture`,
-              formData,
-              {
-                headers: {
-                  Authorization: `Bearer ${accessToken}`,
-                  'Content-Type': "multipart/form-data"
-                },
-              }
-            );
-            console.log('good')
-          } catch (error) {
-            console.log(error.response)
-            throw error;
+      // Send Image to S3 and Backend
+      let formData = new FormData();
+      formData.append('file', {
+        uri: result.assets[0].uri,
+        name: result.assets[0].uri.split('/').pop(),
+        type: 'image/jpeg'
+      });
+      try {
+        await axios.post(
+          `${authenticationService}/api/v1/users/me/profile/picture`,
+          formData,
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+              'Content-Type': "multipart/form-data"
+            },
           }
-        // })
-        // .catch(async (error) => {
-        //   // Handle error
-        //   if (error.response) {
-        //     console.log(error.response.data.error);
-        //   }
-        // });
+        );
+        // Flash Message Image updated
+
+      } catch (error) {
+        if (error.response?.status === 401) {
+          handleRefreshToken(accessToken, saveAccessToken);
+        }
+      }
       setImage(result.assets[0].uri);
     }
   };
@@ -142,7 +132,25 @@ const EditProfileScreen = () => {
   return (
     <SafeAreaView style={styles.container}>
       {!displayImage ? (
-        <NavbarGeneral title="Edit Profile" />
+        // <NavbarGeneral title="Edit Profile" />
+        <View style={styles.container2}>
+          <TouchableOpacity
+            onPress={() => navigation.navigate("Profile")}
+            style={styles.button}
+          >
+            <Feather
+              name="arrow-left"
+              size={26}
+              color={"black"}
+            />
+          </TouchableOpacity>
+
+          <Text style={styles.title}>Edit Profile</Text>
+
+          <TouchableOpacity onPress={() => {}}>
+            <Feather name={"check"} size={26} color={"transparent"} />
+          </TouchableOpacity>
+        </View>
       ) : (
         <View style={styles.navbarContainer}>
           <TouchableOpacity
@@ -396,6 +404,11 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "white",
   },
+  container2: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
   imageContainer: {
     alignItems: "center",
     marginTop: 20,
@@ -494,5 +507,11 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 18,
     fontWeight: "bold",
+  },
+  searchBarContainer: {
+    flex: 1,
+    flexDirection: "row",
+    paddingHorizontal: 5,
+    width: 0,
   },
 });

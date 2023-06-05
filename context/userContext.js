@@ -34,6 +34,7 @@ const UserProvider = ({ children }) => {
 
       if (response.status === 200) {
         const data = response.data;
+        console.log("Profile: "+data)
         setUser({
           username: data.username,
           email: data.email,

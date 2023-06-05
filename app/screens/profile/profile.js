@@ -21,6 +21,7 @@ import ProfilePostList from "../../../components/profile/postList";
 import { authenticationService } from "../../../constants/env";
 import { UserContext } from "../../../context/userContext";
 import { videosData } from "../../videosData";
+import { useNavigation } from "@react-navigation/native";
 
 const ProfileScreen = (props) => {
   const { accessToken, saveAccessToken, deleteAccessToken } = useContext(AuthContext);
@@ -67,12 +68,21 @@ const ProfileScreen = (props) => {
       console.error('Error logging out:', error);
     }
   }
+  // Listen to navigation changes (goBack doesn't re-render normally)
+  const navigation = useNavigation();
 
   // Fetch the authenticated user
   const { user, fetchUser } = useContext(UserContext);
   useEffect(() => {
-    fetchUser();
-  }, []);
+    const unsubscribe = navigation.addListener('focus', () => {
+      // Trigger the fetchUser function when this screen comes into focus
+      fetchUser();
+    });
+
+    return () => {
+      unsubscribe(); // Cleanup the event listener when the component unmounts
+    };
+  }, [navigation]);
 
   // If params exist, that means that we are accessing the profile page from a user's post
   // (which means it's not accessed from the profile button) 
