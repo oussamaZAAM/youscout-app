@@ -28,6 +28,7 @@ const NewVideoScreen = () => {
 
   const navigation = useNavigation();
 
+  const [giveAccess, setGiveAccess] = useState(true);
   useEffect(() => {
     (async () => {
       const cameraStatus = await Camera.requestCameraPermissionsAsync();
@@ -48,7 +49,7 @@ const NewVideoScreen = () => {
         setGalleryItems(userGalleryMedia.assets);
       }
     })().catch((err) => console.log(err));
-  }, []);
+  }, [giveAccess]);
 
   const recordVideo = async () => {
     if (cameraRef) {
@@ -107,9 +108,9 @@ const NewVideoScreen = () => {
 
   if (!hasCameraPermissions || !hasAudioPermissions || !hasGalleryPermissions) {
     return (
-      <View style={styles.giveAccess}>
-        <Text style={{fontSize: 20, fontWeight: 'bold'}}>Give Access</Text>
-      </View>
+      <TouchableOpacity style={styles.giveAccess} onPress={() => { setGiveAccess(prev => !prev) }}>
+        <Text style={{ fontSize: 20, fontWeight: 'bold' }}>Give Access</Text>
+      </TouchableOpacity>
     );
   }
 
