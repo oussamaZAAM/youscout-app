@@ -27,11 +27,6 @@ export const NewVideoStack = () => {
           component={SkillsScreen}
           options={{ headerShown: false }}
         />
-        <Stack.Screen
-          name="HomeAfterUpload"
-          component={HomeScreen}
-          options={{ headerShown: false }}
-        />
       </Stack.Navigator>
     </NavigationContainer>
   );

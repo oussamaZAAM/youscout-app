@@ -86,6 +86,7 @@ const ProfileScreen = (props) => {
 
   // If params exist, that means that we are accessing the profile page from a user's post
   // (which means it's not accessed from the profile button) 
+
   const profileUser = props.route.params ? props.route.params.postUser : user;
 
   // Fetch the current user's posts

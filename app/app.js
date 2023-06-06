@@ -21,8 +21,6 @@ const BottomTab = createBottomTabNavigator();
 const App = () => {
     const { accessToken, saveAccessToken } = useContext(AuthContext);
 
-    // const accessToken = "12";
-
     return (accessToken && accessToken.length !== 0
         ? (
             <NavigationContainer independent={true}>

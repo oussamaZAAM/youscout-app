@@ -7,3 +7,5 @@ export const skillsService = "http://"+hostname+":8072/api/v1/skills-service";
 export const authenticationService = "http://"+hostname+":8082/api/v1/auth-service";
 
 export const postService = "http://"+hostname+":8001/api/v1/post-handling-service";
+
+export const socialGraphService = "http://"+hostname+":8083/api/v1/social-graph-service";

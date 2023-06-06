@@ -5,7 +5,7 @@
     "slug": "YouScout",
     "orientation": "portrait",
     "icon": "./assets/logoRaw.png",
-    "scheme": "acme",
+    "scheme": "youscout",
     "splash": {
       "image": "./assets/logoRaw.png",
       "resizeMode": "contain",

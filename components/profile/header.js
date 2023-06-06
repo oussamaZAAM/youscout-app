@@ -1,24 +1,26 @@
 // import { useNavigation } from "@react-navigation/native";
+import axios from "axios";
+import { useNavigation } from "expo-router";
 import React, { useContext, useEffect, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Entypo } from "react-native-vector-icons";
-import { COLORS } from "../../assets/utils";
-import { useNavigation } from "expo-router";
 import { CheckImage } from "../../assets/functions/functions";
-import { UserContext } from "../auth/userContext";
-import axios from "axios";
-import { authenticationService } from "../../constants/env";
+import { handleRefreshToken } from "../../assets/functions/refreshToken";
+import { COLORS } from "../../assets/utils";
+import { socialGraphService } from "../../constants/env";
 import AuthContext from "../auth/authContext";
+import { UserContext } from "../auth/userContext";
 
 const ProfileHeader = ({ profileUser }) => {
-  const { accessToken, saveAccessToken, deleteAccessToken } = useContext(AuthContext);
+  const navigation = useNavigation();
 
+  // Get the user informations and the access token
+  const { accessToken, saveAccessToken, deleteAccessToken } = useContext(AuthContext);
   const { user, fetchUser } = useContext(UserContext);
   useEffect(() => {
     fetchUser();
   }, []);
 
-  const navigation = useNavigation();
 
   // Here we get the state of the user in the User Interactions service
   const [follows, setFollows] = useState({
@@ -26,57 +28,85 @@ const ProfileHeader = ({ profileUser }) => {
     followings: 0,
   });
   const [isFollowed, setIsFollowed] = useState(false);
-  // const [isFollowing, setIsFollowing] = useState(false);
+  const [trigger, setTrigger] = useState(false);
+
   useEffect(() => {
-    var followers = 0;
-    var followings = 0;
-    const response = [
-      {
-        userId: 1,
-        isFollowing: true,
-        isblocking: false,
-        isFollowed: true,
-        isBlocked: false,
-      },
-      {
-        userId: 2,
-        isFollowing: false,
-        isblocking: false,
-        isFollowed: true,
-        isBlocked: false,
-      },
-      {
-        userId: 3,
-        isFollowing: false,
-        isblocking: true,
-        isFollowed: false,
-        isBlocked: false,
-      },
-      {
-        userId: 4,
-        isFollowing: false,
-        isblocking: false,
-        isFollowed: true,
-        isBlocked: false,
-      },
-      {
-        userId: 10, //Karen Araragi
-        isFollowing: false,
-        isblocking: false,
-        isFollowed: true,
-        isBlocked: false,
-      },
-    ];
-    response.forEach((thisUser) => {
-      if (thisUser.isFollowing) followers++;
-      if (thisUser.isFollowed) followings++;
-      if (thisUser.userId === user.id) {
-        if (thisUser.isFollowing) setIsFollowed(true); else setIsFollowed(false);
-        // if (user.isFollowed) setIsFollowing(true); else setIsFollowing(false);
+    const fetchInteractions = async () => {
+      try {
+        const followersResponse = await axios(socialGraphService + "/users/" + user.username + "/followers/count", {
+          headers: {
+            Authorization: `Bearer ${accessToken}`
+          }
+        });
+        const followers = followersResponse.data;
+
+        const followingResponse = await axios(socialGraphService + "/users/" + user.username + "/following/count", {
+          headers: {
+            Authorization: `Bearer ${accessToken}`
+          }
+        });
+        const followings = followingResponse.data;
+
+        const fetchIsFollowed = async () => {
+          const isFollowedResponse = await axios(socialGraphService + "/users/" + user.username + "/isFollowing/" + profileUser.username, {
+            headers: {
+              Authorization: `Bearer ${accessToken}`
+            }
+          });
+          const isFollowed = isFollowedResponse.data
+          setIsFollowed(isFollowed);
+        }
+
+        profileUser.username !== user.username && fetchIsFollowed();
+        setFollows({ followers, followings });
+      } catch (error) {
+        if (error.response.status === 401) {
+          handleRefreshToken(accessToken, saveAccessToken);
+        }
       }
-    });
-    setFollows({ followers, followings });
-  }, []);
+    }
+    fetchInteractions();
+  }, [trigger]);
+
+  // Handle following and unfollowing actions
+  const handleFollow = async () => {
+    try {
+      const url = socialGraphService + "/users/" + user.username + "/follow/" + profileUser.username;
+      await axios.post(url, {}, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`
+        }
+      });
+      setTrigger(prev => !prev);
+    } catch (error) {
+      console.log(error.message)
+      if (error.response.status === 401) {
+        handleRefreshToken(accessToken, saveAccessToken);
+      }
+      if (error.response.status === 403) {
+        alert("You are already following this user");
+      }
+    }
+  }
+
+  const handleUnfollow = async () => {
+    try {
+      const url = socialGraphService + "/users/" + user.username + "/unfollow/" + profileUser.username;
+      await axios.post(url, {}, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`
+        }
+      });
+      setTrigger(prev => !prev);
+    } catch (error) {
+      if (error.response.status === 401) {
+        handleRefreshToken(accessToken, saveAccessToken);
+      }
+      if (error.response.status === 403) {
+        alert("Cannot unfollow a user already unfollowed!");
+      }
+    }
+  }
 
   return (
     <View style={styles.container}>
@@ -107,20 +137,21 @@ const ProfileHeader = ({ profileUser }) => {
         <View style={styles.otherUsersButtons}>
           {isFollowed ? (
             <TouchableOpacity
-              onPress={() => navigation.navigate("EditProfile")}
+              onPress={handleUnfollow}
               style={styles.unfollowButton}
             >
               <Text>Unfollow</Text>
             </TouchableOpacity>
           ) : (
             <TouchableOpacity
+              onPress={handleFollow}
               style={styles.followButton}
             >
               <Text style={styles.followText}>Follow</Text>
             </TouchableOpacity>
           )}
           <TouchableOpacity
-            onPress={() => navigation.navigate("Conversation", {username: profileUser.username, profilePicture: profileUser.profilePicture})}
+            onPress={() => navigation.navigate("Conversation", { username: profileUser.username, profilePicture: profileUser.profilePicture })}
             style={styles.grayOutlinedButton}
           >
             <Text>Chat</Text>

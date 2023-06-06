@@ -1,3 +1,4 @@
+import { Octicons } from "@expo/vector-icons";
 import { AntDesign, Feather } from "@expo/vector-icons";
 import { WINDOW_WIDTH } from "@gorhom/bottom-sheet";
 import { useNavigation } from "@react-navigation/native";
@@ -20,6 +21,7 @@ import AuthContext from "../../../components/auth/authContext";
 import axios from "axios";
 import { postService } from "../../../constants/env";
 import { handleRefreshToken } from "../../../assets/functions/refreshToken";
+import FlashMessage, { showMessage } from "react-native-flash-message";
 
 const renderItem = ({ item }) => {
   if (item.clicked === true) {
@@ -32,7 +34,7 @@ const renderItem = ({ item }) => {
 };
 
 const SaveVideoScreen = (props) => {
-  const {accessToken, saveAccessToken} = useContext(AuthContext);
+  const { accessToken, saveAccessToken } = useContext(AuthContext);
 
   const colorScheme = Appearance.getColorScheme();
   const [description, setDescription] = useState("");
@@ -42,11 +44,16 @@ const SaveVideoScreen = (props) => {
     const chosenSkills = (props.route?.params?.skills)
       ? (props.route.params.skills
         .filter(skill => skill.clicked))
-        .map(skill => skill.name)
       : [];
     if (chosenSkills.length < 1) {
       alert("Please select at least one Skill!");
     }
+
+    const skillsObject = chosenSkills.reduce((obj, skill) => {
+      const skillName = skill.name;
+      obj[skillName] = {};
+      return obj;
+    }, {});
 
     const videoUrl = props.route.params.source;
     // Upload the video in S3
@@ -57,9 +64,17 @@ const SaveVideoScreen = (props) => {
       type: 'video/mp4',
     });
 
+    const userObject = {
+      caption: description,
+      userProfilePic: "123",
+      skills: skillsObject
+    };
+
+    formData.append('post', JSON.stringify(userObject));
+
     try {
-      await axios.post(
-        `${postService}/upload`,
+      const response = await axios.post(
+        `${postService}/create`,
         formData,
         {
           headers: {
@@ -68,12 +83,25 @@ const SaveVideoScreen = (props) => {
           },
         }
       );
+
       // Flash Message: Video updated
+      showMessage({
+        message: "",
+        type: "success",
+        duration: timeout,
+        icon: () => (
+          <View style={styles.flashMessage}>
+            <Octicons name="diff-added" size={26} />
+            <Text style={styles.editCommentText}>Post added successfully</Text>
+          </View>
+        ),
+      });
+
       setTimeout(() => {
-        navigation.navigate("HomeAfterUpload");
+        navigation.navigate("NewVideo");
       }, timeout);
     } catch (error) {
-      console.log(error.response)
+      console.log(error.message)
       if (error.response?.status === 401) {
         handleRefreshToken(accessToken, saveAccessToken);
       }
@@ -155,6 +183,7 @@ const SaveVideoScreen = (props) => {
           <Text style={styles.postButtonText}>Post</Text>
         </TouchableOpacity>
       </View>
+      <FlashMessage style={{flex: 1, alignItems: 'center', justifyContent: "center"}} position="center" />
     </View>
   );
 };
@@ -256,5 +285,15 @@ const styles = StyleSheet.create({
   skillText: {
     fontWeight: "300",
     fontSize: 10,
+  },
+  editCommentText: {
+    fontWeight: "bold",
+    fontSize: 16,
+  },
+  flashMessage: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 20,
   },
 });
