@@ -17,7 +17,7 @@ import { Feather } from "react-native-vector-icons";
 
 import { WINDOW_HEIGHT, WINDOW_WIDTH } from "../../../assets/utils";
 import NavbarGeneral from "../../../components/general/navbar";
-import { UserContext } from "../../../context/userContext";
+import { UserContext } from "../../../components/auth/userContext";
 import { authenticationService } from "../../../constants/env";
 import axios from "axios";
 import AuthContext from "../../../components/auth/authContext";

@@ -5,7 +5,7 @@ import { Entypo } from "react-native-vector-icons";
 import { COLORS } from "../../assets/utils";
 import { useNavigation } from "expo-router";
 import { CheckImage } from "../../assets/functions/functions";
-import { UserContext } from "../../context/userContext";
+import { UserContext } from "../auth/userContext";
 import axios from "axios";
 import { authenticationService } from "../../constants/env";
 import AuthContext from "../auth/authContext";

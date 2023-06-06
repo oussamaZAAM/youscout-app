@@ -3,7 +3,7 @@ import React from "react";
 import * as ScreenOrientation from "expo-screen-orientation";
 import App from "./app";
 import AuthProvider from "../components/auth/authProvider";
-import UserProvider from "../context/userContext";
+import UserProvider from "../components/auth/userContext";
 
 ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT);
 

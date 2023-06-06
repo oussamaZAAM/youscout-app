@@ -19,7 +19,7 @@ import ProfileHeader from "../../../components/profile/header";
 import ProfileNavbar from "../../../components/profile/navbar";
 import ProfilePostList from "../../../components/profile/postList";
 import { authenticationService } from "../../../constants/env";
-import { UserContext } from "../../../context/userContext";
+import { UserContext } from "../../../components/auth/userContext";
 import { videosData } from "../../videosData";
 import { useNavigation } from "@react-navigation/native";
 

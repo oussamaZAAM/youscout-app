@@ -10,6 +10,7 @@ import BottomSheet, {
 } from "@gorhom/bottom-sheet";
 import React, {
   useCallback,
+  useContext,
   useEffect,
   useMemo,
   useRef,
@@ -33,8 +34,8 @@ import { copyToClipboard } from "../../assets/functions/functions";
 import { getTimeDifference } from "../../assets/functions/functions";
 import { COLORS, ICONS, WINDOW_WIDTH } from "../../assets/utils";
 import { commentsService } from "../../constants/env";
-
-const userId = "64409abd6ac950184bd90525";
+import AuthContext from "../auth/authContext";
+import { UserContext } from "../auth/userContext";
 
 const Comment = ({
   comment,
@@ -42,6 +43,8 @@ const Comment = ({
   setIsKeyboard,
   handleReplyOnComment,
   setFetching,
+  username,
+  accessToken
 }) => {
   const [replies, setReplies] = useState(null);
   const [showReplies, setShowReplies] = useState(false);
@@ -81,17 +84,17 @@ const Comment = ({
         // Check if reply is not empty
         const modifiedCommentReplies = comment.replies; // Initialize with list of comment's replies
         const newReply = {
-          id: userId, // The user's ID
           body: reply,
         };
 
         // Sent post request to save new reply
         const response = await fetch(
-          commentsService + "/api/comments/" + comment.id + "/replies",
+          commentsService + "/comments/" + comment.id + "/replies",
           {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
+              Authorization: `Bearer ${accessToken}`
             },
             body: JSON.stringify(newReply),
           }
@@ -126,11 +129,12 @@ const Comment = ({
         body: commentBody,
       };
       const response = await fetch(
-        commentsService + "/api/comments/" + commentId,
+        commentsService + "/comments/" + commentId,
         {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`
           },
           body: JSON.stringify(newComment),
         }
@@ -150,9 +154,12 @@ const Comment = ({
   const handleDeleteComment = async (commentId) => {
     try {
       const response = await fetch(
-        commentsService + "/api/comments/" + commentId,
+        commentsService + "/comments/" + commentId,
         {
           method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${accessToken}`
+          }
         }
       );
       if (!response.ok) {
@@ -172,10 +179,12 @@ const Comment = ({
       const fetchData = async () => {
         try {
           const response = await fetch(
-            commentsService +
-              "/api/comments/" +
-              comment.id +
-              "/replies?orderBy=recent"
+            commentsService + "/comments/" + comment.id + "/replies?orderBy=recent",
+            {
+              headers: {
+                Authorization: `Bearer ${accessToken}`
+              }
+            }
           );
           const replies = await response.json();
           setReplies(replies);
@@ -204,7 +213,7 @@ const Comment = ({
       />
       <View style={styles.commentContent}>
         <View style={styles.userAndTime}>
-          <Text style={styles.username}>{comment?.author?.username}</Text>
+          <Text style={styles.username}>{comment?.author}</Text>
           <Text style={styles.timestamp}>
             {getTimeDifference(comment?.timestamp)}
           </Text>
@@ -271,7 +280,7 @@ const Comment = ({
               onPress={() => handleLikeComment(comment.id, comment.likes)}
               style={styles.reactionButton}
             >
-              {comment.likes.includes(userId) ? (
+              {comment.likes.includes(username) ? (
                 <AntDesign name="like1" size={16} color="black" />
               ) : (
                 <AntDesign name="like2" size={16} color="black" />
@@ -334,7 +343,7 @@ const Comment = ({
           <View>
             <FlatList
               data={replies}
-              renderItem={({ item }) => <Comment comment={item} />}
+              renderItem={({ item }) => <Comment comment={item} username={username} />}
               keyExtractor={(item) => item.id}
               style={styles.repliesContainer}
             />
@@ -369,7 +378,7 @@ const Comment = ({
         onBackdropPress={toggleBottomNavigationView}
       >
         {/* Check if user is the author of comment */}
-        {userId === comment?.author?.id ? (
+        {username === comment?.author ? (
           <View style={styles.editCommentSection}>
             <TouchableOpacity
               onPress={() => {
@@ -478,7 +487,7 @@ const Comment = ({
             </TouchableOpacity>
             <Divider style={{ width: WINDOW_WIDTH }} />
             <TouchableOpacity
-              onPress={() => console.log(comment.body + " deleted!")}
+              onPress={() => console.log(comment.body + " reported!")}
               style={styles.editCommentButton}
             >
               <MaterialIcons name="report" size={26} />
@@ -494,47 +503,14 @@ const Comment = ({
 };
 
 const Comments = ({ commentsNumber, bottomSheetRef, handleSheetChanges }) => {
+  const { accessToken } = useContext(AuthContext);
+  const { user } = useContext(UserContext);
+
+  const postId = "001";
+
   const textinputRef = useRef();
   const [isKeyboard, setIsKeyboard] = useState(0);
-  const [comments, setComments] = useState([
-    {
-      id: 1,
-      author: {
-        id: 1,
-        username: "Megumin",
-        profilePicture:
-          "https://ih1.redbubble.net/image.3613970471.1584/st,small,845x845-pad,1000x1000,f8f8f8.jpg",
-      },
-      body: "Kono Subarashii Sekai ni Bakuen en woKono Subarashii Sekai ni Bakuen woKono Subarashii Sekai ni Bakuen woKono Subarashii Sekai ni Bakuen woKono Subarashii Sekai ni Bakuen wo!",
-      timestamp: "1 hour ago",
-      likes: [],
-      replies: [
-        {
-          id: 1,
-          author: {
-            id: 2,
-            username: "Jane Smith",
-            profilePicture: "https://randomuser.me/api/portraits/women/1.jpg",
-          },
-          body: "I agree, thanks for sharing!",
-          timestamp: "30 minutes ago",
-        },
-      ],
-    },
-    {
-      id: 2,
-      author: {
-        id: 2,
-        username: "Bob Johnson",
-        profilePicture: "https://randomuser.me/api/portraits/men/2.jpg",
-      },
-      body: "Wow, this is really insightful!",
-      timestamp: "2 hours ago",
-      likes: [],
-      replies: [],
-    },
-    // more comments here...
-  ]);
+  const [comments, setComments] = useState([]);
 
   const [loading, setLoading] = useState(true); // Stores the state loading
   const [fetching, setFetching] = useState(true); // Stores the state of fetching need
@@ -545,8 +521,12 @@ const Comments = ({ commentsNumber, bottomSheetRef, handleSheetChanges }) => {
       setLoading(true);
       try {
         const response = await fetch(
-          commentsService + "/api/posts/001/comments?orderBy=recent"
-        );
+          commentsService + "/posts/" + postId + "/comments?orderBy=recent",
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`
+            }
+          });
         const data = await response.json();
         setComments(data);
         return data;
@@ -573,30 +553,27 @@ const Comments = ({ commentsNumber, bottomSheetRef, handleSheetChanges }) => {
   // Like / Unlike a comment
   const handleLikeComment = async (id, likes) => {
     try {
-      const user = {
-        id: userId,
-      };
       var response;
-      if (likes.includes(userId)) {
+      if (likes.includes(username)) {
         response = await fetch(
-          commentsService + "/api/comments/" + id + "/unlike",
+          commentsService + "/comments/" + id + "/unlike",
           {
             method: "PUT",
             headers: {
               "Content-Type": "application/json",
-            },
-            body: JSON.stringify(user),
+              Authorization: `Bearer ${accessToken}`
+            }
           }
         );
       } else {
         response = await fetch(
-          commentsService + "/api/comments/" + id + "/like",
+          commentsService + "/comments/" + id + "/like",
           {
             method: "PUT",
             headers: {
               "Content-Type": "application/json",
-            },
-            body: JSON.stringify(user),
+              Authorization: `Bearer ${accessToken}`
+            }
           }
         );
       }
@@ -607,15 +584,15 @@ const Comments = ({ commentsNumber, bottomSheetRef, handleSheetChanges }) => {
       setComments((prevArray) => {
         for (let i = 0; i < prevArray.length; i++) {
           if (prevArray[i].id === id) {
-            if (!prevArray[i].likes.includes(userId)) {
+            if (!prevArray[i].likes.includes(username)) {
               const newLikes = prevArray[i].likes.filter(
-                (user) => user !== userId
+                (user) => user !== username
               );
-              newLikes.push(userId);
+              newLikes.push(username);
               prevArray[i].likes = newLikes;
             } else {
               const newLikes = prevArray[i].likes.filter(
-                (user) => user !== userId
+                (user) => user !== username
               );
               prevArray[i].likes = newLikes;
             }
@@ -636,16 +613,16 @@ const Comments = ({ commentsNumber, bottomSheetRef, handleSheetChanges }) => {
       if (newComment.trim() !== "") {
         // Check if comment is not empty
         const addComment = {
-          id: userId, // User's ID
           body: newComment,
-          postId: "001", // Post's ID
+          postId: postId, // Post's ID
         };
 
         // Send a post request to create a new comment
-        const response = await fetch(commentsService + "/api/comments", {
+        const response = await fetch(commentsService + "/comments", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`
           },
           body: JSON.stringify(addComment),
         });
@@ -660,11 +637,7 @@ const Comments = ({ commentsNumber, bottomSheetRef, handleSheetChanges }) => {
         setComments((prevArray) => {
           const comment = {
             id: data.id,
-            author: {
-              id: data.author.id,
-              username: data.author.username,
-              profilePicture: data.author.profilePicture,
-            },
+            author: data.author,
             body: newComment,
             timestamp: data.timestamp,
             likes: data.likes,
@@ -741,6 +714,8 @@ const Comments = ({ commentsNumber, bottomSheetRef, handleSheetChanges }) => {
             setIsKeyboard={setIsKeyboard}
             handleReplyOnComment={handleReplyOnComment}
             setFetching={setFetching}
+            username={user.username}
+            accessToken={accessToken}
           />
         )}
         refreshing={loading}
