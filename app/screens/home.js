@@ -4,10 +4,9 @@ import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import VideosFlatList from "../../components/posts/videosFlatlist";
 import { videosData } from "../videosData";
 
-import { Entypo } from "react-native-vector-icons";
 import { useNavigation } from "@react-navigation/native";
+import { Entypo } from "react-native-vector-icons";
 import { notificationsData } from "../videosData";
-import PushNotification from "react-native-push-notification";
 
 const HomeScreen = () => {
   const badgeCount = notificationsData.filter((x) => !x.seen).length;

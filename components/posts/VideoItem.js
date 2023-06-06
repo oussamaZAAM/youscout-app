@@ -22,10 +22,9 @@ import Comments from "./comments";
 import Rate from "./rate";
 
 const postUser = {
-  id: 11,
-  username: "tsukihicchi",
-  email: "platinum@disco.com",
-  profilePicture: "https://cdn.myanimelist.net/images/characters/11/301411.jpg",
+  username: "hitagi",
+  email: "hitagi.crab@gmail.com",
+  profilePicture: "https://cdn.myanimelist.net/images/characters/6/241415.jpg",
 };
 
 export default function VideoItem({ data, isActive }) {

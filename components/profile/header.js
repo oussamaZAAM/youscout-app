@@ -33,14 +33,14 @@ const ProfileHeader = ({ profileUser }) => {
   useEffect(() => {
     const fetchInteractions = async () => {
       try {
-        const followersResponse = await axios(socialGraphService + "/users/" + user.username + "/followers/count", {
+        const followersResponse = await axios(socialGraphService + "/users/" + profileUser.username + "/followers/count", {
           headers: {
             Authorization: `Bearer ${accessToken}`
           }
         });
         const followers = followersResponse.data;
 
-        const followingResponse = await axios(socialGraphService + "/users/" + user.username + "/following/count", {
+        const followingResponse = await axios(socialGraphService + "/users/" + profileUser.username + "/following/count", {
           headers: {
             Authorization: `Bearer ${accessToken}`
           }
