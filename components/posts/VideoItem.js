@@ -32,7 +32,7 @@ export default function VideoItem({ data, isActive }) {
   const navigation = useNavigation();
   const bottomTabHeight = useBottomTabBarHeight();
   const insets = useSafeAreaInsets();
-  const { channelName, uri, caption, likes, comments, avatarUri } = data;
+  const { username, videoUrl, caption, likes, commentsNum, userProfilePic } = data;
   // ---------------------------------------------------
 
   // ----------------- Like + Animations -----------------
@@ -135,7 +135,7 @@ export default function VideoItem({ data, isActive }) {
       >
         <StatusBar barStyle={"light-content"} />
         <Video
-          source={{ uri }}
+          source={{ videoUrl }}
           style={[
             styles.video,
             { width: WINDOW_WIDTH, height: WINDOW_HEIGHT - bottomTabHeight },
@@ -172,7 +172,7 @@ export default function VideoItem({ data, isActive }) {
         </TouchableOpacity>
         <View style={styles.bottomSection}>
           <View style={styles.bottomLeftSection}>
-            <Text style={styles.channelName}>{channelName}</Text>
+            <Text style={styles.username}>{username}</Text>
             <Text style={styles.caption}>{caption}</Text>
           </View>
         </View>
@@ -183,7 +183,7 @@ export default function VideoItem({ data, isActive }) {
             }
             style={[styles.verticalBarItem, styles.avatarContainer]}
           >
-            <Image style={styles.avatar} source={{ uri: avatarUri }} />
+            <Image style={styles.avatar} source={{ uri: userProfilePic }} />
             <View style={styles.followButton}>
               <Image
                 source={require("../../assets/images/plus-button.png")}
@@ -228,7 +228,7 @@ export default function VideoItem({ data, isActive }) {
                 <Octicons style={styles.verticalBarIcon} name="heart" size={32} color={'white'} />
               )}
             </Animated.View>
-            <Text style={styles.verticalBarText}>{likes}</Text>
+            <Text style={styles.verticalBarText}>{likes.length}</Text>
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => {
@@ -240,7 +240,7 @@ export default function VideoItem({ data, isActive }) {
               style={styles.verticalBarIcon}
               source={require("../../assets/images/message-circle.png")}
             />
-            <Text style={styles.verticalBarText}>{comments}</Text>
+            <Text style={styles.verticalBarText}>{commentsNum}</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={toggleModal}>
             <View style={styles.verticalBarItem}>
@@ -269,7 +269,7 @@ export default function VideoItem({ data, isActive }) {
         )}
       </View>
       <Comments
-        commentsNumber={comments}
+        commentsNumber={commentsNum}
         bottomSheetRef={bottomSheetRef}
         handleSheetChanges={handleSheetChanges}
       />
@@ -313,7 +313,7 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
     alignItems: "flex-end",
   },
-  channelName: {
+  username: {
     color: "white",
     fontWeight: "bold",
     marginRight: 50,

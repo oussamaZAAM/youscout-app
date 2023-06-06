@@ -34,7 +34,7 @@ const UserProvider = ({ children }) => {
 
       if (response.status === 200) {
         const data = response.data;
-        console.log("Profile: "+data)
+        console.log("Fetching user informations...")
         setUser({
           username: data.username,
           email: data.email,
@@ -51,7 +51,7 @@ const UserProvider = ({ children }) => {
         throw new Error("Request failed with status: " + response.status);
       }
     } catch (error) {
-      console.error("An error occurred:", error.message);
+      console.error("An error occurred while fetching user infos:", error.response.message);
       if (error.response.status === 401) {
         handleRefreshToken(accessToken, saveAccessToken);
       }

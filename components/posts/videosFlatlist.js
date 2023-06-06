@@ -4,7 +4,7 @@ import { FlatList } from "react-native";
 import { WINDOW_HEIGHT, WINDOW_WIDTH } from "../../assets/utils";
 import VideoItem from "./VideoItem";
 
-const VideosFlatList = ({ videosData, postEnabled = 1 }) => {
+const VideosFlatList = ({ videosData, postEnabled = 0 }) => {
   const [activeVideoIndex, setActiveVideoIndex] = useState(0);
 
   const bottomTabHeight = useBottomTabBarHeight();

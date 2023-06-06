@@ -80,7 +80,7 @@ const ProfileScreen = (props) => {
     });
 
     return () => {
-      unsubscribe(); // Cleanup the event listener when the component unmounts
+      unsubscribe(); // Cleanup function
     };
   }, [navigation]);
 

@@ -36,6 +36,7 @@ import { COLORS, ICONS, WINDOW_WIDTH } from "../../assets/utils";
 import { commentsService } from "../../constants/env";
 import AuthContext from "../auth/authContext";
 import { UserContext } from "../auth/userContext";
+import { useNavigation } from "@react-navigation/native";
 
 const Comment = ({
   comment,
@@ -503,8 +504,19 @@ const Comment = ({
 };
 
 const Comments = ({ commentsNumber, bottomSheetRef, handleSheetChanges }) => {
+  const navigation = useNavigation();
   const { accessToken } = useContext(AuthContext);
-  const { user } = useContext(UserContext);
+  const { user, fetchUser } = useContext(UserContext);
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      // Trigger the fetchUser function when this screen comes into focus
+      fetchUser();
+    });
+
+    return () => {
+      unsubscribe(); // Cleanup function
+    };
+  }, [navigation]);
 
   const postId = "001";
 

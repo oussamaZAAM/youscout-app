@@ -1,7 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 
-import { useNavigation } from "@react-navigation/native";
-import * as Linking from 'expo-linking';
 import * as ScreenOrientation from "expo-screen-orientation";
 import AuthProvider from "../components/auth/authProvider";
 import UserProvider from "../components/auth/userContext";
