@@ -85,7 +85,6 @@ const NewVideoScreen = () => {
       aspect: [16, 12],
       quality: 1,
     });
-    console.log(result.assets[0].uri);
     if (!result.canceled) {
       let sourceThumb = await generateThumbnail(result.assets[0].uri);
       navigation.navigate("SaveVideo", {

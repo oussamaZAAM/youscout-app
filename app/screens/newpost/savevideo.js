@@ -1,7 +1,7 @@
 import { AntDesign, Feather } from "@expo/vector-icons";
 import { WINDOW_WIDTH } from "@gorhom/bottom-sheet";
 import { useNavigation } from "@react-navigation/native";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import {
   Appearance,
   FlatList,
@@ -15,7 +15,11 @@ import {
 
 import { MaterialIcons } from "react-native-vector-icons";
 
-import { COLORS } from "../../../assets/utils";
+import { COLORS, timeout } from "../../../assets/utils";
+import AuthContext from "../../../components/auth/authContext";
+import axios from "axios";
+import { postService } from "../../../constants/env";
+import { handleRefreshToken } from "../../../assets/functions/refreshToken";
 
 const renderItem = ({ item }) => {
   if (item.clicked === true) {
@@ -28,18 +32,51 @@ const renderItem = ({ item }) => {
 };
 
 const SaveVideoScreen = (props) => {
+  const {accessToken, saveAccessToken} = useContext(AuthContext);
+
   const colorScheme = Appearance.getColorScheme();
   const [description, setDescription] = useState("");
   const navigation = useNavigation();
 
-  const handlePost = () => {
-    const chosenSkills = (props.route?.params?.skills) 
-        ? (props.route.params.skills
-            .filter(skill => skill.clicked))
-            .map(skill => skill.name)
-        : [];
+  const handlePost = async () => {
+    const chosenSkills = (props.route?.params?.skills)
+      ? (props.route.params.skills
+        .filter(skill => skill.clicked))
+        .map(skill => skill.name)
+      : [];
     if (chosenSkills.length < 1) {
       alert("Please select at least one Skill!");
+    }
+
+    const videoUrl = props.route.params.source;
+    // Upload the video in S3
+    const formData = new FormData();
+    formData.append('video', {
+      uri: videoUrl,
+      name: videoUrl.split('/').pop(),
+      type: 'video/mp4',
+    });
+
+    try {
+      await axios.post(
+        `${postService}/upload`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            'Content-Type': 'multipart/form-data',
+          },
+        }
+      );
+      // Flash Message: Video updated
+      setTimeout(() => {
+        navigation.navigate("HomeAfterUpload");
+      }, timeout);
+    } catch (error) {
+      console.log(error.response)
+      if (error.response?.status === 401) {
+        handleRefreshToken(accessToken, saveAccessToken);
+      }
     }
   };
 
@@ -97,7 +134,7 @@ const SaveVideoScreen = (props) => {
               contentContainerStyle={styles.skillsChosen}
               data={props.route.params.skills}
               renderItem={renderItem}
-              keyExtractor={(item) => item.id.toString()}
+              keyExtractor={(item) => item.name}
               numColumns={5}
             />
           </TouchableOpacity>

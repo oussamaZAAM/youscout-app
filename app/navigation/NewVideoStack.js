@@ -4,6 +4,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import NewpostScreen from "../screens/newpost/newvideo";
 import SaveVideoScreen from "../screens/newpost/savevideo";
 import SkillsScreen from "../screens/newpost/skills";
+import HomeScreen from "../screens/home";
 
 const Stack = createNativeStackNavigator();
 
@@ -24,6 +25,11 @@ export const NewVideoStack = () => {
         <Stack.Screen
           name="Skills"
           component={SkillsScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="HomeAfterUpload"
+          component={HomeScreen}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>
