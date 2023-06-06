@@ -702,25 +702,31 @@ const Comments = ({ commentsNumber, bottomSheetRef, handleSheetChanges }) => {
       <Text style={{ alignSelf: "center", fontWeight: 600, fontSize: 16 }}>
         {commentsNumber} Comments
       </Text>
-      <BottomSheetFlatList
-        contentContainerStyle={styles.contentContainer}
-        keyboardShouldPersistTaps="handled"
-        data={comments}
-        renderItem={({ item }) => (
-          <Comment
-            key={item.id}
-            handleLikeComment={handleLikeComment}
-            comment={item}
-            setIsKeyboard={setIsKeyboard}
-            handleReplyOnComment={handleReplyOnComment}
-            setFetching={setFetching}
-            username={user.username}
-            accessToken={accessToken}
-          />
-        )}
-        refreshing={loading}
-        onRefresh={() => setFetching(true)}
-      />
+      {comments.length !== 0
+        ? <BottomSheetFlatList
+          contentContainerStyle={styles.contentContainer}
+          keyboardShouldPersistTaps="handled"
+          data={comments}
+          renderItem={({ item }) => (
+            <Comment
+              key={item.id}
+              handleLikeComment={handleLikeComment}
+              comment={item}
+              setIsKeyboard={setIsKeyboard}
+              handleReplyOnComment={handleReplyOnComment}
+              setFetching={setFetching}
+              username={user.username}
+              accessToken={accessToken}
+            />
+          )}
+          refreshing={loading}
+          onRefresh={() => setFetching(true)}
+        />
+        : <View style={styles.noCommentContainer}>
+          <Ionicons name="chatbubble-outline" size={50} color="#333" />
+          <Text style={styles.noCommentMessage}>Be the first to comment</Text>
+        </View>
+      }
       <View
         style={[
           styles.commentInputContainer,
@@ -937,5 +943,17 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     gap: 20,
+  },
+  noCommentContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  noCommentMessage: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#333',
+    textAlign: 'center',
+    marginTop: 10
   },
 });
