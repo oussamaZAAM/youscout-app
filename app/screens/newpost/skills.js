@@ -1,6 +1,6 @@
 import { AntDesign } from "@expo/vector-icons";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import {
   FlatList,
   StyleSheet,
@@ -13,6 +13,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 import { COLORS, WINDOW_HEIGHT } from "../../../assets/utils";
 import { skillsService } from "../../../constants/env";
+import AuthContext from "../../../components/auth/authContext";
 
 const RenderItem = ({ item, handleClickSkill }) => {
   return (
@@ -29,6 +30,9 @@ const RenderItem = ({ item, handleClickSkill }) => {
 };
 
 const SkillsScreen = (props) => {
+  const {accessToken} = useContext(AuthContext);
+
+
   const [searchQuery, setSearchQuery] = useState("");
 
   const [previousSkills, setPreviousSkills] = useState(props.route?.params?.skills);
@@ -43,7 +47,7 @@ const SkillsScreen = (props) => {
     setSkillsData((prevArray) => {
       const newArray = prevArray.map((skill) => {
         const isClicked = skill.clicked;
-        if (skill.id === item.id) {
+        if (skill.name === item.name) {
           skill.clicked = !isClicked;
         }
         return skill;
@@ -66,9 +70,12 @@ const SkillsScreen = (props) => {
 
   useEffect(()=>{
     const fetchSkills = async() => {
-      console.log(skillsService + "/api/skills")
       try {
-        const response = await fetch(skillsService + "/api/skills");
+        const response = await fetch(skillsService + "/skills", {
+          headers: {
+            Authorization: `Bearer ${accessToken}`
+          }
+        });
         const skills = await response.json();
         setSkillsData(skills);
         setFilteredData(skills);
@@ -106,7 +113,7 @@ const SkillsScreen = (props) => {
         renderItem={({ item }) => (
           <RenderItem item={item} handleClickSkill={handleClickSkill} />
         )}
-        keyExtractor={(item) => item.id.toString()}
+        keyExtractor={(item) => item.name}
       />
       <View style={styles.buttonsContainer}>
         {/* <TouchableOpacity style={styles.cancelButton} onPress={() => navigation.goBack()}>
