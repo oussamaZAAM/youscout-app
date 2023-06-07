@@ -149,12 +149,12 @@ export default function VideoItem({ data, isActive, accessToken, saveAccessToken
       >
         <StatusBar barStyle={"light-content"} />
         <Video
-          source={{ videoUrl }}
+          source={{ uri: videoUrl }}
           style={[
             styles.video,
             { width: WINDOW_WIDTH, height: WINDOW_HEIGHT - bottomTabHeight },
           ]}
-          resizeMode="contain"
+          resizeMode="cover"
           shouldPlay={isPlaying && isActive}
           // shouldPlay={false}
           isLooping
@@ -265,6 +265,16 @@ export default function VideoItem({ data, isActive, accessToken, saveAccessToken
               <Text style={styles.verticalBarText}>Rate</Text>
             </View>
           </TouchableOpacity>
+          {user.username === username &&
+          <TouchableOpacity onPress={() => {}}>
+            <View style={styles.verticalBarItem}>
+              <Image
+                style={styles.verticalBarIcon}
+                source={require("../../assets/images/delete.png")}
+              />
+              <Text style={styles.verticalBarText}>Delete</Text>
+            </View>
+          </TouchableOpacity>}
         </View>
         <Rate
           skills={skills}

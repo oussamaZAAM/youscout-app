@@ -8,6 +8,9 @@ import {
 } from "react-native";
 
 import * as VideoThumbnails from "expo-video-thumbnails";
+import { handleRefreshToken } from "../../assets/functions/refreshToken";
+import axios from "axios";
+import { postService } from "../../constants/env";
 
 const ProfilePostListItem = ({ item, index, setPostEnabled }) => {
   const [thumbUri, setThumbUri] = useState("");
@@ -22,7 +25,7 @@ const ProfilePostListItem = ({ item, index, setPostEnabled }) => {
     }
   };
   useEffect(() => {
-    generateThumbnail(item.uri);
+    generateThumbnail(item.videoUrl);
   }, []);
   return (
     <TouchableOpacity
@@ -35,6 +38,7 @@ const ProfilePostListItem = ({ item, index, setPostEnabled }) => {
 };
 
 const ProfilePostList = ({ posts, setPostEnabled, numColumns }) => {
+  
   return (
     <View style={styles.container}>
       <FlatList

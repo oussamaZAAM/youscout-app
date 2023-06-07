@@ -66,7 +66,7 @@ const ProfileHeader = ({ profileUser }) => {
       }
     }
     fetchInteractions();
-  }, [trigger]);
+  }, [trigger, profileUser.username]);
 
   // Handle following and unfollowing actions
   const handleFollow = async () => {

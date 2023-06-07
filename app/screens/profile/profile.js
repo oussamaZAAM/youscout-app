@@ -18,7 +18,7 @@ import VideosFlatList from "../../../components/posts/videosFlatlist";
 import ProfileHeader from "../../../components/profile/header";
 import ProfileNavbar from "../../../components/profile/navbar";
 import ProfilePostList from "../../../components/profile/postList";
-import { authenticationService } from "../../../constants/env";
+import { authenticationService, postService } from "../../../constants/env";
 import { UserContext } from "../../../components/auth/userContext";
 import { videosData } from "../../videosData";
 import { useNavigation } from "@react-navigation/native";
@@ -101,10 +101,12 @@ const ProfileScreen = (props) => {
     socialMediaLinks: {}
   });
 
+
+  // Fetch the current authenticated user
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const url = authenticationService + "/users/"+props.route.params.postUsername+"/profile";
+        const url = authenticationService + "/users/" + props.route.params.postUsername + "/profile";
         const response = await axios.get(url, {
           headers: {
             Authorization: `Bearer ${accessToken}`
@@ -137,13 +139,32 @@ const ProfileScreen = (props) => {
         }
       }
     }
-    props.route.params.postUsername && fetchUser();
+    props.route.params?.postUsername && fetchUser();
   }, []);
 
+  // Abstract the user (current user / other users)
   const profileUser = props.route.params ? postUser : user;
 
-  // Fetch the current user's posts
-  const posts = videosData;
+  // Fetch the posts of the current user / post author
+  const [posts, setPosts] = useState([]);
+  useEffect(() => {
+    const fetchProfilePosts = async () => {
+      try {
+        const response = await axios.get(postService + "/posts/" + profileUser.username, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`
+          }
+        });
+        const data = response.data;
+        setPosts(data);
+      } catch (error) {
+        if (error.response.status === 401) {
+          handleRefreshToken(accessToken, saveAccessToken);
+        }
+      }
+    }
+    fetchProfilePosts();
+  }, [profileUser.username])
 
   return postEnabled === -1 ? (
     <SafeAreaView style={styles.container}>
