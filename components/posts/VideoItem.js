@@ -93,12 +93,15 @@ export default function VideoItem({ data, isActive, accessToken, saveAccessToken
     setModalVisible(!modalVisible);
   };
 
-  const transformedArray = Object.entries(skills).map(([skill, data]) => ({
+  const transformedArray = Object.entries(skills ?? {}).map(([skill, data]) => ({
     skill,
     rating: data[user.username] || 0
   }));
-
-  const [skillsArray, setSkillsArray] = useState(skills ? transformedArray : []);
+  
+  const [skillsArray, setSkillsArray] = useState([]);
+  useEffect(() => {
+    skills && setSkillsArray(transformedArray);
+  }, [skills]);
 
   const handleRate = async (value, skill) => {
     try {

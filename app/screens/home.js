@@ -30,6 +30,8 @@ const HomeScreen = () => {
     };
   }, [navigation]);
 
+  console.log(postsData)
+
   return (
     <View style={styles.container}>
       {/* <TouchableOpacity
@@ -45,7 +47,7 @@ const HomeScreen = () => {
           </View>
         )}
       </TouchableOpacity> */}
-      {postsData.length > 0
+      {postsData.length <= 0 || (postsData.length === 1 && postsData[0]._id === 0)
         ? <VideosFlatList videosData={postsData} />
         : <View style={styles.noFeedContainer}>
           <AntDesign name="smileo" size={80} color="gray" />
