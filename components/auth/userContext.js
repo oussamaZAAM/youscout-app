@@ -24,6 +24,7 @@ const UserProvider = ({ children }) => {
   });
 
   const fetchUser = async () => {
+    var userInfos;
     try {
       const url = authenticationService + "/users/me/profile";
       const response = await axios.get(url, {
@@ -35,7 +36,7 @@ const UserProvider = ({ children }) => {
       if (response.status === 200) {
         const data = response.data;
         console.log("Fetching user informations...")
-        setUser({
+        userInfos = {
           username: data.username,
           email: data.email,
           profilePicture: data.profilePicture,
@@ -46,10 +47,13 @@ const UserProvider = ({ children }) => {
           cityOrRegion: data.cityOrRegion,
           bio: data.bio,
           socialMediaLinks: data.socialMediaLinks
-        });
+        }
+        setUser(userInfos);
+        console.log("User informations fetched!");
       } else {
         throw new Error("Request failed with status: " + response.status);
       }
+      return userInfos;
     } catch (error) {
       console.error("An error occurred while fetching user infos:", error.response.message);
       if (error.response.status === 401) {

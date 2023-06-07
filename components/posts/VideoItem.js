@@ -140,9 +140,9 @@ export default function VideoItem({ data, isActive }) {
             styles.video,
             { width: WINDOW_WIDTH, height: WINDOW_HEIGHT - bottomTabHeight },
           ]}
-          resizeMode="cover"
-          // shouldPlay={isPlaying && isActive}
-          shouldPlay={false}
+          resizeMode="contain"
+          shouldPlay={isPlaying && isActive}
+          // shouldPlay={false}
           isLooping
           isMuted={false}
         />
@@ -269,6 +269,7 @@ export default function VideoItem({ data, isActive }) {
         )}
       </View>
       <Comments
+        postId={data._id}
         commentsNumber={commentsNum}
         bottomSheetRef={bottomSheetRef}
         handleSheetChanges={handleSheetChanges}

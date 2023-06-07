@@ -37,6 +37,7 @@ import { commentsService } from "../../constants/env";
 import AuthContext from "../auth/authContext";
 import { UserContext } from "../auth/userContext";
 import { useNavigation } from "@react-navigation/native";
+import { handleRefreshToken } from "../../assets/functions/refreshToken";
 
 const Comment = ({
   comment,
@@ -45,7 +46,8 @@ const Comment = ({
   handleReplyOnComment,
   setFetching,
   username,
-  accessToken
+  accessToken,
+  saveAccessToken
 }) => {
   const [replies, setReplies] = useState(null);
   const [showReplies, setShowReplies] = useState(false);
@@ -95,7 +97,7 @@ const Comment = ({
             method: "POST",
             headers: {
               "Content-Type": "application/json",
-              Authorization: `Bearer ${accessToken}`
+              Authorization: `Bearer ${accessToken}w`
             },
             body: JSON.stringify(newReply),
           }
@@ -103,8 +105,9 @@ const Comment = ({
 
         // Break function in case of error and send Alert message
         if (!response.ok) {
-          alert(`HTTP error! status: ${response.status}`);
-          return 0;
+          if (response.status === 401) {
+            handleRefreshToken(accessToken, saveAccessToken);
+          }
         }
         const data = await response.json();
 
@@ -116,9 +119,8 @@ const Comment = ({
 
         toggleReply(); // Close replying area after creating a new reply
       }
-    } catch (e) {
-      // Break the function and display an alert message in case of no response from server
-      alert(e);
+    } catch (error) {
+
       return 0;
     }
   };
@@ -503,9 +505,9 @@ const Comment = ({
   );
 };
 
-const Comments = ({ commentsNumber, bottomSheetRef, handleSheetChanges }) => {
+const Comments = ({ postId, commentsNumber, bottomSheetRef, handleSheetChanges }) => {
   const navigation = useNavigation();
-  const { accessToken } = useContext(AuthContext);
+  const { accessToken, saveAccessToken } = useContext(AuthContext);
   const { user, fetchUser } = useContext(UserContext);
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
@@ -517,8 +519,6 @@ const Comments = ({ commentsNumber, bottomSheetRef, handleSheetChanges }) => {
       unsubscribe(); // Cleanup function
     };
   }, [navigation]);
-
-  const postId = "001";
 
   const textinputRef = useRef();
   const [isKeyboard, setIsKeyboard] = useState(0);
@@ -543,8 +543,11 @@ const Comments = ({ commentsNumber, bottomSheetRef, handleSheetChanges }) => {
         setComments(data);
         return data;
       } catch (error) {
-        console.error("Error fetching comments data:", error);
-        throw error;
+        console.log(error.response.data.message)
+        alert(error.message);
+        if (error.response.status === 401) {
+          handleRefreshToken(accessToken, saveAccessToken);
+        }
       }
     };
     // Fetch only if bottomsheet is enabled
@@ -566,7 +569,7 @@ const Comments = ({ commentsNumber, bottomSheetRef, handleSheetChanges }) => {
   const handleLikeComment = async (id, likes) => {
     try {
       var response;
-      if (likes.includes(username)) {
+      if (likes.includes(user.username)) {
         response = await fetch(
           commentsService + "/comments/" + id + "/unlike",
           {
@@ -590,21 +593,22 @@ const Comments = ({ commentsNumber, bottomSheetRef, handleSheetChanges }) => {
         );
       }
       if (!response.ok) {
-        alert(`HTTP error! status: ${response.status}`);
-        return 0;
+        if (error.response.status === 401) {
+          handleRefreshToken(accessToken, saveAccessToken);
+        }
       }
       setComments((prevArray) => {
         for (let i = 0; i < prevArray.length; i++) {
           if (prevArray[i].id === id) {
-            if (!prevArray[i].likes.includes(username)) {
+            if (!prevArray[i].likes.includes(user.username)) {
               const newLikes = prevArray[i].likes.filter(
-                (user) => user !== username
+                (user) => user !== user.username
               );
-              newLikes.push(username);
+              newLikes.push(user.username);
               prevArray[i].likes = newLikes;
             } else {
               const newLikes = prevArray[i].likes.filter(
-                (user) => user !== username
+                (user) => user !== user.username
               );
               prevArray[i].likes = newLikes;
             }
@@ -660,9 +664,13 @@ const Comments = ({ commentsNumber, bottomSheetRef, handleSheetChanges }) => {
         });
         setNewComment(""); // Set new comment body to empty string
       }
-    } catch (e) {
-      // Break the function and display an alert message in case of no response from server
-      alert(e);
+    } catch (error) {
+      // Break the function and display an alert message in case of no response from server 
+      console.log(error.response.data.message)
+      alert(error.message);
+      if (error.response.status === 401) {
+        // handleRefreshToken(accessToken, saveAccessToken);
+      }
       return 0;
     }
   };
@@ -729,6 +737,7 @@ const Comments = ({ commentsNumber, bottomSheetRef, handleSheetChanges }) => {
               setFetching={setFetching}
               username={user.username}
               accessToken={accessToken}
+              saveAccessToken={saveAccessToken}
             />
           )}
           refreshing={loading}

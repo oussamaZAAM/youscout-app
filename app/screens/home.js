@@ -32,21 +32,23 @@ const HomeScreen = () => {
   // Fetch user and feed on first render
   useEffect(() => {
     fetchUser()
-      .then(async () => {
-        try {
-          const url = feedService + "/feed/" + user.username;
-          console.log(url)
-          const response = await axios(url, {
-            headers: {
-              Authorization: `Bearer ${accessToken}`
+      .then(async (userInfos) => {
+        if (user.username !== "") {
+          try {
+            const url = feedService + "/feed/" + userInfos.username;
+            console.log(url)
+            const response = await axios(url, {
+              headers: {
+                Authorization: `Bearer ${accessToken}`
+              }
+            })
+            setPostsData(response.data.content);
+          } catch (error) {
+            console.log(error.response.data.message)
+            // If error response status 404 : Feed not found
+            if (error.response.status === 401) {
+              handleRefreshToken(accessToken, saveAccessToken);
             }
-          })
-          setPostsData(response.data.content);
-        } catch (error) {
-          console.log(error.message)
-          console.log(error.status)
-          if (error.response.status === 401) {
-            handleRefreshToken(accessToken, saveAccessToken);
           }
         }
       })

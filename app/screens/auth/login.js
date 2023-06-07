@@ -54,11 +54,28 @@ const LoginScreen = ({ navigation }) => {
           initialValues={{ email: "", password: "" }}
           validationSchema={Yup.object({
             email: Yup.string()
-              .email("Invalid email address")
+              .test(
+                "emailOrUsername",
+                "Invalid email address or username",
+                function (value) {
+                  // Check if the value is a valid email address
+                  if (Yup.string().email().isValidSync(value)) {
+                    return true; // Valid email address
+                  }
+
+                  // Check if the value is a valid username
+                  const usernameRegex = /^[a-zA-Z0-9.-]+$/;
+                  if (usernameRegex.test(value)) {
+                    return true; // Valid username
+                  }
+
+                  return false; // Invalid email address and username
+                }
+              )
               .required("Required"),
             password: Yup.string()
               .min(8, "Must be at least 8 characters")
-              .required("Required"),
+              .required("Required")
           })}
           onSubmit={async (values) => {
             try {
@@ -128,7 +145,7 @@ const LoginScreen = ({ navigation }) => {
               )}
               <TextInput
                 name="email"
-                placeholder="Email Address"
+                placeholder="Email Address or Username"
                 style={{
                   borderWidth: 1,
                   borderColor: "black",
@@ -197,11 +214,11 @@ const LoginScreen = ({ navigation }) => {
           )}
         </Formik>
 
-        <TouchableOpacity style={{alignSelf: "center", marginTop: -20, marginBottom: 20}} onPress={() => navigation.navigate("Reset")}>
-            <Text style={{ color: COLORS.light, fontWeight: "700" }}>
-              Forgot password?
-            </Text>
-          </TouchableOpacity>
+        <TouchableOpacity style={{ alignSelf: "center", marginTop: -20, marginBottom: 20 }} onPress={() => navigation.navigate("Reset")}>
+          <Text style={{ color: COLORS.light, fontWeight: "700" }}>
+            Forgot password?
+          </Text>
+        </TouchableOpacity>
 
         <Text style={{ textAlign: "center", color: "#666", marginBottom: 30 }}>
           Or, login with ...
