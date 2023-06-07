@@ -8,7 +8,7 @@ import axios from "axios";
 import { handleRefreshToken } from "../../assets/functions/refreshToken";
 import { WINDOW_WIDTH } from "../../assets/utils";
 import { authenticationService } from "../../constants/env";
-import AuthContext from "../auth/authContext";
+import AuthContext from "../../context/authContext";
 import NavbarGeneral from "../general/navbar";
 
 const updateNormalProfile = async (userData, accessToken, saveAccessToken, deleteAccessToken) => {

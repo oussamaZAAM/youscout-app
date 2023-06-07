@@ -8,8 +8,8 @@ import { CheckImage } from "../../assets/functions/functions";
 import { handleRefreshToken } from "../../assets/functions/refreshToken";
 import { COLORS } from "../../assets/utils";
 import { socialGraphService } from "../../constants/env";
-import AuthContext from "../auth/authContext";
-import { UserContext } from "../auth/userContext";
+import AuthContext from "../../context/authContext";
+import { UserContext } from "../../context/userContext";
 
 const ProfileHeader = ({ profileUser }) => {
   const navigation = useNavigation();

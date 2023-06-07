@@ -13,7 +13,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 import { COLORS, WINDOW_HEIGHT } from "../../../assets/utils";
 import { skillsService } from "../../../constants/env";
-import AuthContext from "../../../components/auth/authContext";
+import AuthContext from "../../../context/authContext";
 
 const RenderItem = ({ item, handleClickSkill }) => {
   return (

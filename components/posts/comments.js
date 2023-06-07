@@ -34,8 +34,8 @@ import { copyToClipboard } from "../../assets/functions/functions";
 import { getTimeDifference } from "../../assets/functions/functions";
 import { COLORS, ICONS, WINDOW_WIDTH } from "../../assets/utils";
 import { commentsService } from "../../constants/env";
-import AuthContext from "../auth/authContext";
-import { UserContext } from "../auth/userContext";
+import AuthContext from "../../context/authContext";
+import { UserContext } from "../../context/userContext";
 import { useNavigation } from "@react-navigation/native";
 import { handleRefreshToken } from "../../assets/functions/refreshToken";
 
@@ -82,7 +82,6 @@ const Comment = ({
   };
 
   const handleReply = async () => {
-    console.log(comment)
     try {
       if (reply.trim() !== "") {
         // Check if reply is not empty
@@ -104,7 +103,7 @@ const Comment = ({
           }
         );
 
-        // Break function in case of error and send Alert message
+        // Refresh Token if the access token is expired
         if (!response.ok) {
           if (response.status === 401) {
             handleRefreshToken(accessToken, saveAccessToken);
@@ -117,7 +116,6 @@ const Comment = ({
         modifiedComment.replies = modifiedCommentReplies;
         handleReplyOnComment(modifiedComment); // Send new comment to Comment Component
         setReply("");
-
         toggleReply(); // Close replying area after creating a new reply
       }
     } catch (error) {
@@ -508,8 +506,11 @@ const Comment = ({
 
 const Comments = ({ postId, commentsNumber, bottomSheetRef, handleSheetChanges }) => {
   const navigation = useNavigation();
+
+  // Fetch Context informations
   const { accessToken, saveAccessToken } = useContext(AuthContext);
   const { user, fetchUser } = useContext(UserContext);
+  
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
       // Trigger the fetchUser function when this screen comes into focus

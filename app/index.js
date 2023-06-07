@@ -1,9 +1,10 @@
 import React from "react";
 
 import * as ScreenOrientation from "expo-screen-orientation";
-import AuthProvider from "../components/auth/authProvider";
-import UserProvider from "../components/auth/userContext";
+import AuthProvider from "../context/authProvider";
+import UserProvider from "../context/userContext";
 import App from "./app";
+import FeedProvider from "../context/feedContext";
 
 // const linking = {
 //   prefixes: ['http://youscout.com', 'youscout://'],
@@ -34,15 +35,17 @@ const Main = () => {
   //     Linking.removeEventListener('url')
   //   )
   // }, [])
-  
+
   // console.log(data)
 
   return (
-      <AuthProvider>
-        <UserProvider>
+    <AuthProvider>
+      <UserProvider>
+        <FeedProvider>
           <App />
-        </UserProvider>
-      </AuthProvider>
+        </FeedProvider>
+      </UserProvider>
+    </AuthProvider>
   );
 };
 

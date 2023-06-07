@@ -1,8 +1,8 @@
 import React, { createContext, useState, useContext } from 'react';
 import axios from 'axios';
-import { authenticationService } from '../../constants/env';
+import { authenticationService } from '../constants/env';
 import AuthContext from './authContext';
-import { handleRefreshToken } from '../../assets/functions/refreshToken';
+import { handleRefreshToken } from '../assets/functions/refreshToken';
 
 // Create the UserContext
 export const UserContext = createContext();

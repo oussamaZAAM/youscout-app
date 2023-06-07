@@ -17,7 +17,7 @@ import {
 import { MaterialIcons } from "react-native-vector-icons";
 
 import { COLORS, timeout } from "../../../assets/utils";
-import AuthContext from "../../../components/auth/authContext";
+import AuthContext from "../../../context/authContext";
 import axios from "axios";
 import { postService } from "../../../constants/env";
 import { handleRefreshToken } from "../../../assets/functions/refreshToken";

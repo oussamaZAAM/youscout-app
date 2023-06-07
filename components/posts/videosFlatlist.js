@@ -1,18 +1,41 @@
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import React, { useContext, useState } from "react";
-import { FlatList } from "react-native";
+import { FlatList, RefreshControl } from "react-native";
 import { WINDOW_HEIGHT, WINDOW_WIDTH } from "../../assets/utils";
 import VideoItem from "./VideoItem";
-import AuthContext from "../auth/authContext";
+import AuthContext from "../../context/authContext";
+import { FeedContext } from "../../context/feedContext";
 
 const VideosFlatList = ({ videosData, postEnabled = 0 }) => {
   // ----------------- Fetch Tokens ---------------------
   const { accessToken, saveAccessToken } = useContext(AuthContext);
   //-----------------------------------------------------
 
+  // ----------------- Fetch Feed ---------------------
+  const { fetchPosts } = useContext(FeedContext);
+  //-----------------------------------------------------
+
   const [activeVideoIndex, setActiveVideoIndex] = useState(0);
 
   const bottomTabHeight = useBottomTabBarHeight();
+
+  // Set refreshing logic
+  const [refreshing, setRefreshing] = useState(false);
+
+  const fetchData = async () => {
+    fetchPosts();
+
+    // Update the data state and stop refreshing
+    setRefreshing(false);
+  };
+
+  const onRefresh = () => {
+    setRefreshing(true);
+
+    // Fetch data again
+    fetchData();
+  };
+
   return (
     <FlatList
       data={videosData}
@@ -34,6 +57,12 @@ const VideosFlatList = ({ videosData, postEnabled = 0 }) => {
         offset: WINDOW_WIDTH * index,
         index,
       })}
+      refreshControl={
+        <RefreshControl
+          refreshing={refreshing}
+          onRefresh={onRefresh}
+        />
+      }
     />
   );
 };

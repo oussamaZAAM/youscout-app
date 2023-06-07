@@ -20,10 +20,11 @@ import { useNavigation } from "@react-navigation/native";
 import { WINDOW_HEIGHT, WINDOW_WIDTH } from "../../assets/utils";
 import Comments from "./comments";
 import Rate from "./rate";
-import { UserContext } from "../auth/userContext";
+import { UserContext } from "../../context/userContext";
 import axios from "axios";
 import { postService } from "../../constants/env";
 import { handleRefreshToken } from "../../assets/functions/refreshToken";
+import { FeedContext } from "../../context/feedContext";
 
 export default function VideoItem({ data, isActive, accessToken, saveAccessToken }) {
   // ----------------- Basic Parameters -----------------
@@ -34,10 +35,11 @@ export default function VideoItem({ data, isActive, accessToken, saveAccessToken
   // ---------------------------------------------------
 
 
-  // ----------------- Fetching user ------------------
+  // ----------------- Fetching user /feed regeneration function ------------------
   const { user } = useContext(UserContext);
   //---------------------------------------------------
 
+  const { fetchPosts } = useContext(FeedContext);
 
   // ----------------- Like + Animations -----------------
   const likeAnimation = useRef(new Animated.Value(0)).current;
@@ -56,6 +58,9 @@ export default function VideoItem({ data, isActive, accessToken, saveAccessToken
           Authorization: `Bearer ${accessToken}`
         }
       });
+      if (response.status === 200) {
+        fetchPosts();
+      }
       if (like) {
         setLike(false);
         Animated.timing(likeAnimation, {
@@ -155,8 +160,8 @@ export default function VideoItem({ data, isActive, accessToken, saveAccessToken
             { width: WINDOW_WIDTH, height: WINDOW_HEIGHT - bottomTabHeight },
           ]}
           resizeMode="cover"
-          shouldPlay={isPlaying && isActive}
-          // shouldPlay={false}
+          // shouldPlay={isPlaying && isActive}
+          shouldPlay={false}
           isLooping
           isMuted={false}
         />

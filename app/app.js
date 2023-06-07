@@ -5,7 +5,7 @@ import { Image, StyleSheet } from "react-native";
 
 import * as ScreenOrientation from "expo-screen-orientation";
 import { COLORS } from "../assets/utils";
-import AuthContext from "../components/auth/authContext";
+import AuthContext from "../context/authContext";
 import NewVideoButton from "../components/general/NewVideoButton";
 import { AuthenticationStack } from "./navigation/AuthenticationStack";
 import { ChatScreenStack } from "./navigation/ChatScreenStack";
