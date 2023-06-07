@@ -48,7 +48,6 @@ const Rate = ({
       </View>
     );
   });
-  const bottomTabHeight = useBottomTabBarHeight();
   return (
     <Modal
       animationType="fade"

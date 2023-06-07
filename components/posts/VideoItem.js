@@ -31,7 +31,7 @@ export default function VideoItem({ data, isActive, accessToken, saveAccessToken
   const navigation = useNavigation();
   const bottomTabHeight = useBottomTabBarHeight();
   const insets = useSafeAreaInsets();
-  const { _id, username, videoUrl, caption, likes, commentsNum, userProfilePic } = data;
+  const { _id, username, videoUrl, caption, likes, skills, commentsNum, userProfilePic } = data;
   // ---------------------------------------------------
 
 
@@ -92,29 +92,43 @@ export default function VideoItem({ data, isActive, accessToken, saveAccessToken
   const toggleModal = () => {
     setModalVisible(!modalVisible);
   };
-  const [skills, setSkills] = useState([
-    {
-      skill: "Dribble",
-      rating: 0,
-    },
-    {
-      skill: "Shooting",
-      rating: 0,
-    },
-    {
-      skill: "Jugging",
-      rating: 0,
-    },
-  ]);
-  const handleRate = (value, skill) => {
-    setSkills((prevList) => {
-      for (let i = 0; i < skills.length; i++) {
-        if (skills[i].skill === skill) {
-          skills[i].rating = value;
+
+  const transformedArray = Object.entries(skills).map(([skill, data]) => ({
+    skill,
+    rating: data[user.username] || 0
+  }));
+
+  const [skillsArray, setSkillsArray] = useState(skills ? transformedArray : []);
+
+  const handleRate = async (value, skill) => {
+    try {
+      const url = postService + "/posts/" + _id + "/rate";
+      const body = {
+        skill: skill,
+        rating: value
+      };
+      await axios.post(url, body, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`
         }
+      });
+      
+      setSkillsArray(prevList => {
+        return prevList.map(item => {
+          if (item.skill === skill) {
+            return {
+              ...item,
+              rating: value
+            };
+          }
+          return item;
+        });
+      });
+    } catch (error) {
+      if (error.response && error.response.status === 401) {
+        handleRefreshToken(accessToken, saveAccessToken);
       }
-      return [...prevList];
-    });
+    }
   };
   // ---------------------------------------------------
 
@@ -138,6 +152,24 @@ export default function VideoItem({ data, isActive, accessToken, saveAccessToken
 
     return () => backHandler.remove();
   }, []);
+  // ---------------------------------------------------
+
+  // -------------- Delete a Post ----------------------
+  const handleDeletePost = async () => {
+    try {
+      const url = postService + "/posts/" + _id;
+      await axios.delete(url, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`
+        }
+      });
+      fetchPosts();
+    } catch (error) {
+      if (error.response.status === 401) {
+        handleRefreshToken(accessToken, saveAccessToken);
+      }
+    }
+  }
   // ---------------------------------------------------
 
   return (
@@ -271,18 +303,18 @@ export default function VideoItem({ data, isActive, accessToken, saveAccessToken
             </View>
           </TouchableOpacity>
           {user.username === username &&
-          <TouchableOpacity onPress={() => {}}>
-            <View style={styles.verticalBarItem}>
-              <Image
-                style={styles.verticalBarIcon}
-                source={require("../../assets/images/delete.png")}
-              />
-              <Text style={styles.verticalBarText}>Delete</Text>
-            </View>
-          </TouchableOpacity>}
+            <TouchableOpacity onPress={handleDeletePost}>
+              <View style={styles.verticalBarItem}>
+                <Image
+                  style={styles.verticalBarIcon}
+                  source={require("../../assets/images/delete.png")}
+                />
+                <Text style={styles.verticalBarText}>Delete</Text>
+              </View>
+            </TouchableOpacity>}
         </View>
         <Rate
-          skills={skills}
+          skills={skillsArray}
           handleRate={handleRate}
           modalVisible={modalVisible}
           setModalVisible={setModalVisible}

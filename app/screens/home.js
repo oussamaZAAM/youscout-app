@@ -4,16 +4,14 @@ import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import VideosFlatList from "../../components/posts/videosFlatlist";
 
 import { useNavigation } from "@react-navigation/native";
-import { Entypo } from "react-native-vector-icons";
+import { Entypo, AntDesign } from "react-native-vector-icons";
 import { FeedContext } from "../../context/feedContext";
-import { UserContext } from "../../context/userContext";
 import { notificationsData } from "../videosData";
 
 const HomeScreen = () => {
   const badgeCount = notificationsData.filter((x) => !x.seen).length;
   const navigation = useNavigation();
 
-  
   // Fetch feed on first render
   const { postsData, fetchPosts } = useContext(FeedContext);
   useEffect(() => {
@@ -34,7 +32,7 @@ const HomeScreen = () => {
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity
+      {/* <TouchableOpacity
         onPress={() => {
           navigation.navigate("Notifications");
         }}
@@ -46,8 +44,13 @@ const HomeScreen = () => {
             <Text style={styles.badge}>{badgeCount}</Text>
           </View>
         )}
-      </TouchableOpacity>
-      <VideosFlatList videosData={postsData} />
+      </TouchableOpacity> */}
+      {postsData.length > 0
+        ? <VideosFlatList videosData={postsData} />
+        : <View style={styles.noFeedContainer}>
+          <AntDesign name="smileo" size={80} color="gray" />
+          <Text style={styles.noFeedText}>No Feed Available, try following more people</Text>
+        </View>}
     </View>
   );
 };
@@ -82,5 +85,17 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: 10,
     fontWeight: "bold",
+  },
+  noFeedContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  noFeedText: {
+    textAlign: 'center',
+    marginTop: 20,
+    fontSize: 20,
+    color: 'gray',
+    width: '75%'
   },
 });
