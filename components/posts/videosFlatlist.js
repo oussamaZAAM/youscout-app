@@ -1,10 +1,15 @@
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { FlatList } from "react-native";
 import { WINDOW_HEIGHT, WINDOW_WIDTH } from "../../assets/utils";
 import VideoItem from "./VideoItem";
+import AuthContext from "../auth/authContext";
 
 const VideosFlatList = ({ videosData, postEnabled = 0 }) => {
+  // ----------------- Fetch Tokens ---------------------
+  const { accessToken, saveAccessToken } = useContext(AuthContext);
+  //-----------------------------------------------------
+
   const [activeVideoIndex, setActiveVideoIndex] = useState(0);
 
   const bottomTabHeight = useBottomTabBarHeight();
@@ -13,7 +18,7 @@ const VideosFlatList = ({ videosData, postEnabled = 0 }) => {
       data={videosData}
       pagingEnabled
       renderItem={({ item, index }) => {
-        return <VideoItem data={item} isActive={activeVideoIndex === index} />;
+        return <VideoItem data={item} isActive={activeVideoIndex === index}  accessToken={accessToken} saveAccessToken={saveAccessToken}/>;
       }}
       onScroll={(e) => {
         const index = Math.round(

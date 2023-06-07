@@ -22,6 +22,7 @@ import { authenticationService } from "../../../constants/env";
 import { UserContext } from "../../../components/auth/userContext";
 import { videosData } from "../../videosData";
 import { useNavigation } from "@react-navigation/native";
+import { handleRefreshToken } from "../../../assets/functions/refreshToken";
 
 const ProfileScreen = (props) => {
   const { accessToken, saveAccessToken, deleteAccessToken } = useContext(AuthContext);
@@ -87,7 +88,59 @@ const ProfileScreen = (props) => {
   // If params exist, that means that we are accessing the profile page from a user's post
   // (which means it's not accessed from the profile button) 
 
-  const profileUser = props.route.params ? props.route.params.postUser : user;
+  const [postUser, setPostUser] = useState({
+    username: "",
+    email: "",
+    profilePicture: "",
+    fullName: "",
+    dateOfBirth: null,
+    gender: null,
+    country: null,
+    cityOrRegion: null,
+    bio: null,
+    socialMediaLinks: {}
+  });
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const url = authenticationService + "/users/"+props.route.params.postUsername+"/profile";
+        const response = await axios.get(url, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`
+          }
+        });
+        if (response.status === 200) {
+          const data = response.data;
+          console.log("Fetching post user informations...")
+          const userInfos = {
+            username: data.username,
+            email: data.email,
+            profilePicture: data.profilePicture,
+            fullName: data.fullName,
+            dateOfBirth: data.dateOfBirth,
+            gender: data.gender,
+            country: data.country,
+            cityOrRegion: data.cityOrRegion,
+            bio: data.bio,
+            socialMediaLinks: data.socialMediaLinks
+          }
+          setPostUser(userInfos);
+          console.log("Post user informations fetched!");
+        } else {
+          throw new Error("Request failed with status: " + response.status);
+        }
+      } catch (error) {
+        console.error("An error occurred while fetching user infos:", error.response.message);
+        if (error.response.status === 401) {
+          handleRefreshToken(accessToken, saveAccessToken);
+        }
+      }
+    }
+    props.route.params.postUsername && fetchUser();
+  }, []);
+
+  const profileUser = props.route.params ? postUser : user;
 
   // Fetch the current user's posts
   const posts = videosData;

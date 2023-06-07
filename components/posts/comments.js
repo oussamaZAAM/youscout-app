@@ -82,6 +82,7 @@ const Comment = ({
   };
 
   const handleReply = async () => {
+    console.log(comment)
     try {
       if (reply.trim() !== "") {
         // Check if reply is not empty
@@ -90,14 +91,14 @@ const Comment = ({
           body: reply,
         };
 
+        const url = commentsService + "/comments/" + comment.id + "/replies";
         // Sent post request to save new reply
-        const response = await fetch(
-          commentsService + "/comments/" + comment.id + "/replies",
+        const response = await fetch(url,
           {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
-              Authorization: `Bearer ${accessToken}w`
+              Authorization: `Bearer ${accessToken}`
             },
             body: JSON.stringify(newReply),
           }

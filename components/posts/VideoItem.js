@@ -1,7 +1,7 @@
 import { MaterialIcons, Octicons } from "@expo/vector-icons";
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import { Video } from "expo-av";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useContext, useEffect, useRef, useState } from "react";
 import {
   Animated,
   BackHandler,
@@ -20,20 +20,24 @@ import { useNavigation } from "@react-navigation/native";
 import { WINDOW_HEIGHT, WINDOW_WIDTH } from "../../assets/utils";
 import Comments from "./comments";
 import Rate from "./rate";
+import { UserContext } from "../auth/userContext";
+import axios from "axios";
+import { postService } from "../../constants/env";
+import { handleRefreshToken } from "../../assets/functions/refreshToken";
 
-const postUser = {
-  username: "hitagi",
-  email: "hitagi.crab@gmail.com",
-  profilePicture: "https://cdn.myanimelist.net/images/characters/6/241415.jpg",
-};
-
-export default function VideoItem({ data, isActive }) {
+export default function VideoItem({ data, isActive, accessToken, saveAccessToken }) {
   // ----------------- Basic Parameters -----------------
   const navigation = useNavigation();
   const bottomTabHeight = useBottomTabBarHeight();
   const insets = useSafeAreaInsets();
-  const { username, videoUrl, caption, likes, commentsNum, userProfilePic } = data;
+  const { _id, username, videoUrl, caption, likes, commentsNum, userProfilePic } = data;
   // ---------------------------------------------------
+
+
+  // ----------------- Fetching user ------------------
+  const { user } = useContext(UserContext);
+  //---------------------------------------------------
+
 
   // ----------------- Like + Animations -----------------
   const likeAnimation = useRef(new Animated.Value(0)).current;
@@ -44,19 +48,29 @@ export default function VideoItem({ data, isActive }) {
       useNativeDriver: true,
     }).start();
   };
-
-  const [like, setLike] = useState(false);
-  const handleLike = () => {
-    if (like) {
-      setLike(false);
-      Animated.timing(likeAnimation, {
-        toValue: 0, // Set the value of "likeAnimation" to 0 immediately
-        duration: 0, // Immediately
-        useNativeDriver: true,
-      }).start();
-    } else {
-      setLike(true);
-      handleLikeAnimation();
+  const [like, setLike] = useState(likes.includes(user.username));
+  const handleLike = async () => {
+    try {
+      const response = await axios.post(postService + "/posts/" + _id + "/like", {}, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`
+        }
+      });
+      if (like) {
+        setLike(false);
+        Animated.timing(likeAnimation, {
+          toValue: 0, // Set the value of "likeAnimation" to 0 immediately
+          duration: 0, // Immediately
+          useNativeDriver: true,
+        }).start();
+      } else {
+        setLike(true);
+        handleLikeAnimation();
+      }
+    } catch (error) {
+      if (error.response.status === 401) {
+        handleRefreshToken(accessToken, saveAccessToken);
+      }
     }
   }
   // ---------------------------------------------------
@@ -179,7 +193,7 @@ export default function VideoItem({ data, isActive }) {
         <View style={styles.verticalBar}>
           <TouchableOpacity
             onPress={() =>
-              navigation.navigate("Profile", { postUser: postUser })
+              navigation.navigate("Profile", { postUsername: username })
             }
             style={[styles.verticalBarItem, styles.avatarContainer]}
           >
