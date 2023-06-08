@@ -7,7 +7,7 @@
     "icon": "./assets/logoRaw.png",
     "scheme": "youscout",
     "splash": {
-      "image": "./assets/logoRaw.png",
+      "image": "./assets/logoSmall.png",
       "resizeMode": "contain",
       "text": "YouScout",
       "backgroundColor": "#ffffff"
