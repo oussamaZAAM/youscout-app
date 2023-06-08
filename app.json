@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "YouScout",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "slug": "YouScout",
     "orientation": "portrait",
     "icon": "./assets/logoRaw.png",
@@ -9,7 +9,6 @@
     "splash": {
       "image": "./assets/logoSmall.png",
       "resizeMode": "contain",
-      "text": "YouScout",
       "backgroundColor": "#ffffff"
     },
     "web": {

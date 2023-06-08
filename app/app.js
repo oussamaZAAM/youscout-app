@@ -5,14 +5,14 @@ import { Image, StyleSheet } from "react-native";
 
 import * as ScreenOrientation from "expo-screen-orientation";
 import { COLORS } from "../assets/utils";
-import AuthContext from "../context/authContext";
 import NewVideoButton from "../components/general/NewVideoButton";
+import AuthContext from "../context/authContext";
 import { AuthenticationStack } from "./navigation/AuthenticationStack";
 import { ChatScreenStack } from "./navigation/ChatScreenStack";
+import { DiscoverStack } from "./navigation/DiscoverStack";
 import { MainScreenStack } from "./navigation/MainScreenStack";
 import { NewVideoStack } from "./navigation/NewVideoStack";
 import { ProfileStack } from "./navigation/ProfileStack";
-import { DiscoverStack } from "./navigation/DiscoverStack";
 
 ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT);
 

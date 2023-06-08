@@ -1,8 +1,8 @@
 import axios from "axios";
-import { getLocalData } from "./asyncStore";
 import { authenticationService } from "../../constants/env";
+import { getLocalData } from "./asyncStore";
 
-export const handleRefreshToken = async(accessToken, saveAccessToken, deleteAccessToken) => {
+export const handleRefreshToken = async (accessToken, saveAccessToken, deleteAccessToken) => {
     console.log("Refreshing token ...")
     // --- refresh token ---
     try {

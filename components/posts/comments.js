@@ -28,16 +28,15 @@ import {
 } from "react-native";
 import { BottomSheet as EditBottomSheet } from "react-native-btr";
 
+import { useNavigation } from "@react-navigation/native";
 import FlashMessage, { showMessage } from "react-native-flash-message";
 import { Divider } from "react-native-paper";
-import { copyToClipboard } from "../../assets/functions/functions";
-import { getTimeDifference } from "../../assets/functions/functions";
+import { copyToClipboard, getTimeDifference } from "../../assets/functions/functions";
+import { handleRefreshToken } from "../../assets/functions/refreshToken";
 import { COLORS, ICONS, WINDOW_WIDTH } from "../../assets/utils";
 import { commentsService } from "../../constants/env";
 import AuthContext from "../../context/authContext";
 import { UserContext } from "../../context/userContext";
-import { useNavigation } from "@react-navigation/native";
-import { handleRefreshToken } from "../../assets/functions/refreshToken";
 
 const Comment = ({
   comment,
@@ -510,7 +509,7 @@ const Comments = ({ postId, commentsNumber, bottomSheetRef, handleSheetChanges }
   // Fetch Context informations
   const { accessToken, saveAccessToken } = useContext(AuthContext);
   const { user, fetchUser } = useContext(UserContext);
-  
+
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
       // Trigger the fetchUser function when this screen comes into focus

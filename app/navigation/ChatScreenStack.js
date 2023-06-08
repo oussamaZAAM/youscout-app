@@ -7,7 +7,7 @@ const Stack = createNativeStackNavigator();
 
 export const ChatScreenStack = () => {
   return (
-    <NavigationContainer independent={true}> 
+    <NavigationContainer independent={true}>
       <Stack.Navigator>
         <Stack.Screen
           name="Chat"

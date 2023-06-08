@@ -3,11 +3,11 @@ import * as ImagePicker from "expo-image-picker";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import {
   Animated,
+  ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
-  View,
-  ScrollView
+  View
 } from "react-native";
 
 import { BottomSheet } from "react-native-btr";
@@ -15,13 +15,12 @@ import { Divider } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Feather } from "react-native-vector-icons";
 
-import { WINDOW_HEIGHT, WINDOW_WIDTH } from "../../../assets/utils";
-import NavbarGeneral from "../../../components/general/navbar";
-import { UserContext } from "../../../context/userContext";
-import { authenticationService } from "../../../constants/env";
 import axios from "axios";
-import AuthContext from "../../../context/authContext";
 import { handleRefreshToken } from "../../../assets/functions/refreshToken";
+import { WINDOW_HEIGHT, WINDOW_WIDTH } from "../../../assets/utils";
+import { authenticationService } from "../../../constants/env";
+import AuthContext from "../../../context/authContext";
+import { UserContext } from "../../../context/userContext";
 
 const EditProfileScreen = () => {
   const navigation = useNavigation();
@@ -147,7 +146,7 @@ const EditProfileScreen = () => {
 
           <Text style={styles.title}>Edit Profile</Text>
 
-          <TouchableOpacity onPress={() => {}}>
+          <TouchableOpacity onPress={() => { }}>
             <Feather name={"check"} size={26} color={"transparent"} />
           </TouchableOpacity>
         </View>

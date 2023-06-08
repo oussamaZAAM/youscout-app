@@ -7,10 +7,9 @@ import {
   View,
 } from "react-native";
 
-import { WINDOW_HEIGHT, WINDOW_WIDTH } from "../../assets/utils";
 import Rating from "../../assets/Rating";
+import { WINDOW_HEIGHT, WINDOW_WIDTH } from "../../assets/utils";
 
-import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 
 const Rate = ({
   skills,

@@ -17,14 +17,14 @@ import {
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { useNavigation } from "@react-navigation/native";
+import axios from "axios";
+import { handleRefreshToken } from "../../assets/functions/refreshToken";
 import { WINDOW_HEIGHT, WINDOW_WIDTH } from "../../assets/utils";
+import { postService } from "../../constants/env";
+import { FeedContext } from "../../context/feedContext";
+import { UserContext } from "../../context/userContext";
 import Comments from "./comments";
 import Rate from "./rate";
-import { UserContext } from "../../context/userContext";
-import axios from "axios";
-import { postService } from "../../constants/env";
-import { handleRefreshToken } from "../../assets/functions/refreshToken";
-import { FeedContext } from "../../context/feedContext";
 
 export default function VideoItem({ data, isActive, accessToken, saveAccessToken }) {
   // ----------------- Basic Parameters -----------------
@@ -97,7 +97,7 @@ export default function VideoItem({ data, isActive, accessToken, saveAccessToken
     skill,
     rating: data[user.username] || 0
   }));
-  
+
   const [skillsArray, setSkillsArray] = useState([]);
   useEffect(() => {
     skills && setSkillsArray(transformedArray);
@@ -115,7 +115,7 @@ export default function VideoItem({ data, isActive, accessToken, saveAccessToken
           Authorization: `Bearer ${accessToken}`
         }
       });
-      
+
       setSkillsArray(prevList => {
         return prevList.map(item => {
           if (item.skill === skill) {

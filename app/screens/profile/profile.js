@@ -9,20 +9,19 @@ import {
 
 import { Octicons } from "react-native-vector-icons";
 
+import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
 import { BottomSheet as EditBottomSheet } from "react-native-btr";
 import FlashMessage, { showMessage } from "react-native-flash-message";
+import { handleRefreshToken } from "../../../assets/functions/refreshToken";
 import { WINDOW_WIDTH, timeout } from "../../../assets/utils";
-import AuthContext from "../../../context/authContext";
 import VideosFlatList from "../../../components/posts/videosFlatlist";
 import ProfileHeader from "../../../components/profile/header";
 import ProfileNavbar from "../../../components/profile/navbar";
 import ProfilePostList from "../../../components/profile/postList";
 import { authenticationService, postService } from "../../../constants/env";
+import AuthContext from "../../../context/authContext";
 import { UserContext } from "../../../context/userContext";
-import { videosData } from "../../videosData";
-import { useNavigation } from "@react-navigation/native";
-import { handleRefreshToken } from "../../../assets/functions/refreshToken";
 
 const ProfileScreen = (props) => {
   const { accessToken, saveAccessToken, deleteAccessToken } = useContext(AuthContext);

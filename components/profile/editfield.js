@@ -61,7 +61,7 @@ const updateProtectedProfile = async (userData, accessToken, saveAccessToken, de
             Authorization: `Bearer ${accessToken}`,
           },
         }
-      ).then(() => {}).catch((error) => { });
+      ).then(() => { }).catch((error) => { });
     });
   } catch (error) {
     // Handle error

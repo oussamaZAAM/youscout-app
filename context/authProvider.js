@@ -1,7 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { useEffect, useState } from 'react';
-import AuthContext from "./authContext";
 import { getLocalData } from "../assets/functions/asyncStore";
+import AuthContext from "./authContext";
 
 const AuthProvider = ({ children }) => {
     const [accessToken, setAccessToken] = useState('');

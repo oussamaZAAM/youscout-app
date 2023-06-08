@@ -1,29 +1,28 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { StyleSheet, View, TouchableOpacity, Text } from "react-native";
+import { StyleSheet, View } from "react-native";
 import {
   Bubble,
-  GiftedAvatar,
   GiftedChat,
   InputToolbar,
-  Send,
+  Send
 } from "react-native-gifted-chat";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { Feather } from "react-native-vector-icons";
 import { COLORS } from "../../../assets/utils";
-import { SafeAreaView } from "react-native-safe-area-context";
 import ChatNavbarGeneral from "../../../components/general/chatnavbar";
 
 const ConversationScreen = (props) => {
   const user = props.route.params
     ? {
-        id: props.route.params.id,
-        username: props.route.params.username,
-        profilePicture: props.route.params.profilePicture,
-      }
+      id: props.route.params.id,
+      username: props.route.params.username,
+      profilePicture: props.route.params.profilePicture,
+    }
     : {
-        id: "",
-        username: "",
-        profilePicture: "",
-      };
+      id: "",
+      username: "",
+      profilePicture: "",
+    };
   const [messages, setMessages] = useState([]);
 
   useEffect(() => {
@@ -126,7 +125,7 @@ const ConversationScreen = (props) => {
         renderSend={renderSend}
         renderInputToolbar={renderInputToolbar}
         renderChatFooter={renderChatFooter}
-        renderAvatar={()=>void(0)} // Remove the avatar near the message
+        renderAvatar={() => void (0)} // Remove the avatar near the message
       />
     </SafeAreaView>
   );

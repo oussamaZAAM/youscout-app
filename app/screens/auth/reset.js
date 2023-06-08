@@ -1,4 +1,3 @@
-import { Octicons } from "@expo/vector-icons";
 import { Formik } from "formik";
 import React, { useContext, useRef } from "react";
 import {
@@ -12,13 +11,10 @@ import {
   View,
 } from "react-native";
 
-import { FontAwesome, MaterialIcons } from "react-native-vector-icons";
 
-import FlashMessage, { showMessage } from "react-native-flash-message";
 import * as Yup from "yup";
-import { COLORS, timeout } from "../../../assets/utils";
+import { COLORS } from "../../../assets/utils";
 import AuthContext from "../../../context/authContext";
-import { authenticationService } from "../../../constants/env";
 
 const ResetScreen = ({ navigation }) => {
   const scrollViewRef = useRef();
@@ -117,7 +113,7 @@ const ResetScreen = ({ navigation }) => {
           )}
         </Formik>
 
-        <TouchableOpacity style={{ flex:1, flexDirection: "row", alignSelf: "center", marginTop: -20, marginBottom: 20, gap: 5 }} onPress={() => navigation.navigate("Login")}>
+        <TouchableOpacity style={{ flex: 1, flexDirection: "row", alignSelf: "center", marginTop: -20, marginBottom: 20, gap: 5 }} onPress={() => navigation.navigate("Login")}>
           <Text style={{ fontWeight: "500" }}>
             Wanna
           </Text>

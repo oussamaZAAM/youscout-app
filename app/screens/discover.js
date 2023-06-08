@@ -1,3 +1,5 @@
+import { useNavigation } from "@react-navigation/native";
+import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
 import {
   ActivityIndicator,
@@ -12,15 +14,13 @@ import {
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Feather } from "react-native-vector-icons";
+import { handleRefreshToken } from "../../assets/functions/refreshToken";
 import { WINDOW_WIDTH } from "../../assets/utils";
 import VideosFlatList from "../../components/posts/videosFlatlist";
 import ProfilePostList from "../../components/profile/postList";
-import { videosData } from "../videosData";
-import axios from "axios";
 import { authenticationService } from "../../constants/env";
 import AuthContext from "../../context/authContext";
-import { handleRefreshToken } from "../../assets/functions/refreshToken";
-import { useNavigation } from "@react-navigation/native";
+import { videosData } from "../videosData";
 
 const DiscoverScreen = () => {
   // -------------- User Validation ------------------

@@ -35,7 +35,7 @@ const ProfilePostListItem = ({ item, index, setPostEnabled }) => {
 };
 
 const ProfilePostList = ({ posts, setPostEnabled, numColumns }) => {
-  
+
   return (
     <View style={styles.container}>
       <FlatList

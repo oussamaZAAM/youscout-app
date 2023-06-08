@@ -1,5 +1,4 @@
-import { Octicons } from "@expo/vector-icons";
-import { AntDesign, Feather } from "@expo/vector-icons";
+import { AntDesign, Feather, Octicons } from "@expo/vector-icons";
 import { WINDOW_WIDTH } from "@gorhom/bottom-sheet";
 import { useNavigation } from "@react-navigation/native";
 import React, { useContext, useState } from "react";
@@ -16,12 +15,12 @@ import {
 
 import { MaterialIcons } from "react-native-vector-icons";
 
-import { COLORS, timeout } from "../../../assets/utils";
-import AuthContext from "../../../context/authContext";
 import axios from "axios";
-import { postService } from "../../../constants/env";
-import { handleRefreshToken } from "../../../assets/functions/refreshToken";
 import FlashMessage, { showMessage } from "react-native-flash-message";
+import { handleRefreshToken } from "../../../assets/functions/refreshToken";
+import { COLORS, timeout } from "../../../assets/utils";
+import { postService } from "../../../constants/env";
+import AuthContext from "../../../context/authContext";
 
 const renderItem = ({ item }) => {
   if (item.clicked === true) {
@@ -183,7 +182,7 @@ const SaveVideoScreen = (props) => {
           <Text style={styles.postButtonText}>Post</Text>
         </TouchableOpacity>
       </View>
-      <FlashMessage style={{flex: 1, alignItems: 'center', justifyContent: "center"}} position="center" />
+      <FlashMessage style={{ flex: 1, alignItems: 'center', justifyContent: "center" }} position="center" />
     </View>
   );
 };

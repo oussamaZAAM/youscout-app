@@ -1,6 +1,6 @@
-import React from 'react';
-import { View, TouchableOpacity, Text } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
+import React from 'react';
+import { TouchableOpacity, View } from 'react-native';
 import { COLORS } from './utils';
 
 const Rating = ({ rating, onRate }) => {

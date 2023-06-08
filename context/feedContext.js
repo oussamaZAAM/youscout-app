@@ -1,8 +1,8 @@
-import React, { createContext, useState, useContext } from 'react';
 import axios from 'axios';
-import { authenticationService, feedService } from '../constants/env';
-import AuthContext from './authContext';
+import React, { createContext, useContext, useState } from 'react';
 import { handleRefreshToken } from '../assets/functions/refreshToken';
+import { feedService } from '../constants/env';
+import AuthContext from './authContext';
 import { UserContext } from './userContext';
 
 // Create the UserContext
@@ -25,24 +25,24 @@ const FeedProvider = ({ children }) => {
   }]);
 
   const fetchPosts = () => {
-      fetchUser()
-          .then(async (userInfos) => {
-            try {
-              const url = feedService + "/feed/" + userInfos.username;
-              const response = await axios(url, {
-                headers: {
-                  Authorization: `Bearer ${accessToken}`
-                }
-              })
-              setPostsData(response.data.content);
-            } catch (error) {
-              console.log(error.response.data.message)
-              // If error response status 404 : Feed not found
-              if (error.response.status === 401) {
-                handleRefreshToken(accessToken, saveAccessToken);
-              }
+    fetchUser()
+      .then(async (userInfos) => {
+        try {
+          const url = feedService + "/feed/" + userInfos.username;
+          const response = await axios(url, {
+            headers: {
+              Authorization: `Bearer ${accessToken}`
             }
           })
+          setPostsData(response.data.content);
+        } catch (error) {
+          console.log(error.response.data.message)
+          // If error response status 404 : Feed not found
+          if (error.response.status === 401) {
+            handleRefreshToken(accessToken, saveAccessToken);
+          }
+        }
+      })
   }
 
 

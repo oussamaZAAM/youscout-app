@@ -82,7 +82,7 @@ const RegisterScreen = ({ navigation }) => {
                   message: "",
                   type: "success",
                   duration: timeout,
- 
+
                   icon: () => (
                     <View style={styles.flashMessage}>
                       <Octicons name="sign-in" size={26} />

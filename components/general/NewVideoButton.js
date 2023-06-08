@@ -1,12 +1,12 @@
 import { useNavigation } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import {
+  Animated,
   Keyboard,
   StyleSheet,
-  View,
-  Animated,
   TouchableOpacity,
+  View,
 } from "react-native";
 import { AntDesign } from "react-native-vector-icons";
 

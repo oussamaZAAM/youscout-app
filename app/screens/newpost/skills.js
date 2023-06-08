@@ -30,7 +30,7 @@ const RenderItem = ({ item, handleClickSkill }) => {
 };
 
 const SkillsScreen = (props) => {
-  const {accessToken} = useContext(AuthContext);
+  const { accessToken } = useContext(AuthContext);
 
 
   const [searchQuery, setSearchQuery] = useState("");
@@ -68,8 +68,8 @@ const SkillsScreen = (props) => {
     }, [navigation])
   );
 
-  useEffect(()=>{
-    const fetchSkills = async() => {
+  useEffect(() => {
+    const fetchSkills = async () => {
       try {
         const response = await fetch(skillsService + "/skills", {
           headers: {
@@ -79,12 +79,12 @@ const SkillsScreen = (props) => {
         const skills = await response.json();
         setSkillsData(skills);
         setFilteredData(skills);
-      } catch(e) {
+      } catch (e) {
         alert(e);
       }
     }
-    (!props.route.params.skills || props.route.params.skills.length===0) && fetchSkills();
-  },[])
+    (!props.route.params.skills || props.route.params.skills.length === 0) && fetchSkills();
+  }, [])
 
   useEffect(() => {
     const results = skillsData?.filter((element) =>

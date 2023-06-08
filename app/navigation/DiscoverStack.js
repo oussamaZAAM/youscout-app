@@ -2,9 +2,9 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import EditProfileFieldScreen from "../../components/profile/editfield";
+import DiscoverScreen from "../screens/discover";
 import EditProfileScreen from "../screens/profile/editprofile";
 import ProfileScreen from "../screens/profile/profile";
-import DiscoverScreen from "../screens/discover";
 
 const Stack = createNativeStackNavigator();
 

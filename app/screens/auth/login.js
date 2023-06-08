@@ -17,8 +17,8 @@ import { FontAwesome, MaterialIcons } from "react-native-vector-icons";
 import FlashMessage, { showMessage } from "react-native-flash-message";
 import * as Yup from "yup";
 import { COLORS, timeout } from "../../../assets/utils";
-import AuthContext from "../../../context/authContext";
 import { authenticationService } from "../../../constants/env";
+import AuthContext from "../../../context/authContext";
 
 const LoginScreen = ({ navigation }) => {
   const scrollViewRef = useRef();

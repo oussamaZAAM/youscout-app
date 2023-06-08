@@ -7,7 +7,7 @@
       "developmentClient": true,
       "distribution": "internal"
     },
-    "local": {
+    "youscout": {
       "android": {
         "buildType": "apk"
       }

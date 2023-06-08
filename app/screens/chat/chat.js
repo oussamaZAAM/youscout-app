@@ -56,7 +56,7 @@ const ChatScreen = () => {
   const [filteredData, setFilteredData] = useState(conversations);
 
   const navigation = useNavigation();
-  
+
   useEffect(() => {
     const results = conversations?.filter((element) =>
       element.username.toLowerCase().includes(searchQuery.toLowerCase())
@@ -68,11 +68,11 @@ const ChatScreen = () => {
     setSearchQuery(text);
   };
 
-  const renderItem = ({ item }) => { 
+  const renderItem = ({ item }) => {
     return (
       <TouchableOpacity
         style={styles.conversation}
-        onPress={() => navigation.navigate("Conversation", { id: item.id, username: item.username, profilePicture: item.profilePicture})}
+        onPress={() => navigation.navigate("Conversation", { id: item.id, username: item.username, profilePicture: item.profilePicture })}
       >
         {item.newMessages > 0 && (
           <Image
