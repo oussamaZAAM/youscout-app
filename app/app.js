@@ -12,14 +12,14 @@ import { ChatScreenStack } from "./navigation/ChatScreenStack";
 import { MainScreenStack } from "./navigation/MainScreenStack";
 import { NewVideoStack } from "./navigation/NewVideoStack";
 import { ProfileStack } from "./navigation/ProfileStack";
-import DiscoverScreen from "./screens/discover";
+import { DiscoverStack } from "./navigation/DiscoverStack";
 
 ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT);
 
 const BottomTab = createBottomTabNavigator();
 
 const App = () => {
-    const { accessToken, saveAccessToken } = useContext(AuthContext);
+    const { accessToken } = useContext(AuthContext);
 
     return (accessToken && accessToken.length !== 0
         ? (
@@ -50,7 +50,7 @@ const App = () => {
 
                     <BottomTab.Screen
                         name="Discover"
-                        component={DiscoverScreen}
+                        component={DiscoverStack}
                         options={{
                             tabBarIcon: ({ focused }) => (
                                 <Image

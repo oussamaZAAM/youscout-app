@@ -19,6 +19,7 @@ import axios from "axios";
 import { authenticationService } from "../../constants/env";
 import AuthContext from "../../context/authContext";
 import { handleRefreshToken } from "../../assets/functions/refreshToken";
+import { useNavigation } from "@react-navigation/native";
 
 const DiscoverScreen = () => {
   // -------------- User Validation ------------------
@@ -36,9 +37,11 @@ const DiscoverScreen = () => {
   const [users, setUsers] = useState([]);
 
   useEffect(() => {
-    const delayedSearch = setTimeout(() => {
-      searchQuery !== "" ? performSearchRequest(searchQuery) : setUsers("");
-    }, 1000);
+    const delayedSearch = searchQuery !== ""
+      ? setTimeout(() => {
+        performSearchRequest(searchQuery);
+      }, 1000)
+      : setUsers("");
 
     return () => clearTimeout(delayedSearch);
   }, [searchQuery]);
@@ -48,7 +51,7 @@ const DiscoverScreen = () => {
   };
 
   const performSearchRequest = async (query) => {
-    try{
+    try {
       const response = await axios.get(authenticationService + "/users/search?username=" + query, {
         headers: {
           Authorization: `Bearer ${accessToken}`
@@ -56,14 +59,17 @@ const DiscoverScreen = () => {
       });
       const data = response.data;
       setUsers(data.content);
-    } catch(error) {
+    } catch (error) {
       if (error.response.status === 401) {
         handleRefreshToken(accessToken, saveAccessToken);
       }
     }
   };
 
-  console.log(users)
+  const navigation = useNavigation();
+  const goToProfile = (username) => {
+    navigation.navigate("Profile", { postUsername: username });
+  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -79,25 +85,27 @@ const DiscoverScreen = () => {
               value={searchQuery}
             />
           </View>
-          {users.length !== 0 && <View style={styles.overlayContainer}>
-            <View style={styles.searchingContainer}>
-              <FlatList
-                data={users}
-                keyExtractor={(item) => item.username}
-                renderItem={({ item }) => (
-                  <View style={styles.userContainer}>
-                    <Image source={{ uri: item.profilePicture || "https://icons.veryicon.com/png/o/internet--web/prejudice/user-128.png" }} style={styles.userImage} />
-                    <Text style={styles.userName}>{item.username}</Text>
-                  </View>
-                )}
-                ItemSeparatorComponent={renderUserSeparator}
-              />
+          {users.length !== 0 &&
+            <View style={styles.overlayContainer}>
+              <View style={styles.searchingContainer}>
+                <FlatList
+                  data={users}
+                  keyExtractor={(item) => item.username}
+                  renderItem={({ item }) => (
+                    <TouchableOpacity onPress={() => goToProfile(item.username)} style={styles.userContainer}>
+                      <Image source={{ uri: item.profilePicture || "https://icons.veryicon.com/png/o/internet--web/prejudice/user-128.png" }} style={styles.userImage} />
+                      <Text style={styles.userName}>{item.username}</Text>
+                    </TouchableOpacity>
+                  )}
+                  ItemSeparatorComponent={renderUserSeparator}
+                />
+              </View>
             </View>
-          </View>}
+          }
           <ProfilePostList
             posts={videosData}
             setPostEnabled={setPostEnabled}
-            numColumns={4}
+            numColumns={3}
           />
         </SafeAreaView>
       ) : (

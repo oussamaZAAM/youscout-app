@@ -8,9 +8,6 @@ import {
 } from "react-native";
 
 import * as VideoThumbnails from "expo-video-thumbnails";
-import { handleRefreshToken } from "../../assets/functions/refreshToken";
-import axios from "axios";
-import { postService } from "../../constants/env";
 
 const ProfilePostListItem = ({ item, index, setPostEnabled }) => {
   const [thumbUri, setThumbUri] = useState("");
