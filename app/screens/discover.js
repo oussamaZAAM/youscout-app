@@ -1,7 +1,10 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
+  FlatList,
+  Image,
   SafeAreaView,
   StyleSheet,
+  Text,
   TextInput,
   TouchableOpacity,
   View,
@@ -12,10 +15,56 @@ import { WINDOW_WIDTH } from "../../assets/utils";
 import VideosFlatList from "../../components/posts/videosFlatlist";
 import ProfilePostList from "../../components/profile/postList";
 import { videosData } from "../videosData";
+import axios from "axios";
+import { authenticationService } from "../../constants/env";
+import AuthContext from "../../context/authContext";
+import { handleRefreshToken } from "../../assets/functions/refreshToken";
 
 const DiscoverScreen = () => {
+  // -------------- User Validation ------------------
+  const { accessToken, saveAccessToken } = useContext(AuthContext);
+
+  // -------------- Search styling -------------------
   const [postEnabled, setPostEnabled] = useState(-1);
   const insets = useSafeAreaInsets();
+  const renderUserSeparator = () => {
+    return <View style={styles.userSeparator} />;
+  };
+
+  // ----------- handle searching users ----------------
+  const [searchQuery, setSearchQuery] = useState('');
+  const [users, setUsers] = useState([]);
+
+  useEffect(() => {
+    const delayedSearch = setTimeout(() => {
+      searchQuery !== "" ? performSearchRequest(searchQuery) : setUsers("");
+    }, 1000);
+
+    return () => clearTimeout(delayedSearch);
+  }, [searchQuery]);
+
+  const handleSearchQueryChange = (query) => {
+    setSearchQuery(query);
+  };
+
+  const performSearchRequest = async (query) => {
+    try{
+      const response = await axios.get(authenticationService + "/users/search?username=" + query, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`
+        }
+      });
+      const data = response.data;
+      setUsers(data.content);
+    } catch(error) {
+      if (error.response.status === 401) {
+        handleRefreshToken(accessToken, saveAccessToken);
+      }
+    }
+  };
+
+  console.log(users)
+
   return (
     <SafeAreaView style={styles.container}>
       {postEnabled === -1 ? (
@@ -26,10 +75,25 @@ const DiscoverScreen = () => {
               style={styles.searchBar}
               placeholder="Search for users"
               placeholderTextColor="gray"
-              // onChangeText={(text) => rightButton.action(text)}
-              // value={rightButton.value}
+              onChangeText={handleSearchQueryChange}
+              value={searchQuery}
             />
           </View>
+          {users.length !== 0 && <View style={styles.overlayContainer}>
+            <View style={styles.searchingContainer}>
+              <FlatList
+                data={users}
+                keyExtractor={(item) => item.username}
+                renderItem={({ item }) => (
+                  <View style={styles.userContainer}>
+                    <Image source={{ uri: item.profilePicture || "https://icons.veryicon.com/png/o/internet--web/prejudice/user-128.png" }} style={styles.userImage} />
+                    <Text style={styles.userName}>{item.username}</Text>
+                  </View>
+                )}
+                ItemSeparatorComponent={renderUserSeparator}
+              />
+            </View>
+          </View>}
           <ProfilePostList
             posts={videosData}
             setPostEnabled={setPostEnabled}
@@ -73,6 +137,7 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 100,
     borderBottomRightRadius: 100,
     width: 0,
+    height: 40
   },
   searchBarContainer: {
     flexDirection: "row",
@@ -104,5 +169,38 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
     borderRadius: 15,
+  },
+
+  // For users Flatlist
+  overlayContainer: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+    marginTop: 45,
+    zIndex: 10
+  },
+  searchingContainer: {
+    flex: 1,
+    paddingVertical: 16,
+    paddingHorizontal: 24,
+    backgroundColor: '#fff',
+  },
+  userContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginVertical: 4,
+  },
+  userImage: {
+    width: 40,
+    height: 40,
+    borderRadius: 25,
+    marginRight: 12,
+  },
+  userName: {
+    fontSize: 14,
+    fontWeight: 'bold',
+  },
+  userSeparator: {
+    height: 1,
+    backgroundColor: '#CCCCCC',
   },
 });

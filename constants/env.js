@@ -1,13 +1,13 @@
-const hostname = "10.0.2.2"
+const hostname = "20.90.245.52"
 
-export const commentsService = "http://"+hostname+":8071/api/v1/comments-service";
+export const commentsService = "http://"+hostname+"/api/v1/comments-service";
 
-export const skillsService = "http://"+hostname+":8072/api/v1/skills-service";
+export const skillsService = "http://"+hostname+"/api/v1/skills-service";
 
-export const authenticationService = "http://"+hostname+":8082/api/v1/auth-service";
+export const authenticationService = "http://"+hostname+"/api/v1/auth-service";
 
-export const postService = "http://"+hostname+":8001/api/v1/post-handling-service";
+export const postService = "http://"+hostname+"/api/v1/post-handling-service";
 
-export const socialGraphService = "http://"+hostname+":8083/api/v1/social-graph-service";
+export const socialGraphService = "http://"+hostname+"/api/v1/social-graph-service";
 
-export const feedService = "http://"+hostname+":8003/api/v1/user-feed-service";
+export const feedService = "http://"+hostname+"/api/v1/user-feed-service";
