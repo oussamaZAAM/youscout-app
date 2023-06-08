@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import {
+  ActivityIndicator,
   FlatList,
   Image,
   SafeAreaView,
@@ -35,13 +36,15 @@ const DiscoverScreen = () => {
   // ----------- handle searching users ----------------
   const [searchQuery, setSearchQuery] = useState('');
   const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    setLoading(true);
     const delayedSearch = searchQuery !== ""
       ? setTimeout(() => {
         performSearchRequest(searchQuery);
       }, 1000)
-      : setUsers("");
+      : setUsers([]);
 
     return () => clearTimeout(delayedSearch);
   }, [searchQuery]);
@@ -58,8 +61,10 @@ const DiscoverScreen = () => {
         }
       });
       const data = response.data;
+      setLoading(false);
       setUsers(data.content);
     } catch (error) {
+      setLoading(false);
       if (error.response.status === 401) {
         handleRefreshToken(accessToken, saveAccessToken);
       }
@@ -85,7 +90,21 @@ const DiscoverScreen = () => {
               value={searchQuery}
             />
           </View>
-          {users.length !== 0 &&
+          {searchQuery !== "" && loading &&
+            <View style={styles.overlayContainer}>
+              <View style={styles.loadingContainer}>
+                <ActivityIndicator size="large" color="blue" />
+              </View>
+            </View>
+          }
+          {searchQuery !== "" && users.length === 0 && !loading &&
+            <View style={styles.overlayContainer}>
+              <View style={styles.noUserContainer}>
+                <Text style={styles.noUserText}>No user found with username "{searchQuery}"</Text>
+              </View>
+            </View>
+          }
+          {searchQuery !== "" && users.length !== 0 && !loading &&
             <View style={styles.overlayContainer}>
               <View style={styles.searchingContainer}>
                 <FlatList
@@ -210,5 +229,20 @@ const styles = StyleSheet.create({
   userSeparator: {
     height: 1,
     backgroundColor: '#CCCCCC',
+  },
+  noUserContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+  },
+  noUserText: {
+    fontSize: 16,
+    textAlign: 'center',
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
