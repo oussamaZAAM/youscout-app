@@ -95,7 +95,7 @@ const NewVideoButton = () => {
           ]}
         >
           <LinearGradient
-            colors={["red", "orange", "purple"]}
+            colors={["#2cdce9", "#bde6e7", "#25acb2"]}
             style={styles.gradientBorder}
           />
         </Animated.View>

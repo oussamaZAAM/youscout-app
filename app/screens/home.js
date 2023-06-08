@@ -1,20 +1,25 @@
-import React, { useContext, useEffect } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import React, { useContext, useEffect, useState } from "react";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 import VideosFlatList from "../../components/posts/videosFlatlist";
 
 import { useNavigation } from "@react-navigation/native";
-import { AntDesign } from "react-native-vector-icons";
+import { FontAwesome } from "react-native-vector-icons";
 import { FeedContext } from "../../context/feedContext";
 
 const HomeScreen = () => {
   const navigation = useNavigation();
 
+  const [trigger, setTrigger] = useState(false);
+  const handleTrigger = () => {
+    setTrigger(prev => !prev)
+  }
+
   // Fetch feed on first render
   const { postsData, fetchPosts } = useContext(FeedContext);
   useEffect(() => {
     fetchPosts();
-  }, []);
+  }, [trigger]);
 
   // Fetch feed on navigation changes
   useEffect(() => {
@@ -32,10 +37,12 @@ const HomeScreen = () => {
     <View style={styles.container}>
       {!(postsData.length <= 0 || (postsData.length === 1 && postsData[0]._id === 0))
         ? <VideosFlatList videosData={postsData} />
-        : <View style={styles.noFeedContainer}>
-          <AntDesign name="smileo" size={80} color="gray" />
-          <Text style={styles.noFeedText}>No Feed Available, try following more people</Text>
-        </View>}
+        :
+          <TouchableOpacity onPress={handleTrigger} style={styles.noFeedContainer}>
+            <FontAwesome name="refresh" size={80} color="gray" />
+            <Text style={styles.noFeedText}>No Feed Available, try following more people</Text>
+          </TouchableOpacity>
+      }
     </View>
   );
 };
