@@ -528,6 +528,12 @@ const Comments = ({ postId, commentsNumber, bottomSheetRef, handleSheetChanges }
   const [loading, setLoading] = useState(true); // Stores the state loading
   const [fetching, setFetching] = useState(true); // Stores the state of fetching need
 
+  // Set a trigger to fetch
+  const [trigger, setTrigger] = useState(false);
+  const handleTrigger = () => {
+    setTrigger(prev => !prev)
+  }
+
   // Fetch comments if Bottomsheet is enabled
   useEffect(() => {
     const fetchData = async () => {
@@ -563,7 +569,7 @@ const Comments = ({ postId, commentsNumber, bottomSheetRef, handleSheetChanges }
           setLoading(false);
         });
     }
-  }, [fetching]);
+  }, [fetching, trigger]);
 
   const [newComment, setNewComment] = useState(""); //Stores the new comment body
   // Like / Unlike a comment
@@ -744,10 +750,10 @@ const Comments = ({ postId, commentsNumber, bottomSheetRef, handleSheetChanges }
           refreshing={loading}
           onRefresh={() => setFetching(true)}
         />
-        : <View style={styles.noCommentContainer}>
-          <Ionicons name="chatbubble-outline" size={50} color="#333" />
+        : <TouchableOpacity style={styles.noCommentContainer}>
+          <FontAwesome name="refresh" size={50} color="#333" />
           <Text style={styles.noCommentMessage}>Be the first to comment</Text>
-        </View>
+        </TouchableOpacity>
       }
       <View
         style={[

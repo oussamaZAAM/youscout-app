@@ -11,7 +11,7 @@ import { socialGraphService } from "../../constants/env";
 import AuthContext from "../../context/authContext";
 import { UserContext } from "../../context/userContext";
 
-const ProfileHeader = ({ profileUser }) => {
+const ProfileHeader = ({ profileUser, trigger, setTrigger }) => {
   const navigation = useNavigation();
 
   // Get the user informations and the access token
@@ -28,7 +28,6 @@ const ProfileHeader = ({ profileUser }) => {
     followings: 0,
   });
   const [isFollowed, setIsFollowed] = useState(false);
-  const [trigger, setTrigger] = useState(false);
 
   useEffect(() => {
     const fetchInteractions = async () => {

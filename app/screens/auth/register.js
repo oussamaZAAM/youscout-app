@@ -70,10 +70,9 @@ const RegisterScreen = ({ navigation }) => {
             ),
           })}
           onSubmit={async (values) => {
-            console.log(authenticationService)
             await axios.post(authenticationService + '/auth/register', {
               fullName: values.name,
-              username: values.name,
+              username: values.username,
               email: values.email,
               password: values.password
             })

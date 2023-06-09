@@ -13,7 +13,7 @@ import {
   View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { Feather } from "react-native-vector-icons";
+import { Feather, MaterialIcons } from "react-native-vector-icons";
 import { handleRefreshToken } from "../../assets/functions/refreshToken";
 import { WINDOW_WIDTH } from "../../assets/utils";
 import VideosFlatList from "../../components/posts/videosFlatlist";
@@ -89,6 +89,9 @@ const DiscoverScreen = () => {
               onChangeText={handleSearchQueryChange}
               value={searchQuery}
             />
+            {searchQuery !== "" && <TouchableOpacity onPress={() => setSearchQuery("")}>
+              <MaterialIcons style={styles.searchBarIcon} name="cancel" size={18} />
+            </TouchableOpacity>}
           </View>
           {searchQuery !== "" && loading &&
             <View style={styles.overlayContainer}>

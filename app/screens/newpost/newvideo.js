@@ -62,7 +62,6 @@ const NewVideoScreen = () => {
         if (videoRecordPromise) {
           const data = await videoRecordPromise;
           const source = data.uri;
-          console.log(source);
           let sourceThumb = await generateThumbnail(source);
           navigation.navigate("SaveVideo", { source, sourceThumb });
         }

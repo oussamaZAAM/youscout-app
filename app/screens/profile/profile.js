@@ -1,6 +1,6 @@
 import { Feather } from "@expo/vector-icons";
 import React, { useContext, useEffect, useState } from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { RefreshControl, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 import {
   SafeAreaView,
@@ -100,10 +100,27 @@ const ProfileScreen = (props) => {
     socialMediaLinks: {}
   });
 
+  // Handle refreshing
+  const [trigger, setTrigger] = useState(false);
+
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
+  const handleRefresh = () => {
+    // Simulating a refresh action
+    setIsRefreshing(true);
+
+    fetchUser();
+    setTrigger(prev => !prev);
+
+    setTimeout(() => {
+      setIsRefreshing(false);
+    }, 2000);
+  };
+
 
   // Fetch the current authenticated user
   useEffect(() => {
-    const fetchUser = async () => {
+    const fetchThisUser = async () => {
       try {
         const url = authenticationService + "/users/" + props.route.params.postUsername + "/profile";
         const response = await axios.get(url, {
@@ -138,8 +155,8 @@ const ProfileScreen = (props) => {
         }
       }
     }
-    props.route.params?.postUsername && fetchUser();
-  }, []);
+    props.route.params?.postUsername && fetchThisUser();
+  }, [isRefreshing]);
 
   // Abstract the user (current user / other users)
   const profileUser = props.route.params ? postUser : user;
@@ -163,40 +180,49 @@ const ProfileScreen = (props) => {
       }
     }
     fetchProfilePosts();
-  }, [profileUser.username])
+  }, [profileUser.username]);
 
   return postEnabled === -1 ? (
-    <SafeAreaView style={styles.container}>
-      <ProfileNavbar
-        profileUserName={profileUser.username}
-        myProfile={user.username === profileUser.username}
-        toggleBottomNavigationView={toggleBottomNavigationView}
-      />
-      <ProfileHeader profileUser={profileUser} />
-      <ProfilePostList
-        posts={posts}
-        setPostEnabled={setPostEnabled}
-        numColumns={3}
-      />
-
-      <EditBottomSheet
-        visible={modalVisible}
-        onBackButtonPress={toggleBottomNavigationView}
-        onBackdropPress={toggleBottomNavigationView}
+    <SafeAreaView style={styles.refreshingContainer}>
+      <ScrollView
+        contentContainerStyle={styles.content}
+        refreshControl={
+          <RefreshControl
+            refreshing={isRefreshing}
+            onRefresh={handleRefresh}
+          />
+        }
       >
-        <View style={styles.editCommentSection}>
-          <TouchableOpacity
-            onPress={() => handleLogout()}
-            style={styles.editCommentButton}
-          >
-            <Octicons name="sign-out" size={26} />
-            <View style={styles.editCommentTextContainer}>
-              <Text style={styles.editCommentText}>Log out</Text>
-            </View>
-          </TouchableOpacity>
-        </View>
-      </EditBottomSheet>
-      <FlashMessage position="top" />
+        <ProfileNavbar
+          profileUserName={profileUser.username}
+          myProfile={user.username === profileUser.username}
+          toggleBottomNavigationView={toggleBottomNavigationView}
+        />
+        <ProfileHeader profileUser={profileUser} trigger={trigger} setTrigger={setTrigger} />
+        <ProfilePostList
+          posts={posts}
+          setPostEnabled={setPostEnabled}
+          numColumns={3}
+        />
+        <EditBottomSheet
+          visible={modalVisible}
+          onBackButtonPress={toggleBottomNavigationView}
+          onBackdropPress={toggleBottomNavigationView}
+        >
+          <View style={styles.editCommentSection}>
+            <TouchableOpacity
+              onPress={() => handleLogout()}
+              style={styles.editCommentButton}
+            >
+              <Octicons name="sign-out" size={26} />
+              <View style={styles.editCommentTextContainer}>
+                <Text style={styles.editCommentText}>Log out</Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+        </EditBottomSheet>
+      </ScrollView>
+      <FlashMessage position="bottom" />
     </SafeAreaView>
   ) : (
     <View>
@@ -220,6 +246,11 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "white",
   },
+
+  refreshingContainer: {
+    flex: 1,
+  },
+
   editCommentSection: {
     width: WINDOW_WIDTH,
     borderTopStartRadius: 25,

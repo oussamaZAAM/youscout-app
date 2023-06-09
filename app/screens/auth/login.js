@@ -119,7 +119,7 @@ const LoginScreen = ({ navigation }) => {
                   icon: () => (
                     <View style={styles.flashMessage}>
                       <Octicons name="sign-in" size={26} />
-                      <Text style={[styles.editCommentText, {}]}>{body.message.split("Please check your inbox")[0]}</Text>
+                      {/* <Text style={[styles.editCommentText, {}]}>{body.message.split("Please check your inbox")[0]}</Text> */}
                     </View>
                   ),
                 });

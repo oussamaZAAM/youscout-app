@@ -44,65 +44,66 @@ const SaveVideoScreen = (props) => {
       ? (props.route.params.skills
         .filter(skill => skill.clicked))
       : [];
+      
     if (chosenSkills.length < 1) {
       alert("Please select at least one Skill!");
-    }
+    } else {
+      const skillsObject = chosenSkills.reduce((obj, skill) => {
+        const skillName = skill.name;
+        obj[skillName] = {};
+        return obj;
+      }, {});
 
-    const skillsObject = chosenSkills.reduce((obj, skill) => {
-      const skillName = skill.name;
-      obj[skillName] = {};
-      return obj;
-    }, {});
-
-    const videoUrl = props.route.params.source;
-    // Upload the video in S3
-    const formData = new FormData();
-    formData.append('video', {
-      uri: videoUrl,
-      name: videoUrl.split('/').pop(),
-      type: 'video/mp4',
-    });
-
-    const userObject = {
-      caption: description,
-      userProfilePic: "123",
-      skills: skillsObject
-    };
-
-    formData.append('post', JSON.stringify(userObject));
-
-    try {
-      const response = await axios.post(
-        `${postService}/create`,
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-            'Content-Type': 'multipart/form-data',
-          },
-        }
-      );
-
-      // Flash Message: Video updated
-      showMessage({
-        message: "",
-        type: "success",
-        duration: timeout,
-        icon: () => (
-          <View style={styles.flashMessage}>
-            <Octicons name="diff-added" size={26} />
-            <Text style={styles.editCommentText}>Post added successfully</Text>
-          </View>
-        ),
+      const videoUrl = props.route.params.source;
+      // Upload the video in S3
+      const formData = new FormData();
+      formData.append('video', {
+        uri: videoUrl,
+        name: videoUrl.split('/').pop(),
+        type: 'video/mp4',
       });
 
-      setTimeout(() => {
-        navigation.navigate("NewVideo");
-      }, timeout);
-    } catch (error) {
-      console.log(error.message)
-      if (error.response?.status === 401) {
-        handleRefreshToken(accessToken, saveAccessToken);
+      const userObject = {
+        caption: description,
+        userProfilePic: "123",
+        skills: skillsObject
+      };
+
+      formData.append('post', JSON.stringify(userObject));
+
+      try {
+        const response = await axios.post(
+          `${postService}/create`,
+          formData,
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+              'Content-Type': 'multipart/form-data',
+            },
+          }
+        );
+
+        // Flash Message: Video updated
+        showMessage({
+          message: "",
+          type: "success",
+          duration: timeout,
+          icon: () => (
+            <View style={styles.flashMessage}>
+              <Octicons name="diff-added" size={26} />
+              <Text style={styles.editCommentText}>Post added successfully</Text>
+            </View>
+          ),
+        });
+
+        setTimeout(() => {
+          navigation.navigate("NewVideo");
+        }, timeout);
+      } catch (error) {
+        console.log(error.message)
+        if (error.response?.status === 401) {
+          handleRefreshToken(accessToken, saveAccessToken);
+        }
       }
     }
   };

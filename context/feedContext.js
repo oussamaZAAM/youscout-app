@@ -27,6 +27,7 @@ const FeedProvider = ({ children }) => {
   const fetchPosts = () => {
     fetchUser()
       .then(async (userInfos) => {
+        console.log('fetching posts...')
         try {
           const url = feedService + "/feed/" + userInfos.username;
           const response = await axios(url, {
@@ -35,6 +36,7 @@ const FeedProvider = ({ children }) => {
             }
           })
           setPostsData(response.data.content);
+          console.log('Posts fetched!')
         } catch (error) {
           console.log(error.response.data.message)
           // If error response status 404 : Feed not found
