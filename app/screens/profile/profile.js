@@ -180,7 +180,7 @@ const ProfileScreen = (props) => {
       }
     }
     fetchProfilePosts();
-  }, [profileUser.username]);
+  }, [profileUser.username, isRefreshing]);
 
   return postEnabled === -1 ? (
     <SafeAreaView style={styles.refreshingContainer}>

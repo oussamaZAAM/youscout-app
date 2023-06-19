@@ -21,6 +21,7 @@ import { handleRefreshToken } from "../../../assets/functions/refreshToken";
 import { COLORS, timeout } from "../../../assets/utils";
 import { postService } from "../../../constants/env";
 import AuthContext from "../../../context/authContext";
+import { UserContext } from "../../../context/userContext";
 
 const renderItem = ({ item }) => {
   if (item.clicked === true) {
@@ -34,6 +35,7 @@ const renderItem = ({ item }) => {
 
 const SaveVideoScreen = (props) => {
   const { accessToken, saveAccessToken } = useContext(AuthContext);
+  const { user } = useContext(UserContext);
 
   const colorScheme = Appearance.getColorScheme();
   const [description, setDescription] = useState("");
@@ -65,7 +67,7 @@ const SaveVideoScreen = (props) => {
 
       const userObject = {
         caption: description,
-        userProfilePic: "123",
+        userProfilePic: user.profilePicture,
         skills: skillsObject
       };
 
